@@ -13,7 +13,8 @@
 - **源泉徴収を自動計算** — 100万円以下 10.21%、100万円超 20.42%(復興特別所得税を含む)。行単位で対象・対象外を切り替えられます
 - **入力内容を送信しない** — サーバーを持たず、すべて端末内で処理します
 - **書き出し** — PDF(印刷)/ CSV(Excel対応)/ JSON(入力データの保存・再読込)
-- **4種類の書類** — 請求書 / 見積書 / 納品書 / 領収書
+- **4種類の書類** — 請求書 / 見積書 / 納品書 / 領収書。`/?type=estimate` のように種別を指定して開けます
+- **実務の解説記事を同梱** — 書き方・計算方法の解説ページをツールとセットで持ち、検索からの入口にします
 
 ## 画面
 
@@ -34,11 +35,17 @@
 
 ```
 public/
-  index.html   入力フォーム + A4プレビュー
-  app.js       画面制御・描画・書き出し
-  calc.js      金額計算ロジック(DOM非依存・テスト対象)
-  style.css    画面表示とA4印刷レイアウト
-  legal.html   免責事項・プライバシーポリシー
+  index.html       入力フォーム + A4プレビュー
+  app.js           画面制御・描画・書き出し
+  calc.js          金額計算ロジック(DOM非依存・テスト対象)
+  style.css        画面表示・記事レイアウト・A4印刷レイアウト
+  legal.html       免責事項・プライバシーポリシー
+  mitsumorisho.html 見積書のランディング(書き方・ただし書き文例)
+  robots.txt
+  guide/
+    index.html                解説記事の一覧
+    seikyusho-kakikata.html   請求書の書き方(必須9項目・インボイス対応)
+    gensen-choshu-keisan.html 源泉徴収の計算方法(10.21% / 20.42%)
 tests/
   calc.test.js 計算ロジックのテスト
 docs/
@@ -55,6 +62,10 @@ python -m http.server 8891 --directory public
 ```
 
 http://localhost:8891 を開きます。
+
+なお本番(Vercel)は `cleanUrls` を有効にしているため、記事のURLは `/guide/seikyusho-kakikata` のように
+拡張子なしになります。上記のローカルサーバーは拡張子を省略できないため、
+ローカルで記事を開くときは `/guide/seikyusho-kakikata.html` を指定してください。
 
 ## テスト
 
