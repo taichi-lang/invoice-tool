@@ -13,6 +13,11 @@
 <header class="site-header no-print">
   <h1>請求書ジェネレーター</h1>
   <p class="tagline">インボイス・源泉徴収対応 / 登録不要 / <strong>PDFに透かしは入りません</strong></p>
+  <nav class="site-nav">
+    <a href="/" aria-current="page">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/guide/">解説記事</a>
+  </nav>
 </header>
 
 <main class="layout">
@@ -104,7 +109,7 @@
           <option value="ceil">切り上げ</option>
         </select>
       </label>
-      <p class="hint">インボイス制度では、端数処理は「一の適格請求書につき、税率ごとに1回」と定められています。本ツールは明細行ごとの端数処理は行いません。</p>
+      <p class="hint">インボイス制度では、端数処理は「一の適格請求書につき、税率ごとに1回」と定められています。本ツールは明細行ごとの端数処理は行いません。<a href="/guide/seikyusho-kakikata">請求書の書き方を見る</a></p>
 
       <label class="check">
         <input type="checkbox" id="withholdingOn"> 源泉徴収を計算する(原稿料・デザイン料・講演料などが対象)
@@ -117,7 +122,7 @@
           </select>
         </label>
         <p class="hint">税率は 100万円以下の部分 10.21%、100万円超の部分 20.42%(復興特別所得税を含む)。1円未満は切り捨てます。</p>
-        <p class="hint">明細に「源泉」欄が表示されます。物品代や立替実費など源泉徴収の対象外の行は、チェックを外してください。</p>
+        <p class="hint">明細に「源泉」欄が表示されます。物品代や立替実費など源泉徴収の対象外の行は、チェックを外してください。<a href="/guide/gensen-choshu-keisan">計算例を見る</a></p>
       </div>
     </details>
 
@@ -150,6 +155,15 @@
         <li>英文・源泉徴収欄つきなどのテンプレート追加</li>
       </ul>
       <p class="hint">上記は有料プランで提供予定です。<strong>PDFの出力そのものは今後も無料・透かしなし</strong>で提供します。</p>
+    </section>
+
+    <section class="card pro-card">
+      <h2>書き方に迷ったら</h2>
+      <ul class="guide-links">
+        <li><a href="/guide/seikyusho-kakikata">請求書の書き方 — 必須9項目とインボイス対応</a></li>
+        <li><a href="/guide/gensen-choshu-keisan">源泉徴収の計算方法(10.21%と20.42%)</a></li>
+        <li><a href="/mitsumorisho">見積書の書き方とただし書き文例</a></li>
+      </ul>
     </section>
   </section>
 
@@ -223,7 +237,7 @@
 
 <footer class="site-footer no-print">
   <p>
-    <a href="/legal.html">免責事項・プライバシー</a>
+    <a href="/guide/">解説記事</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/legal">免責事項・プライバシー</a>
   </p>
   <p class="small">本ツールは制度の解説・税務判断を行うものではありません。個別の取り扱いは所轄の税務署または税理士にご確認ください。</p>
 </footer>

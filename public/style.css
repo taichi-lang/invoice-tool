@@ -41,6 +41,11 @@ body {
 .site-footer a { color: var(--accent); }
 .site-footer .small { font-size: 12px; }
 
+/* ヘッダ内のナビ(ツールと解説記事の行き来に使う) */
+.site-nav { margin-top: 8px; font-size: 13px; }
+.site-nav a { color: var(--accent); margin-right: 14px; }
+.site-nav a[aria-current="page"] { color: var(--ink); font-weight: 700; text-decoration: none; }
+
 /* ---------------------------------------------------------- レイアウト */
 
 .layout {
@@ -169,6 +174,8 @@ body {
 
 .pro-card h2 { margin: 0 0 6px; font-size: 14px; }
 .pro-card ul { margin: 0 0 8px; padding-left: 1.3em; font-size: 13px; color: var(--ink-sub); }
+.pro-card ul.guide-links { margin-bottom: 0; }
+.pro-card ul.guide-links a { color: var(--accent); }
 
 /* ---------------------------------------------------------- プレビュー(用紙) */
 
@@ -285,6 +292,110 @@ table.items tr.blank td { height: 7mm; }
   padding-bottom: 1mm;
 }
 .paper-foot p { margin: 0; white-space: pre-wrap; min-height: 8mm; }
+
+/* ---------------------------------------------------------- 解説記事 */
+
+.article {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.breadcrumb { font-size: 12px; color: var(--ink-sub); margin: 0 0 12px; }
+.breadcrumb a { color: var(--accent); }
+
+.article > h1 {
+  font-size: 24px;
+  line-height: 1.45;
+  margin: 0 0 8px;
+}
+.article .updated { margin: 0 0 20px; font-size: 12px; color: var(--ink-sub); }
+
+.article h2 {
+  font-size: 18px;
+  margin: 32px 0 10px;
+  padding-left: 10px;
+  border-left: 4px solid var(--accent);
+}
+.article h3 { font-size: 15px; margin: 22px 0 6px; }
+.article p, .article li { font-size: 15px; }
+.article ul, .article ol { padding-left: 1.4em; }
+
+.article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 14px;
+  background: #fff;
+}
+.article th, .article td {
+  border: 1px solid var(--line);
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+.article thead th { background: var(--accent-weak); }
+.article .num { text-align: right; white-space: nowrap; }
+
+/* 横に長い表は表単位で横スクロールさせ、本文は横に溢れさせない */
+.table-scroll { overflow-x: auto; }
+.table-scroll table { min-width: 480px; margin: 12px 0; }
+
+/* 文例・計算式のブロック。長い行は折り返さず、ブロック単位で横スクロールさせる */
+.article pre {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px 14px;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.article pre code { font-family: "Menlo", "Consolas", monospace; }
+.article p code {
+  background: var(--accent-weak);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: "Menlo", "Consolas", monospace;
+  font-size: 13px;
+}
+
+.article .note {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 16px;
+  margin: 16px 0;
+  font-size: 14px;
+}
+.article .note p:first-child { margin-top: 0; }
+.article .note p:last-child { margin-bottom: 0; }
+
+.cta {
+  display: block;
+  margin: 24px 0;
+  padding: 16px 20px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+}
+.cta strong { display: block; font-size: 16px; }
+.cta span { font-size: 13px; opacity: .9; }
+.cta:hover { background: #17395a; }
+
+.linklist { list-style: none; padding: 0; }
+.linklist li {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+}
+.linklist a { color: var(--accent); font-weight: 700; text-decoration: none; }
+.linklist a:hover { text-decoration: underline; }
+.linklist p { margin: 4px 0 0; font-size: 13px; color: var(--ink-sub); }
 
 /* ---------------------------------------------------------- 印刷 */
 
