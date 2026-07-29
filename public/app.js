@@ -19,6 +19,18 @@ const TAX_RATES = [
   { key: '0', label: '非課税', rate: 0 },
 ];
 
+/**
+ * ランディングページから書類の種類を指定して開けるようにする(例: /?type=estimate)。
+ * 受け取った値はこの表のキーとの完全一致でしか採用しないため、URLの内容が
+ * そのまま画面に出ることはない。
+ */
+const DOC_TYPE_BY_QUERY = {
+  invoice: '請求書',
+  estimate: '見積書',
+  delivery: '納品書',
+  receipt: '領収書',
+};
+
 /** 書類の種類ごとの表示文言。 */
 const DOC_PRESETS = {
   '請求書': { lead: '下記のとおりご請求申し上げます。', grand: 'ご請求金額', bank: 'お振込先', due: '支払期限' },
@@ -325,6 +337,14 @@ function loadDraft() {
   }
 }
 
+/** URLで指定された書類の種類。未指定・未知の値なら null。 */
+function requestedDocType() {
+  const key = new URLSearchParams(location.search).get('type');
+  return key && Object.prototype.hasOwnProperty.call(DOC_TYPE_BY_QUERY, key)
+    ? DOC_TYPE_BY_QUERY[key]
+    : null;
+}
+
 function todayIso() {
   const now = new Date();
   const pad = (n) => String(n).padStart(2, '0');
@@ -341,6 +361,10 @@ function init() {
     createItemRow();
     $('issueDate').value = todayIso();
   }
+
+  // URLでの指定は下書きより優先する(見積書のランディングから来た場合など)
+  const wantedDocType = requestedDocType();
+  if (wantedDocType) $('docType').value = wantedDocType;
 
   document.addEventListener('input', update);
   document.addEventListener('change', update);
