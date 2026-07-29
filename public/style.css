@@ -1,0 +1,310 @@
+/* 請求書ジェネレーター — スタイル
+   画面表示と、A4印刷(PDF保存)の両方をこの1ファイルで賄う。 */
+
+:root {
+  --ink: #1a1a1a;
+  --ink-sub: #666;
+  --line: #d9d9d9;
+  --bg: #f4f5f7;
+  --accent: #1f4e79;
+  --accent-weak: #eaf0f6;
+  --warn: #b3261e;
+  --ok: #1b6b3a;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--bg);
+  font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", system-ui, sans-serif;
+  line-height: 1.7;
+}
+
+/* ---------------------------------------------------------- ヘッダ・フッタ */
+
+.site-header {
+  padding: 20px 24px 16px;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+.site-header h1 { margin: 0; font-size: 20px; }
+.tagline { margin: 4px 0 0; font-size: 13px; color: var(--ink-sub); }
+
+.site-footer {
+  padding: 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-sub);
+}
+.site-footer a { color: var(--accent); }
+.site-footer .small { font-size: 12px; }
+
+/* ---------------------------------------------------------- レイアウト */
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(340px, 420px) 1fr;
+  gap: 24px;
+  align-items: start;
+  padding: 24px;
+}
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; padding: 16px; }
+}
+
+/* ---------------------------------------------------------- 入力パネル */
+
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+.card > summary {
+  cursor: pointer;
+  font-weight: 700;
+  margin: -12px -16px;
+  padding: 12px 16px;
+}
+.card[open] > summary { border-bottom: 1px solid var(--line); margin-bottom: 12px; }
+
+.editor label {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-sub);
+  margin-bottom: 10px;
+}
+.editor label.check { display: flex; align-items: center; gap: 8px; color: var(--ink); }
+.editor label.check input { width: auto; }
+
+.editor input,
+.editor select,
+.editor textarea {
+  display: block;
+  width: 100%;
+  margin-top: 3px;
+  padding: 7px 8px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.editor textarea { resize: vertical; }
+.editor input:focus, .editor select:focus, .editor textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+
+.hint { margin: 0 0 10px; font-size: 12px; color: var(--ink-sub); }
+.hint.warn { color: var(--warn); }
+.hint.ok { color: var(--ok); }
+
+/* 明細エディタ */
+.item-editor { width: 100%; border-collapse: collapse; }
+.item-editor th {
+  font-size: 11px;
+  color: var(--ink-sub);
+  font-weight: 400;
+  text-align: left;
+  padding-bottom: 2px;
+}
+.item-editor td { padding: 0 2px 6px 0; }
+.item-editor input, .item-editor select { margin-top: 0; padding: 6px; font-size: 13px; }
+.item-editor .c-del { width: 28px; }
+.item-editor th:nth-child(2), .item-editor td:nth-child(2) { width: 58px; }
+.item-editor th:nth-child(3), .item-editor td:nth-child(3) { width: 50px; }
+.item-editor th:nth-child(4), .item-editor td:nth-child(4) { width: 84px; }
+.item-editor th:nth-child(5), .item-editor td:nth-child(5) { width: 82px; }
+.item-editor .i-del {
+  width: 26px; height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--ink-sub);
+  cursor: pointer;
+}
+.item-editor .i-del:hover { background: #fbe9e7; color: var(--warn); }
+
+/* ボタン */
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 12px; }
+
+.btn-main, .btn-sub {
+  font: inherit;
+  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+.btn-main {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  flex: 1 1 100%;
+}
+.btn-main:hover { background: #17395a; }
+.btn-sub:hover { background: var(--accent-weak); }
+.btn-sub.danger:hover { background: #fbe9e7; color: var(--warn); }
+.file-btn { display: inline-block; margin-bottom: 0 !important; color: var(--ink) !important; }
+
+.privacy-note {
+  font-size: 12px;
+  color: var(--ink-sub);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.pro-card h2 { margin: 0 0 6px; font-size: 14px; }
+.pro-card ul { margin: 0 0 8px; padding-left: 1.3em; font-size: 13px; color: var(--ink-sub); }
+
+/* ---------------------------------------------------------- プレビュー(用紙) */
+
+.preview { display: flex; justify-content: center; }
+
+.paper {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 18mm 16mm;
+  background: #fff;
+  color: #000;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .12);
+  font-size: 10.5pt;
+  line-height: 1.6;
+}
+
+@media (max-width: 1400px) {
+  /* 画面が狭いときは用紙を縮小表示する(印刷時は原寸) */
+  .paper { transform: scale(.72); transform-origin: top center; margin-bottom: -80mm; }
+}
+@media (max-width: 900px) {
+  .paper { transform: scale(.45); margin-bottom: -160mm; }
+}
+
+.doc-title {
+  margin: 0 0 8mm;
+  text-align: center;
+  font-size: 20pt;
+  letter-spacing: .5em;
+  text-indent: .5em;
+  font-weight: 700;
+}
+
+.paper-head { display: flex; justify-content: space-between; gap: 10mm; }
+.paper-head p { margin: 0; }
+
+.to { flex: 1 1 auto; min-width: 0; }
+.to-name {
+  font-size: 13pt;
+  font-weight: 700;
+  border-bottom: 1px solid #000;
+  padding-bottom: 2mm;
+  margin-bottom: 2mm !important;
+  min-height: 8mm;
+}
+.to-dept, .to-addr { font-size: 9.5pt; white-space: pre-wrap; }
+
+.meta { flex: 0 0 52mm; font-size: 9.5pt; }
+.meta p { display: flex; justify-content: space-between; gap: 4mm; }
+.meta p span:first-child { color: #444; }
+
+.lead { margin: 6mm 0 3mm; }
+
+.grand {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6mm;
+  margin: 0 0 5mm;
+  padding: 2.5mm 4mm;
+  border: 1.5px solid #000;
+  background: #f7f7f7;
+}
+.grand-label { font-size: 11pt; font-weight: 700; }
+.grand-value { font-size: 17pt; font-weight: 700; }
+
+.from { margin: 0 0 5mm; text-align: right; font-size: 9.5pt; }
+.from p { margin: 0; }
+.from-name { font-size: 11.5pt; font-weight: 700; }
+.from-addr { white-space: pre-wrap; }
+
+/* 明細表 */
+table.items { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+table.items th, table.items td {
+  border: 1px solid #666;
+  padding: 2mm 2.5mm;
+  vertical-align: top;
+}
+table.items thead th { background: #eee; text-align: center; font-weight: 700; }
+table.items .c-qty, table.items .c-price, table.items .c-amount { text-align: right; white-space: nowrap; }
+table.items .c-unit, table.items .c-rate { text-align: center; white-space: nowrap; }
+table.items .c-qty { width: 16mm; }
+table.items .c-unit { width: 14mm; }
+table.items .c-price { width: 26mm; }
+table.items .c-rate { width: 18mm; }
+table.items .c-amount { width: 30mm; }
+table.items tr.blank td { height: 7mm; }
+
+/* 合計欄 */
+.totals { display: flex; justify-content: flex-end; margin-top: 4mm; }
+.totals table { border-collapse: collapse; font-size: 10pt; min-width: 74mm; }
+.totals th, .totals td { border: 1px solid #666; padding: 1.8mm 3mm; }
+.totals th { background: #f2f2f2; text-align: left; font-weight: 400; white-space: nowrap; }
+.totals td { text-align: right; white-space: nowrap; }
+.totals tr.sum th, .totals tr.sum td { font-weight: 700; background: #e9eef4; }
+.totals th small { display: block; font-size: 7.5pt; color: #555; font-weight: 400; }
+
+/* 税率ごとの内訳 */
+.tax-breakdown { margin-top: 5mm; }
+.tax-breakdown h2 { margin: 0 0 1.5mm; font-size: 9.5pt; font-weight: 700; }
+.tax-breakdown table { border-collapse: collapse; font-size: 9pt; }
+.tax-breakdown th, .tax-breakdown td { border: 1px solid #666; padding: 1.2mm 3mm; }
+.tax-breakdown th { background: #f2f2f2; font-weight: 400; white-space: nowrap; }
+.tax-breakdown td { text-align: right; white-space: nowrap; }
+
+/* 脚注 */
+.paper-foot { display: flex; gap: 8mm; margin-top: 6mm; font-size: 9.5pt; }
+.paper-foot > div { flex: 1 1 50%; }
+.paper-foot h2 {
+  margin: 0 0 1.5mm;
+  font-size: 9.5pt;
+  font-weight: 700;
+  border-bottom: 1px solid #999;
+  padding-bottom: 1mm;
+}
+.paper-foot p { margin: 0; white-space: pre-wrap; min-height: 8mm; }
+
+/* ---------------------------------------------------------- 印刷 */
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  body { background: #fff; }
+  .no-print, .site-header, .site-footer { display: none !important; }
+  .layout { display: block; padding: 0; }
+  .preview { display: block; }
+  .paper {
+    width: auto;
+    min-height: 0;
+    transform: none;
+    margin: 0;
+    padding: 15mm 14mm;
+    box-shadow: none;
+  }
+  table.items tr { break-inside: avoid; }
+}

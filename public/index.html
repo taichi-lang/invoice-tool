@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>請求書ジェネレーター(インボイス・源泉徴収対応)| 無料・登録不要</title>
+<meta name="description" content="インボイス制度(適格請求書)と源泉徴収に対応した無料の請求書作成ツール。登録不要・ブラウザ内で完結し、透かしの入らないPDFをそのまま取引先へ送れます。">
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header no-print">
+  <h1>請求書ジェネレーター</h1>
+  <p class="tagline">インボイス・源泉徴収対応 / 登録不要 / <strong>PDFに透かしは入りません</strong></p>
+</header>
+
+<main class="layout">
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 書類の種類と番号</summary>
+      <div class="grid2">
+        <label>書類の種類
+          <select id="docType">
+            <option value="請求書">請求書</option>
+            <option value="見積書">見積書</option>
+            <option value="納品書">納品書</option>
+            <option value="領収書">領収書</option>
+          </select>
+        </label>
+        <label>書類番号
+          <input type="text" id="docNo" placeholder="2026-001">
+        </label>
+        <label>発行日
+          <input type="date" id="issueDate">
+        </label>
+        <label>支払期限
+          <input type="date" id="dueDate">
+        </label>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 請求先</summary>
+      <div class="grid2">
+        <label>宛名
+          <input type="text" id="toName" placeholder="株式会社サンプル">
+        </label>
+        <label>敬称
+          <select id="toHonorific">
+            <option value="御中">御中</option>
+            <option value="様">様</option>
+            <option value="">(なし)</option>
+          </select>
+        </label>
+      </div>
+      <label>部署・担当者(任意)
+        <input type="text" id="toDept" placeholder="経理部 山田太郎 様">
+      </label>
+      <label>住所(任意)
+        <textarea id="toAddress" rows="2" placeholder="〒100-0001 東京都千代田区…"></textarea>
+      </label>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 自分(請求元)</summary>
+      <div class="grid2">
+        <label>氏名・屋号・会社名
+          <input type="text" id="fromName" placeholder="中村太郎">
+        </label>
+        <label>登録番号(インボイス)
+          <input type="text" id="fromInvoiceNo" placeholder="T1234567890123">
+        </label>
+      </div>
+      <p class="hint" id="invoiceNoHint"></p>
+      <label>住所・連絡先(任意)
+        <textarea id="fromAddress" rows="3" placeholder="〒000-0000 …&#10;TEL 000-0000-0000"></textarea>
+      </label>
+      <label>振込先(任意)
+        <textarea id="bank" rows="2" placeholder="○○銀行 △△支店 普通 1234567 ナカムラタロウ"></textarea>
+      </label>
+    </details>
+
+    <details class="card" open>
+      <summary>4. 明細</summary>
+      <table class="item-editor">
+        <thead>
+          <tr><th>品目</th><th>数量</th><th>単位</th><th>単価</th><th>税率</th><th class="col-wh" hidden>源泉</th><th></th></tr>
+        </thead>
+        <tbody id="itemRows"></tbody>
+      </table>
+      <button type="button" id="addItem" class="btn-sub">＋ 明細を追加</button>
+    </details>
+
+    <details class="card" open>
+      <summary>5. 消費税・源泉徴収</summary>
+      <label>消費税の端数処理(税率ごとに1回だけ行います)
+        <select id="rounding">
+          <option value="floor">切り捨て</option>
+          <option value="round">四捨五入</option>
+          <option value="ceil">切り上げ</option>
+        </select>
+      </label>
+      <p class="hint">インボイス制度では、端数処理は「一の適格請求書につき、税率ごとに1回」と定められています。本ツールは明細行ごとの端数処理は行いません。</p>
+
+      <label class="check">
+        <input type="checkbox" id="withholdingOn"> 源泉徴収を計算する(原稿料・デザイン料・講演料などが対象)
+      </label>
+      <div id="withholdingBox" hidden>
+        <label>源泉徴収の対象額
+          <select id="withholdingBase">
+            <option value="excl">税抜金額(消費税を区分しているため税抜が対象・推奨)</option>
+            <option value="incl">税込金額(消費税を区分しない場合)</option>
+          </select>
+        </label>
+        <p class="hint">税率は 100万円以下の部分 10.21%、100万円超の部分 20.42%(復興特別所得税を含む)。1円未満は切り捨てます。</p>
+        <p class="hint">明細に「源泉」欄が表示されます。物品代や立替実費など源泉徴収の対象外の行は、チェックを外してください。</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>6. 備考</summary>
+      <label>備考欄
+        <textarea id="notes" rows="3" placeholder="お振込手数料は貴社にてご負担ください。"></textarea>
+      </label>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="btnPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="btnCsv" class="btn-sub">CSVで書き出す</button>
+      <button type="button" id="btnJson" class="btn-sub">入力データを保存(JSON)</button>
+      <label class="btn-sub file-btn">JSONを読み込む<input type="file" id="fileJson" accept="application/json" hidden></label>
+      <button type="button" id="btnClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>準備中の機能</h2>
+      <ul>
+        <li>取引先・品目マスタの保存(毎回の入力をなくす)</li>
+        <li>請求番号の自動採番と発行履歴の一覧</li>
+        <li>見積書 → 納品書 → 請求書 のワンクリック変換</li>
+        <li>英文・源泉徴収欄つきなどのテンプレート追加</li>
+      </ul>
+      <p class="hint">上記は有料プランで提供予定です。<strong>PDFの出力そのものは今後も無料・透かしなし</strong>で提供します。</p>
+    </section>
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="preview" aria-label="プレビュー">
+    <div class="paper" id="paper">
+      <h1 class="doc-title" id="pDocType">請求書</h1>
+
+      <div class="paper-head">
+        <div class="to">
+          <p class="to-name"><span id="pToName"></span><span id="pToHonorific"></span></p>
+          <p class="to-dept" id="pToDept"></p>
+          <p class="to-addr" id="pToAddress"></p>
+        </div>
+        <div class="meta">
+          <p><span>No.</span><span id="pDocNo"></span></p>
+          <p><span>発行日</span><span id="pIssueDate"></span></p>
+          <p class="due-line"><span>支払期限</span><span id="pDueDate"></span></p>
+        </div>
+      </div>
+
+      <p class="lead" id="pLead">下記のとおりご請求申し上げます。</p>
+
+      <p class="grand">
+        <span class="grand-label" id="pGrandLabel">ご請求金額</span>
+        <span class="grand-value" id="pGrandTotal">¥0</span>
+      </p>
+
+      <div class="from">
+        <p class="from-name" id="pFromName"></p>
+        <p class="from-invoice" id="pFromInvoiceNo"></p>
+        <p class="from-addr" id="pFromAddress"></p>
+      </div>
+
+      <table class="items">
+        <thead>
+          <tr>
+            <th class="c-name">品目</th>
+            <th class="c-qty">数量</th>
+            <th class="c-unit">単位</th>
+            <th class="c-price">単価</th>
+            <th class="c-rate">税率</th>
+            <th class="c-amount">金額</th>
+          </tr>
+        </thead>
+        <tbody id="pItems"></tbody>
+      </table>
+
+      <div class="totals">
+        <table id="pTotals"></table>
+      </div>
+
+      <div class="tax-breakdown">
+        <h2>税率ごとの内訳</h2>
+        <table id="pTaxBreakdown"></table>
+      </div>
+
+      <div class="paper-foot">
+        <div class="bank">
+          <h2 id="pBankLabel">お振込先</h2>
+          <p id="pBank"></p>
+        </div>
+        <div class="notes">
+          <h2>備考</h2>
+          <p id="pNotes"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer no-print">
+  <p>
+    <a href="/legal.html">免責事項・プライバシー</a>
+  </p>
+  <p class="small">本ツールは制度の解説・税務判断を行うものではありません。個別の取り扱いは所轄の税務署または税理士にご確認ください。</p>
+</footer>
+
+<script src="/calc.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>
