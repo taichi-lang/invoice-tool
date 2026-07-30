@@ -152,6 +152,31 @@ function writeState(state) {
   items.forEach((item) => createItemRow(item));
 }
 
+// ------------------------------------------------------------ 収入印紙の案内
+
+/**
+ * 書類の種類が「領収書」のときだけ、収入印紙の判定ツールへの導線を出す。
+ * 判定に必要な「税抜金額」と「税率」をURLに載せ、入力し直さずに済むようにする。
+ * 税率が混在する場合は、印紙の金額が大きく出るほう(高い税率)を既定にする。
+ */
+function updateStampHint(state, totals) {
+  const hint = $('receiptStampHint');
+  if (!hint) return;
+
+  const isReceipt = state.docType === '領収書';
+  hint.hidden = !isReceipt;
+  if (!isReceipt) return;
+
+  const rate = totals.rates.length
+    ? Math.max(...totals.rates.map((r) => r.rate))
+    : 10;
+  const params = new URLSearchParams({
+    amount: String(Math.max(0, Math.round(totals.subtotal))),
+    rate: String(rate),
+  });
+  $('receiptStampLink').href = `/inshi?${params.toString()}`;
+}
+
 // ---------------------------------------------------------------- プレビュー描画
 
 function renderPreview(state, totals) {
@@ -186,6 +211,7 @@ function renderPreview(state, totals) {
   }
 
   setText('pGrandTotal', yen(totals.payable));
+  updateStampHint(state, totals);
 
   // 明細
   const rows = state.items
