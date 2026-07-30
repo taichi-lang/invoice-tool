@@ -397,6 +397,105 @@ table.items tr.blank td { height: 7mm; }
 .linklist a:hover { text-decoration: underline; }
 .linklist p { margin: 4px 0 0; font-size: 13px; color: var(--ink-sub); }
 
+/* ------------------------------------------------ 収入印紙 判定ツール(/inshi) */
+
+.sd-tool {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0 8px;
+}
+@media (max-width: 720px) {
+  .sd-tool { grid-template-columns: 1fr; }
+}
+
+.sd-form {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+.sd-form label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--ink-sub);
+}
+.sd-form label.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--ink);
+  font-size: 14px;
+}
+.sd-form label.check input { width: auto; margin-top: 5px; }
+.sd-form input[type="number"],
+.sd-form select {
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px 10px;
+  font-size: 15px;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: inherit;
+}
+.sd-form input:focus, .sd-form select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+.sd-form .sd-calc {
+  margin: -4px 0 12px;
+  font-size: 13px;
+  color: var(--ink-sub);
+}
+.sd-form .sd-calc span { color: var(--ink); font-weight: 700; }
+.sd-form .hint { margin: -6px 0 12px; }
+
+.sd-result {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px 18px;
+  background: #fff;
+  border-left-width: 5px;
+}
+.sd-result.is-free { border-left-color: var(--ok); }
+.sd-result.is-required { border-left-color: var(--warn); }
+
+.sd-verdict {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.sd-result.is-free .sd-verdict { color: var(--ok); }
+.sd-result.is-required .sd-verdict { color: var(--warn); }
+
+.sd-reason { margin: 0 0 12px; font-size: 14px; }
+
+.sd-basis {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 12px;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  background: var(--accent-weak);
+  border-radius: 6px;
+  font-size: 13px;
+}
+.sd-basis dt { color: var(--ink-sub); white-space: nowrap; }
+.sd-basis dd { margin: 0; font-weight: 700; }
+
+.sd-notes {
+  margin: 0;
+  padding-left: 1.2em;
+  font-size: 13px;
+  color: var(--ink-sub);
+}
+.sd-notes li { margin-bottom: 6px; font-size: 13px; }
+.sd-notes li:last-child { margin-bottom: 0; }
+
 /* ---------------------------------------------------------- 印刷 */
 
 @page {

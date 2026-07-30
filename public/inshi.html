@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>収入印紙はいくら?領収書の印紙判定ツール(無料・登録不要)</title>
+<meta name="description" content="領収書に貼る収入印紙の金額を、その場で判定できる無料ツール。5万円の境界・消費税額の区分記載・電子交付・クレジットカードまで判定します。免税事業者は結論が変わる点にも対応。">
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <h1>収入印紙 判定ツール</h1>
+  <p class="tagline">領収書の印紙がいくらかを判定 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/inshi" aria-current="page">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+  </nav>
+</header>
+
+<article class="article">
+  <p class="breadcrumb"><a href="/">トップ</a> ＞ 収入印紙 判定ツール</p>
+
+  <h1>収入印紙はいくら? — 領収書の印紙を判定する</h1>
+  <p class="updated">最終更新: 2026年7月31日</p>
+
+  <p>領収書の収入印紙は、<strong>貼らなくてよい場面で貼っている人がとても多い</strong>費用です。金額の境界だけでなく、<strong>書き方・渡し方・自分が課税事業者かどうか</strong>で結論が変わります。下のツールで、その4つをまとめて判定します。</p>
+
+  <!-- ============ 判定ツール ============ -->
+  <section class="sd-tool" aria-label="収入印紙の判定">
+    <div class="sd-form">
+      <label>領収金額(税抜)
+        <input type="number" id="sdAmount" value="48000" min="0" step="1" inputmode="numeric">
+      </label>
+      <label>消費税率
+        <select id="sdRate">
+          <option value="10">10%</option>
+          <option value="8">8%(軽減税率)</option>
+          <option value="0">0%(消費税なし)</option>
+        </select>
+      </label>
+
+      <p class="sd-calc">消費税額 <span id="sdTaxAmount"></span></p>
+
+      <label class="check">
+        <input type="checkbox" id="sdSeparateTax" checked>
+        消費税額を<strong>金額で</strong>区分記載する
+      </label>
+      <p class="hint">「税込」「消費税10%を含む」だけでは足りません。消費税額そのものを金額で書いた場合にチェックしてください。</p>
+
+      <label>渡し方
+        <select id="sdDelivery">
+          <option value="paper">紙で渡す(手渡し・郵送)</option>
+          <option value="electronic">電子データで渡す(PDFをメール送付など)</option>
+        </select>
+      </label>
+
+      <label>受け取り方
+        <select id="sdPayment">
+          <option value="cash">現金・銀行振込など</option>
+          <option value="credit">クレジットカード(領収書に明記する)</option>
+        </select>
+      </label>
+
+      <label>発行する人
+        <select id="sdBusiness">
+          <option value="taxable">課税事業者</option>
+          <option value="exempt">免税事業者</option>
+          <option value="nonbusiness">営業に関しない受取書(自由職業者・私物の売却など)</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="sd-result" id="sdResult" aria-live="polite"></div>
+  </section>
+
+  <p class="privacy-note">
+    入力した金額は<strong>お使いのブラウザの中だけ</strong>で計算されます。サーバーへ送信・保存されることはありません。
+  </p>
+
+  <a class="cta" href="/?type=receipt">
+    <strong>領収書そのものをつくる(登録不要)</strong>
+    <span>「書類の種類=領収書」で開きます。PDFのまま渡せば、この判定は「印紙不要」になります</span>
+  </a>
+
+  <h2>判定を左右する4つのポイント</h2>
+
+  <h3>1. 5万円未満なら非課税</h3>
+  <p>領収書は印紙税法の<strong>第17号文書(売上代金に係る金銭の受取書)</strong>にあたります。記載金額が5万円未満なら非課税です。<strong>5万円ちょうどは課税</strong>で、200円かかります。「未満」と「以上」の境目なので、ここは取り違えないでください。</p>
+
+  <h3>2. 消費税額を金額で区分記載すると、記載金額から外れる</h3>
+  <p>領収書に消費税額を分けて書いた場合、<strong>その消費税額は印紙税の「記載金額」に含めません</strong>(国税庁 タックスアンサー No.7124)。同じ取引でも、書き方だけで200円変わります。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>書き方</th><th>印紙税の記載金額</th><th>印紙</th></tr></thead>
+    <tbody>
+      <tr><td>「合計 52,800円(消費税10%込)」</td><td class="num">52,800円</td><td class="num">200円</td></tr>
+      <tr><td>「商品 48,000円 / 消費税 4,800円 / 合計 52,800円」</td><td class="num">48,000円</td><td class="num"><strong>不要</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>注意点は<strong>「税込」とだけ書くのでは足りない</strong>ことです。税率だけでなく、消費税額そのものを金額で書く必要があります(単価と税率から金額が一通りに計算できる場合を除きます)。</p>
+
+  <div class="note">
+    <p><strong>⚠ 免税事業者は、この取扱いを使えません</strong></p>
+    <p>消費税額を区分記載していても、<strong>免税事業者はこの区分記載の取扱いの適用を受けられない</strong>とされています。印紙税の判定では<strong>受け取った総額</strong>で見ることになります。</p>
+    <p>上の例なら、免税事業者が発行した52,800円の領収書は、区分記載していても記載金額52,800円=印紙200円です。<strong>自分が課税事業者か免税事業者かで結論が変わります。</strong>上のツールの「発行する人」を正しく選んでください。</p>
+  </div>
+
+  <h3>3. 電子データで渡せば印紙は不要</h3>
+  <p>印紙税は<strong>「紙の文書を作ったこと」</strong>に対してかかる税です。PDFをメールで送る、Web上でダウンロードしてもらう形で渡した領収書は、紙の課税文書を作ったことになりません。そのため印紙は不要とされています。</p>
+  <p>これは金額が大きいほど効きます。<strong>5万円以上の領収書を紙で手渡せば200円、同じ内容をPDFで送れば0円</strong>です。</p>
+  <p>ただし<strong>自分で印刷して手渡した場合は、その紙が課税文書になります。</strong>電子で渡すところまで一貫させてください。</p>
+
+  <h3>4. クレジットカード払いは「明記」が条件</h3>
+  <p>クレジットカード払いは信用取引で、その場で金銭を受け取っていません。そのため領収書に<strong>「クレジットカード利用」と明記すれば</strong>、金銭の受取書に当たらず印紙は不要とされています。<strong>明記がないと課税されます。</strong>一文があるかないかで200円変わります。</p>
+
+  <h2>収入印紙の金額一覧(領収書・第17号文書の1)</h2>
+  <p>売上代金に係る金銭又は有価証券の受取書の税額です。</p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>記載された受取金額</th><th>印紙税額</th></tr></thead>
+    <tbody id="sdTableBody"></tbody>
+  </table>
+  </div>
+  <p class="hint">受取金額の記載がないものは200円です。営業に関しない受取書は非課税です。</p>
+
+  <h2>そのほか、間違えやすいところ</h2>
+
+  <h3>見積書に印紙は要らない</h3>
+  <p>見積書は印紙税法上の課税文書ではないため、<strong>金額がいくらであっても収入印紙は不要</strong>です。「高額だから貼ったほうが安心では」と貼ってしまう例がありますが、貼る必要はありません。<a href="/mitsumorisho">見積書の書き方はこちら</a>。</p>
+
+  <h3>負担するのは発行する側</h3>
+  <p>印紙税を納める義務があるのは<strong>課税文書を作成した者</strong>です。領収書なら<strong>発行する側=お金を受け取った側</strong>が負担します。「買う側が持つべきでは」という主張が出ることがありますが、法律上は発行者の負担です。</p>
+
+  <h3>消印を忘れない</h3>
+  <p>印紙は貼っただけでは納付したことになりません。<strong>印紙と台紙にまたがるように、印章または署名で消印</strong>してください。消印がないと過怠税の対象になり得ます。署名でも構いませんが、必ず線をまたがせます。</p>
+
+  <h3>貼り忘れ・貼りすぎたとき</h3>
+  <ul>
+    <li><strong>貼り忘れ</strong> — 過怠税がかかります。ただし<strong>税務調査を受ける前に自主的に申し出た場合は軽減されます</strong>。気づいたら早めに申し出るほうが得です。</li>
+    <li><strong>貼りすぎ</strong> — 税務署に「印紙税過誤納確認申請書」を出せば還付を受けられます。誤って貼った文書を持参します。</li>
+  </ul>
+
+  <h3>「営業に関しない受取書」の範囲</h3>
+  <p>医師・弁護士・公認会計士などは印紙税では「自由職業者」と呼ばれ、仕事で受け取る領収書は非課税です。個人が私物を売ったときのような、営業ではない受け取りも非課税になります。</p>
+  <p>一方、<strong>通常の個人事業主が事業として行う取引は「営業」に当たります。</strong>「自分は会社じゃないから非課税だろう」は誤りです。自分の業種が該当するか迷う場合は、自己判断せず所轄の税務署にご確認ください(電話で回答を得られます)。</p>
+
+  <h2>迷ったときの手順</h2>
+  <ol>
+    <li>そもそも<strong>PDFのまま渡せないか</strong>を検討する(渡せるなら印紙は0円)</li>
+    <li>紙で渡すなら、<strong>消費税額を金額で区分記載</strong>する(課税事業者のみ有効)</li>
+    <li>クレジットカード払いなら<strong>「クレジットカード利用」と明記</strong>する</li>
+    <li>それでも5万円以上なら、金額に応じた印紙を貼り、<strong>消印</strong>する</li>
+  </ol>
+
+  <a class="cta" href="/?type=receipt">
+    <strong>領収書をつくる(登録不要・透かしなし)</strong>
+    <span>作ったPDFをそのままメールで送れば、印紙は不要になります</span>
+  </a>
+
+  <h2>関連記事</h2>
+  <ul class="linklist">
+    <li><a href="/guide/seikyusho-kakikata">請求書の書き方 — 必須9項目とインボイス対応</a>
+      <p>消費税額の区分記載は、請求書でも印紙税でも効いてきます。</p></li>
+    <li><a href="/guide/gensen-choshu-keisan">源泉徴収の計算方法(10.21%と20.42%)</a>
+      <p>源泉徴収された金額を受け取ったとき、領収書に書く金額はどちらか。</p></li>
+    <li><a href="/mitsumorisho">見積書の書き方とただし書き文例</a>
+      <p>見積書に印紙は不要です。代わりに有効期限で守ります。</p></li>
+  </ul>
+
+  <h2>出典</h2>
+  <ul>
+    <li>国税庁 タックスアンサー No.7105 金銭又は有価証券の受取書、領収書</li>
+    <li>国税庁 タックスアンサー No.7141 印紙税額の一覧表(その2)第5号文書から第20号文書まで</li>
+    <li>国税庁 タックスアンサー No.7124 消費税額等が区分記載された契約書等の記載金額</li>
+  </ul>
+  <p class="hint">上記のうち、税額表と「5万円未満は非課税」「営業に関しない受取書は非課税」は原文で確認しています。<strong>電子交付・クレジットカード決済の取扱いは、一般に流布している理解にもとづく記載で、一次資料での確認が取れていません。</strong>金額の大きい取引では所轄の税務署にご確認ください。</p>
+</article>
+
+<footer class="site-footer">
+  <p>
+    <a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/guide/">解説記事</a> ・ <a href="/legal">免責事項・プライバシー</a>
+  </p>
+  <p class="small">本ツールは制度の解説・税務判断を行うものではありません。個別の取り扱いは所轄の税務署または税理士にご確認ください。</p>
+</footer>
+
+<script src="/stamp.js"></script>
+<script src="/inshi.js"></script>
+</body>
+</html>
