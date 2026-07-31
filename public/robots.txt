@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# sitemap.xml は絶対URLが必須のため、本番ドメインが決まってから追記する
-# (存在しないURLを先に書かない方針)
+Sitemap: https://invoice-tool-kohl.vercel.app/sitemap.xml
