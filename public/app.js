@@ -70,7 +70,7 @@ function createItemRow(data = {}) {
 
   tr.innerHTML = `
     <td><input type="text" class="i-name" placeholder="Webサイト制作費"></td>
-    <td><input type="number" class="i-qty" step="any" min="0" value="1"></td>
+    <td><input type="number" class="i-qty" step="any" min="0" value="1" placeholder="数量" aria-label="数量"></td>
     <td><input type="text" class="i-unit" placeholder="式"></td>
     <td><input type="number" class="i-price" step="any" min="0" placeholder="0"></td>
     <td><select class="i-rate">${rateOptions}</select></td>

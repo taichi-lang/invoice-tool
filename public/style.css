@@ -50,15 +50,23 @@ body {
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(340px, 420px) 1fr;
+  grid-template-columns: minmax(340px, 560px) 1fr;
   gap: 24px;
   align-items: start;
   padding: 24px;
 }
+/* グリッドの子は既定で min-width:auto のため、中身(A4の用紙)の幅で
+   トラックが押し広げられてしまう。0 にして親の幅に従わせる */
+.layout > * { min-width: 0; }
 
 @media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; padding: 16px; }
 }
+
+/* hidden 属性は、後続の display 指定に負けて効かなくなることがある
+   (.editor input の display:block、.meta p の display:flex など)。
+   属性で隠すという意図を優先させる */
+[hidden] { display: none !important; }
 
 /* ---------------------------------------------------------- 入力パネル */
 
@@ -124,10 +132,13 @@ body {
 .item-editor td { padding: 0 2px 6px 0; }
 .item-editor input, .item-editor select { margin-top: 0; padding: 6px; font-size: 13px; }
 .item-editor .c-del { width: 28px; }
-.item-editor th:nth-child(2), .item-editor td:nth-child(2) { width: 58px; }
-.item-editor th:nth-child(3), .item-editor td:nth-child(3) { width: 50px; }
-.item-editor th:nth-child(4), .item-editor td:nth-child(4) { width: 84px; }
-.item-editor th:nth-child(5), .item-editor td:nth-child(5) { width: 82px; }
+/* 品目は残り幅をすべて使う。数量〜税率は内容が読める最小限にとどめる
+   (以前は固定幅の合計が入力欄の幅をほぼ埋め、品目が4文字しか見えなかった) */
+.item-editor th:first-child, .item-editor td:first-child { width: auto; min-width: 0; }
+.item-editor th:nth-child(2), .item-editor td:nth-child(2) { width: 52px; }
+.item-editor th:nth-child(3), .item-editor td:nth-child(3) { width: 44px; }
+.item-editor th:nth-child(4), .item-editor td:nth-child(4) { width: 80px; }
+.item-editor th:nth-child(5), .item-editor td:nth-child(5) { width: 74px; }
 .item-editor .i-del {
   width: 26px; height: 30px;
   border: 1px solid var(--line);
@@ -192,12 +203,18 @@ body {
   line-height: 1.6;
 }
 
+/* 用紙(A4=210mm)が入りきらない画面では縮小表示する(印刷時は原寸)。
+   transform: scale は見た目だけを縮め、レイアウト上の幅は 210mm のままなので、
+   スマホでページ全体が横スクロールしていた。zoom はレイアウト幅ごと縮む。
+   zoom を解釈しない環境でも横スクロールが起きないよう、
+   .preview 側で内部スクロールに閉じ込める */
+.preview { overflow-x: auto; }
+
 @media (max-width: 1400px) {
-  /* 画面が狭いときは用紙を縮小表示する(印刷時は原寸) */
-  .paper { transform: scale(.72); transform-origin: top center; margin-bottom: -80mm; }
+  .paper { zoom: .72; }
 }
 @media (max-width: 900px) {
-  .paper { transform: scale(.45); margin-bottom: -160mm; }
+  .paper { zoom: .45; }
 }
 
 .doc-title {
@@ -409,6 +426,36 @@ table.items tr.blank td { height: 7mm; }
   .sd-tool { grid-template-columns: 1fr; }
 }
 
+/* スマホでは明細の固定列(数量〜削除)だけで幅を使い切ってしまい、
+   品目が1文字しか見えなかった。品目を上段に単独で置き、
+   数量以降を下段に並べる。列を hidden にしても崩れないよう flex を使う */
+@media (max-width: 720px) {
+  .item-editor thead { display: none; }
+  .item-editor, .item-editor tbody, .item-editor tr, .item-editor td { display: block; width: auto; }
+  .item-editor tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 8px;
+    margin-bottom: 8px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+  .item-editor td { padding: 0; }
+  .item-editor td:first-child { flex: 1 0 100%; }
+  /* 375px で1行に使える幅は実測 276px しかなく、全項目は入りきらない。
+     源泉列の表示/非表示で折り返し位置が変わると崩れて見えるため、
+     単価の basis を大きめに取り、どちらの状態でも
+     「品目 / 数量・単位・単価 / 税率・源泉・削除」の3段に固定する */
+  .item-editor td:nth-child(2) { flex: 0 0 48px; }
+  .item-editor td:nth-child(3) { flex: 0 0 42px; }
+  .item-editor td:nth-child(4) { flex: 1 1 100px; }
+  .item-editor td:nth-child(5) { flex: 0 0 72px; }
+  .item-editor td.col-wh { flex: 0 0 auto; }
+  .item-editor td:last-child { flex: 0 0 auto; }
+}
+
 .sd-form {
   background: #fff;
   border: 1px solid var(--line);
@@ -508,9 +555,11 @@ table.items tr.blank td { height: 7mm; }
   .no-print, .site-header, .site-footer { display: none !important; }
   .layout { display: block; padding: 0; }
   .preview { display: block; }
+  .preview { overflow: visible; }
   .paper {
     width: auto;
     min-height: 0;
+    zoom: 1;
     transform: none;
     margin: 0;
     padding: 15mm 14mm;
