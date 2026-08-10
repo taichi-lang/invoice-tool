@@ -73,7 +73,16 @@ def submit(urls):
 def main():
     if not check_key_file():
         return 1
-    urls = load_urls()
+    if len(sys.argv) > 1:
+        # 変えたページだけを送る。引数はパス(/guide/...)でも絶対URLでもよい。
+        urls = [a if a.startswith("http") else SITE_URL + a for a in sys.argv[1:]]
+        known = set(load_urls())
+        unknown = [u for u in urls if u not in known]
+        if unknown:
+            print(f"NG sitemap に無いURLは送らない: {unknown}")
+            return 1
+    else:
+        urls = load_urls()
     print(f"送信対象: {len(urls)} URL")
     status, body = submit(urls)
     print(f"HTTP {status} {body!r}")
