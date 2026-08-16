@@ -154,6 +154,13 @@
       <button type="button" id="btnClear" class="btn-sub danger">入力をすべて消す</button>
     </div>
 
+    <!-- Xシェア導線。PDFを出した直後(=価値を感じた瞬間)にだけ現れる1か所。
+         ヘッダー・フッターには置かない。投稿するかどうかは利用者が決める。
+         リンクに載せるのはこのページの title と URL だけで、入力内容は一切含めない -->
+    <p class="share-row no-print" id="shareRow" hidden>
+      <a class="share-x" id="shareX" href="#" target="_blank" rel="noopener noreferrer">このツールをXで紹介する</a>
+    </p>
+
     <p class="privacy-note">
       入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
       下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。

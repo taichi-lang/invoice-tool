@@ -397,7 +397,19 @@ function init() {
 
   $('addItem').addEventListener('click', () => { createItemRow(); update(); });
 
-  $('btnPrint').addEventListener('click', () => window.print());
+  // Xシェア導線(B1 seido-web の app.js と同じ形。x.com/intent/post を開くだけのリンクで、
+  // Xアカウントの保有もAPIキーも不要・費用0円。こちらから送信する処理は一切ない)。
+  // 載せるのは固定の文言とサイトURLのみ。取引先名・金額などの入力内容は絶対に含めない。
+  const SHARE_TEXT = '請求書作成ツール 無料・登録不要(インボイス・源泉徴収対応)';
+  const SITE_URL = 'https://invoice-tool-kohl.vercel.app/';
+
+  $('btnPrint').addEventListener('click', () => {
+    // PDFを出した直後にだけシェア導線を出す(価値を感じた瞬間以外では押されない)
+    $('shareX').href = 'https://x.com/intent/post?text=' +
+      encodeURIComponent(SHARE_TEXT + '\n' + SITE_URL);
+    $('shareRow').hidden = false;
+    window.print();
+  });
 
   $('btnCsv').addEventListener('click', () => {
     download(baseFilename(currentState) + '.csv', toCsv(currentState, currentTotals), 'text/csv;charset=utf-8');
