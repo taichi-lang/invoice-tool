@@ -60,6 +60,10 @@ body {
    トラックが押し広げられてしまう。0 にして親の幅に従わせる */
 .layout > * { min-width: 0; }
 
+/* トップの本題見出し。2カラムのどちらにも属さないので、行全体を使わせる
+   (グリッドの子として1トラック占有すると、入力パネルが右へ押し出されるため) */
+.page-title { grid-column: 1 / -1; margin: 0; font-size: 18px; font-weight: 700; }
+
 @media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; padding: 16px; }
 }
