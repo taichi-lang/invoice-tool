@@ -179,6 +179,11 @@ function updateStampHint(state, totals) {
 
 // ---------------------------------------------------------------- プレビュー描画
 
+function hideWhenEmpty(selector, value) {
+  const el = document.querySelector(selector);
+  if (el) el.hidden = String(value == null ? '' : value).trim() === '';
+}
+
 function renderPreview(state, totals) {
   // 読み込んだJSONに未知の値が入っていても既定の書式に落とす
   const preset = Object.prototype.hasOwnProperty.call(DOC_PRESETS, state.docType)
@@ -209,6 +214,14 @@ function renderPreview(state, totals) {
   } else {
     dueLine.hidden = true;
   }
+
+  // ラベルだけが残った行は、印刷すると「書きかけの書類」に見える。
+  // 未入力なら行ごと消す(支払期限と同じ扱い)。
+  hideWhenEmpty('.docno-line', state.docNo);
+  hideWhenEmpty('.issue-line', state.issueDate);
+  hideWhenEmpty('#pNotesBlock', state.notes);
+  // お振込先はここに入れない。空のまま隠すと、振込先の無い請求書が
+  // そのまま出てしまう。見出しを残して未入力に気づけるようにする。
 
   setText('pGrandTotal', yen(totals.payable));
   updateStampHint(state, totals);
