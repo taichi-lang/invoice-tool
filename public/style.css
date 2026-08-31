@@ -583,4 +583,18 @@ table.items tr.blank td { height: 7mm; }
     box-shadow: none;
   }
   table.items tr { break-inside: avoid; }
+
+  /* 明細が2ページ目にまたがったとき、見出し行を各ページの先頭に繰り返す。
+     Chrome は既定でそう振る舞うが、明示して他のブラウザにもそろえる。 */
+  table.items thead { display: table-header-group; }
+
+  /* 紙面がページをまたぐとき、意味のかたまりを割らない。
+     実測(2026-09-01・Chrome ヘッドレスでA4に出力)で分かった2件:
+       ・明細15行: 「小計・消費税」が1ページ目、「合計・源泉徴収・お振込金額」が2ページ目に割れた
+       ・明細8行 : 見出し「お振込先」「備考」だけが1ページ目に残り、中身が2ページ目に落ちた
+     どちらも金額と振込先という、読み手がいちばん必要とする箇所である。 */
+  .grand { break-inside: avoid; }
+  .totals, .totals table { break-inside: avoid; }
+  .tax-breakdown { break-inside: avoid; }
+  .paper-foot .bank, .paper-foot .notes { break-inside: avoid; }
 }
