@@ -10,7 +10,7 @@
 
 const STORAGE_KEY = 'invoice-tool:draft:v1';
 
-const { calcTotals, isValidInvoiceNo } = window.InvoiceCalc;
+const { calcTotals, isValidInvoiceNo, hasContent } = window.InvoiceCalc;
 
 /** 税率の定義。key は内部識別子、rate は百分率。 */
 const TAX_RATES = [
@@ -228,7 +228,7 @@ function renderPreview(state, totals) {
 
   // 明細
   const rows = state.items
-    .filter((item) => item.name || item.qty * item.price)
+    .filter(hasContent)
     .map((item) => {
       const amount = item.qty * item.price;
       const rateLabel = item.rate === 0 ? '非課税' : `${item.rate}%`;
@@ -299,7 +299,7 @@ function toCsv(state, totals) {
     ['品目', '数量', '単位', '単価', '税率', '金額', '源泉対象'].map(esc).join(','),
   ];
   for (const item of state.items) {
-    if (!item.name && !item.qty * item.price) continue;
+    if (!hasContent(item)) continue;
     lines.push([item.name, item.qty, item.unit, item.price,
       item.rate === 0 ? '非課税' : `${item.rate}%`, item.qty * item.price,
       state.withholdingOn ? (item.wh ? '対象' : '対象外') : ''].map(esc).join(','));

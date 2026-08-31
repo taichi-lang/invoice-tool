@@ -169,6 +169,26 @@ test('登録番号は T + 数字13桁のみ有効', () => {
   assert.strictEqual(calc.isValidInvoiceNo(''), false);
 });
 
+// ---------------------------------------------------------------- 空行の判定
+
+// 旧実装は `!item.name && !item.qty * item.price` と書いており、演算子の優先順位により
+// `(!item.name) && ((!item.qty) * item.price)` と解釈されていた。
+// そのため「品目名も金額も無い空行」がCSVにだけ残り、印刷される書類と行数がずれていた。
+test('品目名も金額も無い行は中身なしと判定する', () => {
+  assert.strictEqual(calc.hasContent({ name: '', qty: 1, price: 0 }), false); // 既定の空行(旧実装は true)
+  assert.strictEqual(calc.hasContent({ name: '', qty: 0, price: 0 }), false); //           (旧実装は true)
+  assert.strictEqual(calc.hasContent({ name: '', qty: 0, price: 5000 }), false);
+  assert.strictEqual(calc.hasContent({}), false);
+  assert.strictEqual(calc.hasContent(null), false);
+});
+
+test('品目名か金額のどちらかがあれば中身ありと判定する', () => {
+  assert.strictEqual(calc.hasContent({ name: '交通費', qty: 0, price: 0 }), true);  // 名前だけ
+  assert.strictEqual(calc.hasContent({ name: '', qty: 2, price: 1000 }), true);     // 金額だけ
+  assert.strictEqual(calc.hasContent({ name: '原稿料', qty: 1, price: 50000 }), true);
+  assert.strictEqual(calc.hasContent({ name: '', qty: '2', price: '1000' }), true); // 文字列で来ても同じ
+});
+
 // ---------------------------------------------------------------- 実行
 
 let failed = 0;

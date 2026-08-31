@@ -91,8 +91,18 @@
     return /^T\d{13}$/.test(String(value || '').trim());
   }
 
+  /**
+   * 明細の1行に中身があるか。品目名も金額も無い行は「書きかけの空行」なので、
+   * 印刷にもCSVにも出さない。判定をここ1か所に置き、書類とCSVで行数がずれないようにする。
+   */
+  function hasContent(item) {
+    if (!item) return false;
+    return Boolean(item.name) || Boolean(Number(item.qty) * Number(item.price));
+  }
+
   const api = {
     applyRounding: applyRounding,
+    hasContent: hasContent,
     calcWithholding: calcWithholding,
     calcTotals: calcTotals,
     isValidInvoiceNo: isValidInvoiceNo,
