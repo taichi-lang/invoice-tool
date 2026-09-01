@@ -42,6 +42,8 @@ public/
   style.css        画面表示・記事レイアウト・A4印刷レイアウト
   legal.html       免責事項・プライバシーポリシー
   mitsumorisho.html 見積書のランディング(書き方・ただし書き文例)
+  nohinsho.html     納品書のランディング(発行義務・請求書と兼ねるときの条件)
+  ryoshusho.html    領収書のランディング(宛名・但し書き)
   inshi.html       収入印紙 判定ツール + 印紙税の解説
   inshi.js         判定ツールの画面制御
   stamp.js         印紙税の判定ロジック(DOM非依存・テスト対象)
@@ -53,6 +55,8 @@ public/
 tests/
   calc.test.js  金額計算ロジックのテスト
   stamp.test.js 印紙税の判定ロジックのテスト
+  print.test.js 印刷紙面(@media print)のページ割れを防ぐ宣言のテスト
+  links.test.js サイト内リンク・ナビ・canonical・sitemap の整合テスト
 docs/
   仕様.md              機能仕様と課金方針
   セキュリティレビュー.md 公開前レビューの記録
@@ -77,13 +81,23 @@ http://localhost:8891 を開きます。
 ```bash
 node tests/calc.test.js
 node tests/stamp.test.js
+node tests/print.test.js
+node tests/links.test.js
 ```
 
-`calc.test.js`(16件)は消費税の端数処理、複数税率の集計、源泉徴収の計算、登録番号の形式検証を扱います。
+合計 **49件**(calc 18 / stamp 17 / print 6 / links 8)。
+
+`calc.test.js`(18件)は消費税の端数処理、複数税率の集計、源泉徴収の計算、登録番号の形式検証を扱います。
 期待値は国税庁タックスアンサー(No.6625 / No.2795)に基づいています。
 
 `stamp.test.js`(17件)は印紙税の判定を扱います。税額表の全区分は No.7141 の原文と照合しており、
 **5万円ちょうどは課税**という境界と、**課税事業者と免税事業者で結論が変わる**ケースを固定しています。
+
+`print.test.js`(6件)は、印刷時に合計欄と振込先がページをまたいで割れないための `break-inside: avoid` が
+`@media print` の中に在り続けることを確かめます。
+
+`links.test.js`(8件)はサイトの構造を固定します。**ツールが出せる4種類の書類(請求書・見積書・納品書・領収書)に、
+それぞれ入口となるページが在ること**を含みます。2026-09-02 まで、納品書は出力できるのに入口が1つも無い状態でした。
 
 ## 料金の考え方
 

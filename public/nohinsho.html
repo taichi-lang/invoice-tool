@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>納品書作成ツール 無料・登録不要 — 発行義務と「請求書と兼ねる」ときの注意</title>
+<meta name="description" content="無料・登録不要の納品書作成ツール。納品書に発行義務はありません。それでも出すと得をする場面(検収後払いの起算日固定)と、納品書兼請求書をインボイスとして使うときの条件を、判断できる形で解説します(透かしなし)。">
+<meta property="og:title" content="納品書作成ツール 無料・登録不要 — 発行義務と「請求書と兼ねる」ときの注意">
+<meta property="og:description" content="無料・登録不要の納品書作成ツール。納品書に発行義務はありません。それでも出すと得をする場面(検収後払いの起算日固定)と、納品書兼請求書をインボイスとして使うときの条件を、判断できる形で解説します(透かしなし)。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/nohinsho">
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">納品書ジェネレーター</p>
+  <p class="tagline">登録不要 / 納品日・案件番号に対応 / <strong>PDFに透かしは入りません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho" aria-current="page">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+  </nav>
+</header>
+
+<article class="article">
+  <p class="breadcrumb"><a href="/">トップ</a> ＞ 納品書ジェネレーター</p>
+
+  <h1>納品書作成ツール — 出す/出さないの判断から、書き方まで</h1>
+  <p class="updated">最終更新: 2026年9月2日</p>
+
+  <p><strong>納品書に発行義務はありません。</strong>法律で「出さなければならない」と定められた書類ではないため、出さない業種のほうが多いくらいです。それでも出したほうが得をする場面がはっきりあります。<strong>支払期日の起算日を、こちらで固定できる</strong>ことです。</p>
+
+  <a class="cta" href="/?type=delivery">
+    <strong>納品書をつくる(登録不要)</strong>
+    <span>「書類の種類=納品書」で開きます。表題と「納品金額合計」の文言が切り替わります</span>
+  </a>
+
+  <h2>出す・出さないの判断</h2>
+  <p>迷ったときは、案件が次のどれに当たるかで決めてください。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>状況</th><th>納品書</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr><td>モノを送る(物販・印刷物・制作物の納品)</td><td><strong>出す</strong></td><td>検収の起点になる</td></tr>
+      <tr><td>検収後に支払う契約</td><td><strong>出す</strong></td><td>検収日が支払期日の起算日になるため</td></tr>
+      <tr><td>月額固定の保守・顧問契約</td><td>不要</td><td>請求書だけでよい</td></tr>
+      <tr><td>単発のスポット作業・時間単価の稼働</td><td>不要なことが多い</td><td>納めた「モノ」が特定しにくい</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>納品書が効くのは「支払期日を動かせなくする」とき</h2>
+  <p>「検収後、翌月末払い」という契約では、<strong>検収がいつ完了したかで支払日が1か月ずれます</strong>。納品日を書いた納品書を先に出しておくと、この起点が動かせなくなります。地味ですが、支払遅延の予防として効きます。</p>
+  <div class="note">
+    <p>逆に言えば、<strong>納品書を出していない案件は、相手の都合で検収日を後ろにずらせます。</strong>「まだ確認できていない」の一言で1か月延びる契約になっていないか、支払条件をもう一度読んでください。</p>
+  </div>
+
+  <h2>納品書に収入印紙は必要か</h2>
+  <p><strong>不要です。</strong>納品書は「金銭または有価証券の受取書」ではないため、印紙税の課税文書に当たりません。金額がいくらでも収入印紙は貼りません。</p>
+  <p class="hint">ただし、納品書に「代済」「相済」など<strong>代金を受け取った事実を書き添えると、受取書として扱われることがあります</strong>。納品書は納品の記録にとどめ、金銭の受領は領収書で分けるのが安全です。<a href="/inshi">領収書の印紙が必要かどうかは、こちらで判定できます</a>。</p>
+
+  <h2>「納品書兼請求書」にするときの条件</h2>
+  <p>「納品書兼請求書」という様式はよく使われます。問題ありませんが、<strong>インボイス(適格請求書)として使うなら、その1枚が適格請求書の記載事項を満たしている必要があります</strong>。登録番号・税率ごとに区分した合計額・税率ごとの消費税額が入っているかを必ず確認してください。</p>
+  <p>なお、インボイスの記載事項は<strong>1枚の書類で完結させる必要はありません</strong>。「納品書と請求書の2枚を合わせて満たす」という運用も認められています。条件は、<strong>書類どうしのつながりが相手に分かる形になっていること</strong>です(納品書番号を請求書に書く、など)。</p>
+  <div class="note">
+    <p><strong>ひとりで事業をしている方には、請求書1枚で完結させる形をおすすめします。</strong>2枚に分けた運用は、相手の経理が2枚をそろえて保存できて初めて成立します。こちらの手間は減りません。</p>
+  </div>
+
+  <h2>納品書番号は、請求書と同じ案件番号でそろえる</h2>
+  <p>書類の種類ごとに独立した連番を振ると、3か月後に照合できなくなります。<strong>案件番号を共通の軸にして、書類の種類を接頭辞で分ける</strong>のがいちばん単純です。</p>
+
+  <pre><code>案件番号: 2026-ABC-03
+          └ 年 └ 取引先略号 └ その取引先での通し番号
+
+  見積書   Q-2026-ABC-03   (Quotation)
+  納品書   D-2026-ABC-03   (Delivery)
+  請求書   I-2026-ABC-03   (Invoice)
+  領収書   R-2026-ABC-03   (Receipt)</code></pre>
+
+  <p>年月ではなく<strong>年</strong>にしてあるのは、見積りと請求が月をまたぐのが普通だからです。1月の見積りに対する請求が3月になっても、同じ案件の書類が離れません。</p>
+
+  <h2>納品書から請求書をつくる(入力し直さない)</h2>
+  <p>納品書と請求書は、表題と文言以外はほぼ同じです。本ツールでは次の手順で使い回せます。</p>
+  <ol>
+    <li>納品書を作った時点で「<strong>入力データを保存(JSON)</strong>」を押し、ファイルを残しておきます。</li>
+    <li>請求のタイミングで「<strong>JSONを読み込む</strong>」でそのファイルを開きます。</li>
+    <li>「書類の種類」を<strong>請求書</strong>に変えます。表題と「納品金額合計 → ご請求金額」の文言が自動で切り替わります。</li>
+    <li>書類番号を <code>D-…</code> から <code>I-…</code> に変え、発行日と支払期限を書き換えます。</li>
+  </ol>
+  <p class="hint"><strong>全機能が無料で、PDFに透かしも入りません。</strong>保存したJSONはお使いのパソコンの中だけにあり、こちらのサーバーには送られません。</p>
+
+  <h2>関連する解説</h2>
+  <ul class="linklist">
+    <li><a href="/guide/seikyusho-kakikata">請求書の書き方 — 必須9項目とインボイス対応</a>
+      <p>納品書兼請求書をインボイスとして使うときに、その1枚が満たすべき項目。</p></li>
+    <li><a href="/mitsumorisho">見積書作成ツール — 有効期限とただし書き</a>
+      <p>納品の前段。作業範囲を書いておかないと、検収が終わりません。</p></li>
+    <li><a href="/guide/gensen-choshu-keisan">源泉徴収の計算方法(10.21%と20.42%)</a>
+      <p>報酬から源泉徴収される案件では、納品金額と入金額が一致しません。</p></li>
+  </ul>
+
+  <a class="cta" href="/?type=delivery">
+    <strong>納品書をつくる</strong>
+    <span>入力しながらA4プレビューが更新されます</span>
+  </a>
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/guide/">解説記事</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本ツールおよび本記事は制度の一般的な説明であり、税務判断・法律判断を行うものではありません。個別の取り扱いは所轄の税務署または税理士・専門家にご確認ください。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+</body>
+</html>
