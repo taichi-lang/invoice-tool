@@ -103,6 +103,19 @@
       <label>振込先(任意)
         <textarea id="bank" rows="2" placeholder="○○銀行 △△支店 普通 1234567 ナカムラタロウ"></textarea>
       </label>
+      <label>印影(任意)
+        <input type="file" id="sealFile" accept="image/png,image/jpeg,image/svg+xml">
+      </label>
+      <p class="hint">
+        印影の画像を選ぶと、紙面の発行元名に重ねて印字します。
+        <strong>画像はこの端末から出ません</strong>(ブラウザの中で表示するだけで、どこにも送信しません)。
+        押印は請求書の法律上の必須項目ではありませんが、
+        <a href="/guide/seikyusho-kakikata">商慣習として求められること</a>があります。
+        印影の画像が手元に無い場合は、同じ運営者の
+        <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a>で作れます(無料・登録不要)。
+        <button type="button" id="sealClear" class="btn-sub">印影を外す</button>
+      </p>
+      <p class="hint" id="sealError" role="alert" hidden></p>
     </details>
 
     <details class="card" open>
@@ -213,6 +226,7 @@
       </p>
 
       <div class="from">
+        <img class="from-seal" id="pSeal" alt="" hidden>
         <p class="from-name" id="pFromName"></p>
         <p class="from-invoice" id="pFromInvoiceNo"></p>
         <p class="from-addr" id="pFromAddress"></p>
@@ -269,6 +283,7 @@
 </footer>
 
 <script src="/calc.js"></script>
+<script src="/seal.js"></script>
 <script src="/app.js"></script>
 </body>
 </html>

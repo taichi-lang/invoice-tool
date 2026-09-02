@@ -4,8 +4,8 @@
     {
       "name": "invoice-tool",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "3002", "-d", "public"],
-      "port": 3002
+      "runtimeArgs": ["-m", "http.server", "3400", "--directory", "public"],
+      "port": 3400
     }
   ]
 }

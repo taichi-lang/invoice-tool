@@ -276,10 +276,23 @@ a.share-x:hover { background: #17395a; }
 .grand-label { font-size: 11pt; font-weight: 700; }
 .grand-value { font-size: 17pt; font-weight: 700; }
 
-.from { margin: 0 0 5mm; text-align: right; font-size: 9.5pt; }
+.from { position: relative; margin: 0 0 5mm; text-align: right; font-size: 9.5pt; }
 .from p { margin: 0; }
 .from-name { font-size: 11.5pt; font-weight: 700; }
 .from-addr { white-space: pre-wrap; }
+
+/* 印影は発行元の右端に重ねる。紙の請求書では社名や氏名に一部かかるのが通例。
+   mix-blend-mode で朱色の下の文字が透ける(白地の四角で名前を隠さないため)。 */
+.from-seal {
+  position: absolute;
+  top: -2mm;
+  right: -3mm;
+  width: 20mm;
+  height: 20mm;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
 
 /* 明細表 */
 table.items { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
@@ -568,6 +581,9 @@ table.items tr.blank td { height: 7mm; }
 }
 
 @media print {
+  /* 印影の朱色を落とさない。既定では印刷時に色が省かれることがある。 */
+  .from-seal { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
   body { background: #fff; }
   .no-print, .site-header, .site-footer { display: none !important; }
   .layout { display: block; padding: 0; }

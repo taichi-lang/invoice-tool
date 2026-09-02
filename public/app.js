@@ -11,6 +11,11 @@
 const STORAGE_KEY = 'invoice-tool:draft:v1';
 
 const { calcTotals, isValidInvoiceNo, hasContent } = window.InvoiceCalc;
+const { checkSeal } = window.InvoiceSeal;
+
+// 印影の画像(data: URL)。入力欄を持たないので、状態としてここに置く。
+// ⚠ この値はページの中だけで使い、どこにも送信しない。
+let sealImage = '';
 
 /** 税率の定義。key は内部識別子、rate は百分率。 */
 const TAX_RATES = [
@@ -104,6 +109,14 @@ function readItems() {
   }));
 }
 
+/** 印影の断り書きを出す(空文字なら隠す)。 */
+function setSealError(message) {
+  const box = $('sealError');
+  if (!box) return;
+  box.textContent = message;
+  box.hidden = !message;
+}
+
 // ---------------------------------------------------------------- 状態の読み書き
 
 function readState() {
@@ -124,6 +137,7 @@ function readState() {
     withholdingOn: $('withholdingOn').checked,
     withholdingBase: $('withholdingBase').value,
     notes: $('notes').value.trim(),
+    sealImage: sealImage,
     items: readItems(),
   };
 }
@@ -146,6 +160,8 @@ function writeState(state) {
   assign('withholdingBase', state.withholdingBase);
   assign('notes', state.notes);
   $('withholdingOn').checked = Boolean(state.withholdingOn);
+  // 保存ファイルは人の手で書き換えられる。印影も新しく選んだときと同じ判定を通す。
+  sealImage = checkSeal(state.sealImage).ok ? state.sealImage : '';
 
   itemRows.innerHTML = '';
   const items = Array.isArray(state.items) && state.items.length ? state.items : [{}];
@@ -204,6 +220,16 @@ function renderPreview(state, totals) {
   setText('pFromInvoiceNo', state.fromInvoiceNo ? `登録番号 ${state.fromInvoiceNo}` : '');
   setText('pFromAddress', state.fromAddress);
   setText('pBank', state.bank);
+
+  const seal = $('pSeal');
+  if (state.sealImage) {
+    seal.src = state.sealImage;
+    seal.hidden = false;
+  } else {
+    seal.removeAttribute('src');
+    seal.hidden = true;
+  }
+
   setText('pNotes', state.notes);
 
   const dueLine = document.querySelector('.due-line');
@@ -446,6 +472,26 @@ function init() {
     };
     reader.readAsText(file);
     event.target.value = '';
+  });
+
+  $('sealFile').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    event.target.value = '';          // 同じファイルを選び直せるように毎回空にする
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const verdict = checkSeal(reader.result);
+      setSealError(verdict.ok ? '' : verdict.reason);
+      if (verdict.ok) { sealImage = reader.result; update(); }
+    };
+    reader.onerror = () => setSealError('画像が読み取れませんでした。');
+    reader.readAsDataURL(file);       // 端末の中で data: URL にするだけ。送信はしない
+  });
+
+  $('sealClear').addEventListener('click', () => {
+    sealImage = '';
+    setSealError('');
+    update();
   });
 
   $('btnClear').addEventListener('click', () => {
