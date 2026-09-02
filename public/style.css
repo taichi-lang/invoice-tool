@@ -294,6 +294,10 @@ a.share-x:hover { background: #17395a; }
   pointer-events: none;
 }
 
+/* 印影は絶対配置なので、発行元の高さ(通常は1〜3行)より背が高い。
+   高さを確保しておかないと、下の明細表の見出しに重なる。 */
+.from.has-seal { min-height: 20mm; }
+
 /* 明細表 */
 table.items { width: 100%; border-collapse: collapse; font-size: 9.5pt; }
 table.items th, table.items td {

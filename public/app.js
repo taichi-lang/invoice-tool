@@ -222,12 +222,15 @@ function renderPreview(state, totals) {
   setText('pBank', state.bank);
 
   const seal = $('pSeal');
+  const fromBlock = seal.parentElement;
   if (state.sealImage) {
     seal.src = state.sealImage;
     seal.hidden = false;
+    fromBlock.classList.add('has-seal');
   } else {
     seal.removeAttribute('src');
     seal.hidden = true;
+    fromBlock.classList.remove('has-seal');
   }
 
   setText('pNotes', state.notes);

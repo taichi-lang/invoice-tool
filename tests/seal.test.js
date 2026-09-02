@@ -85,6 +85,13 @@ test('印影は発行元に重ね、印刷でも色が落ちない', () => {
     '印刷で背景色・画像の色が落ちない指定が無い(朱色が消える)');
 });
 
+test('印影があるとき、発行元の高さを確保して明細表に重ならない', () => {
+  // 印影は絶対配置。高さを確保しないと下の表の見出しに重なる(本番の実物で起きた)
+  assert.ok(/\.from\.has-seal\s*\{[^}]*min-height/.test(pub('style.css')),
+    '.from.has-seal の min-height が無い');
+  assert.ok(/has-seal/.test(pub('app.js')), 'has-seal を付け外ししていない');
+});
+
 test('印影は JSON の保存と読み込みで往復する', () => {
   const js = pub('app.js');
   assert.ok(/sealImage:\s*/.test(js), 'readState が印影を持ち出していない');
