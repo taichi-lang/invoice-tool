@@ -78,6 +78,21 @@ test('明細の1行はページ内で割らない(既存の宣言が消えてい
   assert.ok(avoidsBreak('table.items tr'), 'table.items tr に break-inside: avoid が無い');
 });
 
+test('印影の高さ確保が、紙面でも効いている', () => {
+  // 2026-09-04、A4のPDFを実際に出して確かめた。
+  //   min-height あり: 印影の下端 291.1pt / 明細見出しの上端 320.6pt(29.5pt 空く)
+  //   min-height なし: 明細見出し「金額」が 282.4〜294.6pt に上がり、印影に重なる(対照)
+  // 画面では 09-03 に直したが、紙面で確かめたのは 09-04 である。
+  assert.ok(
+    /\.from\.has-seal\s*\{[^}]*min-height\s*:\s*20mm/.test(css),
+    '.from.has-seal に min-height: 20mm が無い'
+  );
+  assert.ok(
+    !/\.from[^,{}]*\{[^}]*min-height/.test(block),
+    '@media print の中で .from の min-height が打ち消されている'
+  );
+});
+
 let passed = 0;
 let failed = 0;
 console.log('印刷紙面(@media print)');
