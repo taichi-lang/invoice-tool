@@ -148,4 +148,19 @@ test('各ページの h1 はちょうど1個', () => {
   }
 });
 
+/*
+ * 2026-09-06 に足した。記事を1本足したとき、記事一覧(/guide/)への追加を忘れると
+ * 「実在するがどこからも辿れない記事」ができる。リンク切れ0件のテストでは検出できない。
+ * 追加前に、一覧のリンクを消すと落ちることを実際に確かめてある。
+ */
+test('解説記事はすべて、記事一覧 /guide/ からリンクされている(孤立0件)', () => {
+  const idx = pages.find((p) => p.url === '/guide/');
+  assert.ok(idx, '/guide/ が無い');
+  const orphans = pages
+    .filter((p) => p.url.startsWith('/guide/') && p.url !== '/guide/')
+    .map((p) => p.url)
+    .filter((u) => !idx.html.includes('href="' + u + '"'));
+  assert.deepStrictEqual(orphans, [], '一覧から辿れない記事: ' + orphans.join(','));
+});
+
 console.log('links.test.js: ' + passed + ' 件すべて通過');

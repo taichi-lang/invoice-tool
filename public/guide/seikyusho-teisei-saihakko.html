@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>請求書を間違えたときの直し方 — 訂正か再発行かの判断(修正インボイス・返還インボイス)| 請求書作成ツール</title>
+<meta name="description" content="請求書のミスに気づいたときの直し方を、依頼の3種類の切り分けから整理します。二重線と訂正印で直してよいか、修正した適格請求書(修正インボイス)の2つの出し方、値引き・返品で必要になる適格返還請求書との違い、請求書番号と発行日の扱いまで。">
+<meta property="og:title" content="請求書を間違えたときの直し方 — 訂正か再発行かの判断(修正インボイス・返還インボイス)">
+<meta property="og:description" content="二重線と訂正印で直してよいか、修正した適格請求書の2つの出し方、値引き・返品で必要になる適格返還請求書との違い、請求書番号と発行日の扱いまで。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/guide/seikyusho-teisei-saihakko">
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">請求書ジェネレーター</p>
+  <p class="tagline">インボイス・源泉徴収対応 / 登録不要 / <strong>PDFに透かしは入りません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+  </nav>
+</header>
+
+<article class="article">
+  <p class="breadcrumb"><a href="/">トップ</a> ＞ <a href="/guide/">解説記事</a> ＞ 請求書の訂正と再発行</p>
+
+  <h1>請求書を間違えたときの直し方 — 訂正か再発行かの判断</h1>
+  <p class="updated">最終更新: 2026年9月6日</p>
+
+  <p>送ったあとに金額や宛名の誤りに気づいたとき、迷うのは「二重線で直してよいのか、作り直すのか」の一点です。ここを決めてしまえば、あとの手順は事務作業になります。この記事は<strong>発行する側</strong>のための整理です。</p>
+
+  <div class="note">
+    <p><strong>3行でわかる結論</strong></p>
+    <ul>
+      <li>原則は<strong>作り直し</strong>。二重線と訂正印は、電子でやり取りする書類では経緯が追えなくなるため使いません。</li>
+      <li>「再発行してほしい」という依頼は<strong>中身が3種類</strong>あります。<strong>返事をする前にどれかを確かめる</strong>のが最短の道です。</li>
+      <li><strong>間違い</strong>を直すのは修正した適格請求書、<strong>あとからの値引き・返品</strong>は適格返還請求書。<strong>この2つは別物</strong>で、混ぜると相手の消費税の処理が狂います。</li>
+    </ul>
+  </div>
+
+  <a class="cta" href="/">
+    <strong>正しい内容で請求書を作り直す</strong>
+    <span>登録不要・ブラウザ内で完結・PDFに透かしは入りません</span>
+  </a>
+
+  <h2>1. まず、依頼の中身を3つに切り分ける</h2>
+  <p>「請求書を再発行してください」という一言で来る依頼は、実態がまったく違う3つのどれかです。ここを確かめずに作り直すと、番号の重複や二重計上といった、直したはずが増える種類の事故になります。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead>
+      <tr><th>ケース</th><th>実態</th><th>対応</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>A 再送</strong></td><td>紛失・見失い。<strong>中身は変わらない</strong></td><td><strong>同じ番号・同じ発行日</strong>のまま送り直す</td></tr>
+      <tr><td><strong>B 訂正</strong></td><td>金額・宛名・日付などが<strong>実際と違う</strong></td><td>誤ったものを無効にし、<strong>新しい番号</strong>で発行する</td></tr>
+      <tr><td><strong>C 日付の遡り・繰り下げ</strong></td><td>「先月分にしてほしい」など<strong>相手の都合</strong></td><td><strong>原則お断りする</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p><strong>Aは何の問題もありません。</strong>ただし<strong>同じ請求書番号で送ること</strong>。ここで新しい番号を採ると、相手の台帳では2件請求されたことになります。送付メールに「先日お送りしたものと同一の内容・同一の番号です」と1行入れておくと、相手の経理はそこで手が止まりません。</p>
+
+  <p><strong>Cを断る理由は「事実と違う日付の書類が残るから」です。</strong>売上をどの事業年度・どの課税期間に計上するかが変わってしまいます。ただし、<strong>本当の取引日の認識がずれていただけ</strong>なら話は別で、事実に合わせて直すのが正しい対応です。判断の基準は相手の都合ではなく、<strong>事実がどうだったか</strong>の一点です。</p>
+
+  <h2>2. 二重線と訂正印で直してよいか</h2>
+  <p>結論として、<strong>原則は使いません。</strong>「担当者名の誤字だけ」といった軽微な訂正について訂正印を認める運用は今も残っていますが、次の理由でおすすめしていません。</p>
+
+  <ul>
+    <li>請求書はPDFで送るのが当たり前になりました。<strong>紙に線を引いて押した印は、電子データには残せません。</strong>相手が保存するファイルと、手元の紙が食い違います。</li>
+    <li>訂正の跡が残った書類は、後から「どちらが正しいのか」を説明する手間が増えます。作り直すほうが早く、証跡もきれいです。</li>
+    <li>金額・消費税額・適格請求書の記載事項の誤りは、<strong>そもそも訂正印では足りません</strong>(次章)。</li>
+  </ul>
+
+  <p>作り直すコストが高かった時代の作法が、そのまま残っているだけ、という面があります。入力し直して出し直すのに数分しかかからないなら、原則どおり作り直すほうが安全です。</p>
+
+  <h2>3. インボイス(適格請求書)の誤りは、修正したものを交付する</h2>
+  <p>適格請求書発行事業者が交付した適格請求書に誤りがあったときは、<strong>売手が、修正した適格請求書を交付します。</strong>買手が受け取った請求書を自分で書き直して使うことはできません(相手が仕入税額控除に使う書類だからです)。</p>
+
+  <p>交付のしかたは<strong>2通り</strong>あり、どちらでも構いません。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead>
+      <tr><th>出し方</th><th>内容</th><th>向いている場面</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>全部を出し直す</strong></td><td>正しい内容の適格請求書を、改めて1枚まるごと交付する</td><td><strong>ふつうはこちら。</strong>相手が差し替えるだけで済む</td></tr>
+      <tr><td><strong>修正箇所だけ出す</strong></td><td>当初のものとの関係が分かる情報(発行日・請求書番号など)を書いたうえで、誤っていた箇所と正しい内容だけを示す書類を交付する</td><td>1枚に大量の明細があり、差し替えが相手の負担になるとき</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>どちらの場合も、<strong>誤ったほうの書類を捨てないでください。</strong>当初のものと修正したものは、対応関係が分かる形でセットで保管します。</p>
+
+  <h2>4. 「値引き・返品」は訂正ではありません — 適格返還請求書</h2>
+  <p>ここが最も取り違えられます。<strong>請求書の記載が間違っていたのか、記載は正しかったが後から金額が減ったのか</strong>で、出す書類が変わります。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead>
+      <tr><th></th><th>間違いを直す</th><th>あとから減額する</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>例</td><td>単価の入力ミス、税率の取り違え、宛名違い</td><td>値引き、返品、割戻し、早期入金の割引</td></tr>
+      <tr><td>当初の請求書</td><td><strong>誤り。</strong>無効にして出し直す</td><td><strong>正しい。</strong>そのまま生きている</td></tr>
+      <tr><td>出す書類</td><td>修正した適格請求書</td><td><strong>適格返還請求書(返還インボイス)</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>売上に係る対価の返還等を行ったときは、適格請求書発行事業者には適格返還請求書の交付義務があります。ただし<strong>返還等の金額が税込1万円未満であれば、交付は不要</strong>です。振込手数料を売手が負担する形で入金額が数百円少ない、といった実務でよくある場面は、この免除の範囲に収まることがほとんどです。</p>
+
+  <div class="note">
+    <p><strong>ありがちな失敗</strong>: 後から値引きしたぶんを、<strong>元の請求書の金額を書き換えて</strong>出し直してしまう。取引そのものは当初の金額で成立しているので、これをやると売上高も消費税額も実態とずれます。<strong>減らすときは、減らしたという書類を別に出す</strong>のが原則です。</p>
+  </div>
+
+  <h2>5. 番号と発行日をどうするか</h2>
+  <p>作り直すときに迷うのはこの2つだけです。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead>
+      <tr><th></th><th>A 再送(中身が同じ)</th><th>B 訂正(中身が違う)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>請求書番号</td><td><strong>同じ番号</strong></td><td><strong>新しい番号</strong>。誤ったほうは欠番として残す</td></tr>
+      <tr><td>発行日</td><td><strong>当初のまま</strong></td><td>当初の取引の事実に合わせる(支払期日も同様に扱う)</td></tr>
+      <tr><td>記録</td><td>台帳に「再送」と記録</td><td>台帳に「◯◯は誤りにつき無効。△△で再発行」と記録</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p><strong>一度使った番号は再利用しません。</strong>誤った番号を空けたまま欠番として残し、理由を控えておきます。番号を使い回して上書きしたくなりますが、後から照合するときに必ず混乱します。</p>
+
+  <h2>6. 相手が払ったあとに気づいたとき</h2>
+  <div class="table-scroll">
+  <table>
+    <thead>
+      <tr><th>状況</th><th>対応</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>請求が少なすぎた</strong></td><td>差額だけの請求書を新たに発行する。<strong>元の請求書番号を必ず参照させる</strong></td></tr>
+      <tr><td><strong>請求が多すぎた</strong></td><td>最優先で連絡する。返金するか、次回請求から差し引くかを選ぶ。<strong>相殺は必ず相手の同意を得てから</strong></td></tr>
+      <tr><td><strong>消費税額が数円ずれていた</strong></td><td>端数処理の回数が原因のことが多い。1枚の請求書につき<strong>税率ごとに1回</strong>が原則(<a href="/guide/seikyusho-kakikata">請求書の書き方</a>で解説)</td></tr>
+      <tr><td><strong>源泉徴収税額を間違えた</strong></td><td>相手が納付済みだと相手側の手続きが必要になる。<strong>年をまたぐ前に連絡する</strong>(<a href="/guide/gensen-choshu-keisan">源泉徴収の計算方法</a>)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>7. お詫びの連絡に必ず入れる4行</h2>
+  <p>長い文章は要りません。相手の経理が知りたいのは次の4点だけです。</p>
+  <ol>
+    <li><strong>どの請求書か</strong>(番号と当初の発行日)</li>
+    <li><strong>何が違っていたか</strong>(誤 → 正)</li>
+    <li><strong>その請求書をどう扱ってほしいか</strong>(破棄・差し替え・そのまま保管のどれか)</li>
+    <li><strong>支払期日と金額がどうなるか</strong></li>
+  </ol>
+  <p>原因の説明や再発防止の決意表明は、相手が求めていない限り不要です。<strong>差し替え後の書類を同じメールに添付する</strong>ほうが、何倍も早く片づきます。</p>
+
+  <h2>8. よくある質問</h2>
+  <h3>請求書に「再発行」と書く必要はありますか</h3>
+  <p>法律上の決まりはありません。ただし<strong>Aの再送では書かないほうが安全</strong>です。中身が同じものに「再発行」とだけ付けると、相手が別の請求と受け取ることがあります。書くのであれば、番号・発行日が当初と同じである旨を添えてください。</p>
+
+  <h3>相手から「訂正印を押して送り返して」と言われました</h3>
+  <p>相手の社内規程でそうなっていることがあります。<strong>紙でやり取りしている取引先であれば、それに合わせて差し支えありません。</strong>その場合も、金額や適格請求書の記載事項の誤りについては、修正した適格請求書を別途交付してください。</p>
+
+  <h3>もう何年も前の請求書について訂正を求められました</h3>
+  <p>売掛金には時効があります。現行の民法では、権利を行使できることを知った時から<strong>5年</strong>です。改正前にあった短期消滅時効(業種ごとに1〜3年)は廃止されていますので、<strong>「請求書の有効期限は2年」と書かれた古い情報には注意してください。</strong>期間の数え方は個別の事情で変わるため、金額が大きい場合は専門家にご相談ください。</p>
+
+  <h3>作り直したPDFに透かしは入りますか</h3>
+  <p>入りません。当ツールは全機能が無料で、出力したPDFはそのまま取引先へ送れます。入力内容はブラウザ内だけで処理し、サーバーへ送信していません。</p>
+
+  <h2>関連する解説</h2>
+  <ul class="linklist">
+    <li><a href="/guide/seikyusho-kakikata">請求書の書き方 — 必須9項目とインボイス対応</a>
+      <p>そもそも差し戻されないための9項目と、適格請求書で足りなくなる3点。端数処理のルールもこちらです。</p></li>
+    <li><a href="/guide/gensen-choshu-keisan">源泉徴収の計算方法(10.21%と20.42%)</a>
+      <p>税額を間違えたときに、どこから計算し直せばよいかが分かります。</p></li>
+    <li><a href="/ryoshusho">領収書の書き方 — 宛名と但し書きで迷わない</a>
+      <p>領収書の再発行や宛名の書き換えを頼まれたときの考え方もまとめています。</p></li>
+  </ul>
+
+  <a class="cta" href="/">
+    <strong>正しい内容で請求書をつくる</strong>
+    <span>入力しながらA4プレビューが更新されます</span>
+  </a>
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/guide/">解説記事</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本ツールおよび本記事は制度の一般的な説明であり、税務判断を行うものではありません。個別の取り扱いは所轄の税務署または税理士にご確認ください。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+</body>
+</html>
