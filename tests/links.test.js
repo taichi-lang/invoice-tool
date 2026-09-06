@@ -163,4 +163,51 @@ test('解説記事はすべて、記事一覧 /guide/ からリンクされて�
   assert.deepStrictEqual(orphans, [], '一覧から辿れない記事: ' + orphans.join(','));
 });
 
+/*
+ * 2026-09-07 に足した。母屋(開業したらやること /kaigyo)は、
+ * 2つのサイトに散らばったツールを1本に束ねるための入口である。
+ * 工程を1つ足したときにリンクを置き忘れると、母屋が母屋でなくなる。
+ * リンク切れ0件のテストでは、そもそも書かれていないリンクは検出できない。
+ * 追加前に、次を実際に確かめてある。
+ *   ・/kaigyo 本文から /inshi の行を消すと「母屋から辿れない工程: /inshi」で落ちる
+ *   ・工程の見出しからリンク集を消すと「リンクが1本も無い工程: 3. 納品する」で落ちる
+ * ⚠ ナビの1本を消す試験は、先にある「ナビが他ページとそろっていない」が先に落ちるため、
+ *    /kaigyo の行だけを落とすことは確認できていない。あちらに重ねた保険である。
+ */
+test('母屋 /kaigyo から、6工程のツールすべてへリンクがある', () => {
+  const hub = pages.find((p) => p.url === '/kaigyo');
+  assert.ok(hub, '/kaigyo が無い');
+  const required = [
+    'https://seal-generator.vercel.app/',   // 1. 印鑑(姉妹サイト)
+    '/mitsumorisho',                        // 2. 見積書
+    '/nohinsho',                            // 3. 納品書
+    '/guide/seikyusho-kakikata',            // 4. 請求書
+    '/guide/gensen-choshu-keisan',          // 5. 源泉徴収
+    '/ryoshusho',                           // 6. 領収書
+    '/inshi',
+  ];
+  // ナビとフッターにも同じURLが並んでいるので、本文(<main>)の中だけを見る。
+  const body = hub.html.slice(hub.html.indexOf('<main'), hub.html.indexOf('</main>'));
+  const missing = required.filter((href) => !body.includes('href="' + href + '"'));
+  assert.deepStrictEqual(missing, [], '母屋から辿れない工程: ' + missing.join(','));
+});
+
+test('母屋はナビに載っていて、全ページから1クリックで開ける', () => {
+  const withNav = pages.filter((p) => navLinks(p.html) !== null);
+  for (const page of withNav) {
+    assert.ok(navLinks(page.html).includes('/kaigyo'), page.url + ' のナビに /kaigyo が無い');
+  }
+});
+
+test('母屋の工程は、どれも空にならない(番号つき見出しに必ずリンク集が続く)', () => {
+  const hub = pages.find((p) => p.url === '/kaigyo');
+  const sections = hub.html.split(/<h2>/).slice(1);
+  const steps = sections.filter((sec) => /^\d+\./.test(sec));
+  assert.ok(steps.length >= 6, '番号つきの工程が ' + steps.length + ' 個しかない');
+  const empty = steps
+    .filter((sec) => !sec.includes('<ul class="linklist">'))
+    .map((sec) => sec.slice(0, sec.indexOf('<')));
+  assert.deepStrictEqual(empty, [], 'リンクが1本も無い工程: ' + empty.join(','));
+});
+
 console.log('links.test.js: ' + passed + ' 件すべて通過');
