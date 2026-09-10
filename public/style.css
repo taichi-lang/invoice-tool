@@ -656,3 +656,26 @@ table.items tr.blank td { height: 7mm; }
   .tax-breakdown { break-inside: avoid; }
   .paper-foot .bank, .paper-foot .notes { break-inside: avoid; }
 }
+
+/* ── 広告の入れ物 ─────────────────────────────────────────────
+   設計は AIBusiness `businesses/starter-tools/広告_設計.md`。
+   置くのは解説記事と母屋の本文末尾だけで、書類を作る画面には置かない。
+   器は JavaScript が作るので、発行者IDが未設定のあいだはこの規則は
+   当たる相手がいない(=画面は1ピクセルも変わらない)。 */
+.ad-slot {
+  margin: 2.5rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line, #e5e7eb);
+}
+.ad-slot .ad-label {
+  margin: 0 0 .4rem;
+  font-size: .72rem;
+  color: var(--muted, #6b7280);
+}
+
+/* ⚠ 印刷対策の二重化(設計 §4)。
+   請求書の紙はそのまま取引先へ渡る。`no-print` の付け忘れが1か所でもあると
+   紙に広告が出るため、器そのものを消す規則を独立して置く。 */
+@media print {
+  .ad-slot { display: none !important; }
+}

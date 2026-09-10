@@ -25,7 +25,9 @@
 
 ## 技術構成
 
-依存パッケージ **0**、ビルド工程 **なし**の静的サイトです。
+依存パッケージ **0** の静的サイトです。ビルド工程は1つだけあり、
+広告の設定値を環境変数から静的ファイルへ書き出します(`tools/build-ads.mjs`)。
+**値が未設定なら「未設定」を書き出して正常終了する**ので、ビルドが本番を止めることはありません。
 
 | 項目 | 内容 |
 |------|------|
@@ -53,12 +55,16 @@ public/
   cover.js         送付状の文面組み立て(DOM非依存・テスト対象)
   seal.js          印影の読み込み・配置
   kaigyo.html      開業したらやること(書類の順に道具を並べた母屋)
+  ads.js           記事末尾の広告の入れ物(未設定なら何も描画しない)
+  ads-config.js    広告の設定値。**自動生成**。手で編集しない
   robots.txt
   guide/
     index.html                     解説記事の一覧
     seikyusho-kakikata.html        請求書の書き方(必須9項目・インボイス対応)
     seikyusho-teisei-saihakko.html 請求書の訂正・再発行
     gensen-choshu-keisan.html      源泉徴収の計算方法(10.21% / 20.42%)
+tools/
+  build-ads.mjs   広告の設定値を環境変数から書き出す(ビルド時に走る)
 tests/
   calc.test.js    金額計算ロジックのテスト
   stamp.test.js   印紙税の判定ロジックのテスト
@@ -67,6 +73,7 @@ tests/
   print.test.js   印刷紙面(@media print)のページ割れを防ぐ宣言のテスト
   links.test.js   サイト内リンク・ナビ・canonical・sitemap の整合テスト
   soufujo.test.js 送付状ページの HTML / JS / CSS の読み合わせ
+  ads.test.js     広告を置く面・置かない面と、印刷・CSP の一線のテスト
 docs/
   仕様.md              機能仕様と課金方針
   セキュリティレビュー.md 公開前レビューの記録
@@ -92,7 +99,7 @@ http://localhost:8891 を開きます。
 node --test tests/*.test.js
 ```
 
-合計 **100件**(calc 18 / cover 26 / stamp 17 / links 12 / seal 12 / soufujo 8 / print 7)。
+合計 **115件**(calc 18 / cover 26 / stamp 17 / links 12 / seal 12 / ads 15 / soufujo 8 / print 7)。
 
 `calc.test.js`(18件)は消費税の端数処理、複数税率の集計、源泉徴収の計算、登録番号の形式検証を扱います。
 期待値は国税庁タックスアンサー(No.6625 / No.2795)に基づいています。
@@ -113,6 +120,14 @@ node --test tests/*.test.js
 `soufujo.test.js`(8件)は、送付状ページの HTML・JS・CSS の読み合わせです。
 `soufujo.js` が触る id が HTML に無い、といった「開いた瞬間に真っ白になる」壊れ方を落とします。
 ⚠ 描画そのものは確かめていません(横あふれ・改ページ・印刷の見た目は対象外)。
+
+`ads.test.js`(15件)は広告の一線を固定します。**書類を作る画面と `/legal` に広告を置かないこと**、
+**印刷時に器そのものを消す規則が `no-print` とは別に在ること**、そして
+**書類を作る画面の CSP が `connect-src 'none'` のままであること**を含みます。
+「入力内容を送信しない」という約束は文章だけでなくヘッダでも止まっている必要があり、
+広告のための緩和は記事と母屋の2面に閉じ込めてあります。
+⚠ このテストは `tools/build-ads.mjs` を実際に走らせるため、実行中に `public/ads-config.js` と
+`public/ads.txt` を書き換えます(最後に未設定の状態へ戻します)。
 
 ## 料金の考え方
 

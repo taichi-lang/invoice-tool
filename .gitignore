@@ -5,3 +5,7 @@ Thumbs.db
 *.log
 
 .vercel
+
+# 広告の設定値はビルド時に生成する(tools/build-ads.mjs)。
+# 発行者IDが設定されていないあいだは作られない=/ads.txt は 404。
+public/ads.txt
