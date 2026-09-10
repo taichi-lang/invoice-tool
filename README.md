@@ -15,6 +15,7 @@
 - **書き出し** — PDF(印刷)/ CSV(Excel対応)/ JSON(入力データの保存・再読込)
 - **4種類の書類** — 請求書 / 見積書 / 納品書 / 領収書。`/?type=estimate` のように種別を指定して開けます
 - **収入印紙の判定** — 領収書に貼る印紙を `/inshi` でその場で判定します。5万円の境界だけでなく、消費税額の区分記載・電子交付・クレジットカード、そして**免税事業者だけ結論が変わる点**まで扱います
+- **送付状** — 紙で郵送するときに添える1枚を `/soufujo` で作ります。頭語と結語の対応(拝啓→敬具 / 前略→草々)と、同封物の「記〜以上」をそろえます
 - **実務の解説記事を同梱** — 書き方・計算方法の解説ページをツールとセットで持ち、検索からの入口にします
 
 ## 画面
@@ -47,16 +48,25 @@ public/
   inshi.html       収入印紙 判定ツール + 印紙税の解説
   inshi.js         判定ツールの画面制御
   stamp.js         印紙税の判定ロジック(DOM非依存・テスト対象)
+  soufujo.html     送付状ジェネレーター + 送付状の書き方
+  soufujo.js       送付状の画面制御
+  cover.js         送付状の文面組み立て(DOM非依存・テスト対象)
+  seal.js          印影の読み込み・配置
+  kaigyo.html      開業したらやること(書類の順に道具を並べた母屋)
   robots.txt
   guide/
-    index.html                解説記事の一覧
-    seikyusho-kakikata.html   請求書の書き方(必須9項目・インボイス対応)
-    gensen-choshu-keisan.html 源泉徴収の計算方法(10.21% / 20.42%)
+    index.html                     解説記事の一覧
+    seikyusho-kakikata.html        請求書の書き方(必須9項目・インボイス対応)
+    seikyusho-teisei-saihakko.html 請求書の訂正・再発行
+    gensen-choshu-keisan.html      源泉徴収の計算方法(10.21% / 20.42%)
 tests/
-  calc.test.js  金額計算ロジックのテスト
-  stamp.test.js 印紙税の判定ロジックのテスト
-  print.test.js 印刷紙面(@media print)のページ割れを防ぐ宣言のテスト
-  links.test.js サイト内リンク・ナビ・canonical・sitemap の整合テスト
+  calc.test.js    金額計算ロジックのテスト
+  stamp.test.js   印紙税の判定ロジックのテスト
+  cover.test.js   送付状の文面組み立てのテスト
+  seal.test.js    印影の配置のテスト
+  print.test.js   印刷紙面(@media print)のページ割れを防ぐ宣言のテスト
+  links.test.js   サイト内リンク・ナビ・canonical・sitemap の整合テスト
+  soufujo.test.js 送付状ページの HTML / JS / CSS の読み合わせ
 docs/
   仕様.md              機能仕様と課金方針
   セキュリティレビュー.md 公開前レビューの記録
@@ -79,13 +89,10 @@ http://localhost:8891 を開きます。
 ## テスト
 
 ```bash
-node tests/calc.test.js
-node tests/stamp.test.js
-node tests/print.test.js
-node tests/links.test.js
+node --test tests/*.test.js
 ```
 
-合計 **49件**(calc 18 / stamp 17 / print 6 / links 8)。
+合計 **100件**(calc 18 / cover 26 / stamp 17 / links 12 / seal 12 / soufujo 8 / print 7)。
 
 `calc.test.js`(18件)は消費税の端数処理、複数税率の集計、源泉徴収の計算、登録番号の形式検証を扱います。
 期待値は国税庁タックスアンサー(No.6625 / No.2795)に基づいています。
@@ -96,8 +103,16 @@ node tests/links.test.js
 `print.test.js`(6件)は、印刷時に合計欄と振込先がページをまたいで割れないための `break-inside: avoid` が
 `@media print` の中に在り続けることを確かめます。
 
-`links.test.js`(8件)はサイトの構造を固定します。**ツールが出せる4種類の書類(請求書・見積書・納品書・領収書)に、
-それぞれ入口となるページが在ること**を含みます。2026-09-02 まで、納品書は出力できるのに入口が1つも無い状態でした。
+`links.test.js`(12件)はサイトの構造を固定します。**ツールが出せる4種類の書類(請求書・見積書・納品書・領収書)に、
+それぞれ入口となるページが在ること**と、**母屋 `/kaigyo` から全工程へリンクが在ること**を含みます。
+2026-09-02 まで、納品書は出力できるのに入口が1つも無い状態でした。
+
+`cover.test.js`(26件)は送付状の文面を扱います。頭語と結語が対になること、
+**「前略」のときは時候の挨拶を出さないこと**、同封物が0件なら「記〜以上」を出さないことを固定しています。
+
+`soufujo.test.js`(8件)は、送付状ページの HTML・JS・CSS の読み合わせです。
+`soufujo.js` が触る id が HTML に無い、といった「開いた瞬間に真っ白になる」壊れ方を落とします。
+⚠ 描画そのものは確かめていません(横あふれ・改ページ・印刷の見た目は対象外)。
 
 ## 料金の考え方
 

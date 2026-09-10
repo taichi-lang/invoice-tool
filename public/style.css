@@ -577,6 +577,42 @@ table.items tr.blank td { height: 7mm; }
 .sd-notes li { margin-bottom: 6px; font-size: 13px; }
 .sd-notes li:last-child { margin-bottom: 0; }
 
+/* ---------------------------------------------------------- 送付状(/soufujo) */
+
+/* 送付状はA4の上半分で終わる紙である。請求書の .paper をそのまま使いつつ、
+   縦書きの余白だけを送付状の作法に寄せる(表題を中央、記書きを下にまとめる)。 */
+.sf-paper { padding: 25mm 20mm; }
+
+.sf-date { margin: 0 0 8mm; text-align: right; font-size: 10.5pt; }
+
+.sf-head { display: flex; justify-content: space-between; gap: 10mm; align-items: flex-start; }
+.sf-to { flex: 1 1 auto; min-width: 0; }
+.sf-from { flex: 0 0 70mm; text-align: right; }
+.sf-head p { margin: 0; }
+.sf-to-name { font-size: 12pt; font-weight: 700; min-height: 6mm; }
+.sf-to-dept { font-size: 10.5pt; margin-top: 1.5mm !important; }
+.sf-from-name { font-size: 11pt; font-weight: 700; min-height: 6mm; }
+.sf-from-addr { font-size: 9.5pt; white-space: pre-wrap; margin-top: 1.5mm !important; }
+
+.sf-title {
+  margin: 12mm 0 10mm;
+  text-align: center;
+  font-size: 14pt;
+  font-weight: 700;
+  letter-spacing: .3em;
+  text-indent: .3em;
+}
+
+.sf-opening { margin: 0 0 4mm; }
+/* 本文は1字下げ。日本語の書面ではここが空いていないと下書きに見える。 */
+.sf-para { margin: 0 0 4mm; text-indent: 1em; }
+.sf-closing { margin: 6mm 0 0; text-align: right; }
+
+.sf-kiji { margin: 10mm 0 4mm; text-align: center; }
+.sf-items { margin: 0 0 6mm; padding-left: 30mm; list-style: none; }
+.sf-items li { margin-bottom: 2mm; }
+.sf-ijo { margin: 0; text-align: right; }
+
 /* ---------------------------------------------------------- 印刷 */
 
 @page {
@@ -602,6 +638,8 @@ table.items tr.blank td { height: 7mm; }
     padding: 15mm 14mm;
     box-shadow: none;
   }
+  /* 送付状は上下にゆとりを取る(1枚に収まり、明細のような折り返しが無いため) */
+  .sf-paper { padding: 25mm 20mm; }
   table.items tr { break-inside: avoid; }
 
   /* 明細が2ページ目にまたがったとき、見出し行を各ページの先頭に繰り返す。

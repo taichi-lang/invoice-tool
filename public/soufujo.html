@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>送付状の作成ツール 無料・登録不要 — 請求書に添える1枚をPDFで</title>
+<meta name="description" content="請求書や見積書に添える送付状の書き方で迷っていませんか。無料・登録不要の作成ツールです。頭語と結語の対応、時候の挨拶、記書きの形をそろえた1枚を、その場でPDFにできます。入力内容は送信されません。">
+<meta property="og:title" content="送付状の作成ツール 無料・登録不要 — 請求書に添える1枚をPDFで">
+<meta property="og:description" content="請求書や見積書に添える送付状の書き方で迷っていませんか。無料・登録不要の作成ツールです。頭語と結語の対応、時候の挨拶、記書きの形をそろえた1枚を、その場でPDFにできます。入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/soufujo">
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">送付状ジェネレーター</p>
+  <p class="tagline">請求書に添える1枚 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo" aria-current="page">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">送付状の作成ツール — 請求書に添える1枚をPDFで</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 何を送るか</summary>
+      <label>用途
+        <select id="sfKind"></select>
+      </label>
+      <p class="hint">選び直すと、本文と同封物の欄が書き換わります。そのあとで手直しできます。</p>
+      <label>日付
+        <input type="date" id="sfDate">
+      </label>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 宛先</summary>
+      <div class="grid2">
+        <label>会社名・屋号
+          <input type="text" id="sfToName" placeholder="株式会社サンプル">
+        </label>
+        <label>敬称
+          <select id="sfToHonorific">
+            <option value="御中">御中</option>
+            <option value="様">様</option>
+            <option value="">(なし)</option>
+          </select>
+        </label>
+      </div>
+      <label>部署・担当者(任意)
+        <input type="text" id="sfToDept" placeholder="経理部 山田太郎 様">
+      </label>
+      <p class="hint">担当者名まで書くときは、会社名の敬称を「御中」ではなく空にして、担当者に「様」を付けます。<strong>「御中」と「様」は重ねません。</strong></p>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 差出人(自分)</summary>
+      <label>氏名・屋号・会社名
+        <input type="text" id="sfFromName" placeholder="中村太郎">
+      </label>
+      <label>住所・連絡先(任意)
+        <textarea id="sfFromAddress" rows="3" placeholder="〒000-0000 東京都…&#10;TEL 000-0000-0000&#10;MAIL info@example.com"></textarea>
+      </label>
+    </details>
+
+    <details class="card" open>
+      <summary>4. 文面</summary>
+      <label>頭語と結語
+        <select id="sfSalutation">
+          <option value="haikei">拝啓 — 敬具(標準)</option>
+          <option value="zenryaku">前略 — 草々(急ぎ・親しい相手)</option>
+          <option value="none">付けない</option>
+        </select>
+      </label>
+      <label class="check">
+        <input type="checkbox" id="sfUseGreeting" checked>
+        時候の挨拶を入れる
+      </label>
+      <p class="hint" id="sfGreetingHint"></p>
+      <label>本文
+        <textarea id="sfBody" rows="4"></textarea>
+      </label>
+      <label>なお書き(任意)
+        <textarea id="sfPostscript" rows="2" placeholder="なお、ご不明な点がございましたら、下記までご連絡ください。"></textarea>
+      </label>
+    </details>
+
+    <details class="card" open>
+      <summary>5. 同封するもの</summary>
+      <label>1行に1件(「請求書 1通」の形)
+        <textarea id="sfItems" rows="3"></textarea>
+      </label>
+      <p class="hint">数量を書かない行は1通として扱います。<strong>1行も書かなければ「記〜以上」は紙面に出ません。</strong></p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="sfPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="sfClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <p class="hint warn" id="sfMissing" hidden></p>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>次に必要になるもの</h2>
+      <ul class="guide-links">
+        <li><a href="/">請求書をつくる</a></li>
+        <li><a href="/mitsumorisho">見積書をつくる</a></li>
+        <li><a href="/nohinsho">納品書をつくる</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="preview" aria-label="プレビュー">
+    <div class="paper sf-paper" id="sfSheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>送付状は、そもそも要るのか</h2>
+  <p><strong>法律上の義務はありません。</strong>付けなくても請求は成立しますし、電子で送るなら本文のメールがその役目を果たします。それでも紙で郵送するときは、1枚付けたほうが得をします。<strong>封を開けた人が、中身と用件を見ないで判断できる</strong>からです。</p>
+  <p>経理に回るまでに何人か手を通る取引先ほど、この差が出ます。請求書だけが1枚入っていると、受け取った人はまず「誰から、何の件で来たのか」を調べることになります。送付状はその手間を先に引き受ける紙です。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>送り方</th><th>送付状</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr><td>紙で郵送する</td><td><strong>付ける</strong></td><td>封の中身と用件を、開けた人がその場で判断できる</td></tr>
+      <tr><td>PDFをメールに添付する</td><td>不要なことが多い</td><td>メール本文が同じ役目を果たす</td></tr>
+      <tr><td>初めての取引先へ送る</td><td><strong>付ける</strong></td><td>連絡先を相手の手元に残せる</td></tr>
+      <tr><td>手渡しする</td><td>不要</td><td>その場で口頭で伝わる</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>入れるのはこの6つだけ</h2>
+  <p>送付状で悩む時間は、たいてい「何を書けばいいか分からない」ではなく<strong>「余計なことまで書こうとしている」</strong>ことから来ます。要素は6つで足ります。</p>
+  <ol>
+    <li><strong>日付</strong> — 右上。投函する日を書きます</li>
+    <li><strong>宛名</strong> — 左。会社名と、必要なら部署・担当者</li>
+    <li><strong>差出人</strong> — 右。名前と連絡先。<strong>ここが抜けると問い合わせ先が無くなります</strong></li>
+    <li><strong>表題</strong> — 中央。「書類送付のご案内」で通じます</li>
+    <li><strong>本文</strong> — 何を送ったか、相手に何をしてほしいか。この2つ</li>
+    <li><strong>記書き</strong> — 同封物の一覧。「記」で始めて「以上」で閉じます</li>
+  </ol>
+  <p>逆に、<strong>売り込みや近況報告は入れません。</strong>送付状は読んでもらう紙ではなく、確認してもらう紙です。</p>
+
+  <h2>頭語と結語は対で決まっている</h2>
+  <p>ここだけは好みではなく決まりごとです。<strong>片方だけ選ぶと対になりません。</strong>上のツールでは、頭語を選ぶと結語が自動でそろいます。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>頭語</th><th>結語</th><th>使う場面</th><th>時候の挨拶</th></tr></thead>
+    <tbody>
+      <tr><td>拝啓</td><td>敬具</td><td>取引先への標準。迷ったらこれ</td><td><strong>入れる</strong></td></tr>
+      <tr><td>前略</td><td>草々</td><td>急ぎのとき、やり取りの多い相手</td><td><strong>入れない</strong></td></tr>
+      <tr><td>(付けない)</td><td>(付けない)</td><td>社内・定型のやり取り</td><td>任意</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <p><strong>「前略」のあとに時候の挨拶を書かない理由</strong></p>
+    <p>「前略」は<strong>前置きを省きます、という意味の語</strong>です。そのあとに「初秋の候」と続けると、省くと言ったそばから前置きを書いていることになります。上のツールでは、前略を選ぶと時候の挨拶を出さない作りにしてあります。</p>
+  </div>
+
+  <h2>時候の挨拶は月で決まる</h2>
+  <p>漢語調(「〜の候」)なら、月から機械的に選べます。上のツールは、入力した日付の月に合うものを自動で入れます。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>月</th><th>挨拶</th><th>月</th><th>挨拶</th></tr></thead>
+    <tbody>
+      <tr><td>1月</td><td>厳寒の候</td><td>7月</td><td>盛夏の候</td></tr>
+      <tr><td>2月</td><td>余寒の候</td><td>8月</td><td>残暑の候</td></tr>
+      <tr><td>3月</td><td>早春の候</td><td>9月</td><td>初秋の候</td></tr>
+      <tr><td>4月</td><td>陽春の候</td><td>10月</td><td>仲秋の候</td></tr>
+      <tr><td>5月</td><td>新緑の候</td><td>11月</td><td>晩秋の候</td></tr>
+      <tr><td>6月</td><td>梅雨の候</td><td>12月</td><td>師走の候</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>差し戻される定番の3つ</h2>
+
+  <h3>1. 「御中」と「様」が重なっている</h3>
+  <p><strong>「株式会社サンプル御中 山田太郎様」は誤りです。</strong>担当者名まで書くなら、会社名には敬称を付けず、担当者に「様」を付けます。会社宛てで止めるなら「御中」だけにします。上のツールでは、敬称を「(なし)」にすれば会社名から御中が消えます。</p>
+
+  <h3>2. 同封物の数が中身と合っていない</h3>
+  <p>記書きに「請求書 1通」と書いてあるのに2通入っている、あるいは返信用封筒を書き忘れる。<strong>受け取った側は記書きの数を数えて確認します。</strong>ここがずれると、そのための連絡が1往復増えます。封をする直前に、紙面の一覧と手元の紙を突き合わせてください。</p>
+
+  <h3>3. 何をしてほしいのかが書いていない</h3>
+  <p>「下記の書類をお送りいたします。」だけで終わっている送付状は珍しくありません。しかし受け取った側は、<strong>確認すればいいのか、押印して返せばいいのか、支払えばいいのか</strong>が分かりません。上のツールのひな形は、どの用途でも「送った」と「してほしい」の2文になっています。</p>
+
+  <a class="cta" href="/">
+    <strong>請求書そのものをつくる(登録不要)</strong>
+    <span>送付状と同じく、この端末の中だけで組み立てます。PDFに透かしは入りません</span>
+  </a>
+
+  <h2>この紙で扱わないこと</h2>
+  <p>送付状は事務の書式であり、税務の書類ではありません。<strong>収入印紙は要りません。</strong>同封する領収書のほうに印紙が必要かどうかは、<a href="/inshi">収入印紙の判定ツール</a>で調べられます。制度の一般的な説明であり、個別の判断は所轄の税務署または税理士にご確認ください。</p>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/cover.js"></script>
+<script src="/soufujo.js"></script>
+</body>
+</html>
