@@ -638,8 +638,21 @@ table.items tr.blank td { height: 7mm; }
     padding: 15mm 14mm;
     box-shadow: none;
   }
-  /* 送付状は上下にゆとりを取る(1枚に収まり、明細のような折り返しが無いため) */
-  .sf-paper { padding: 25mm 20mm; }
+  /* 送付状は左右にゆとりを取る。
+     ⚠ 下の余白は 0 にする。2026-09-11 に本番の画面で実測して分かったこと:
+     同封物8件・本文長めの送付状で、本文は 285mm で終わっているのに
+     .sf-paper の下余白 25mm が足されて紙面が 310mm になり、
+     「ほぼ白紙の2枚目」が出ていた。下の余白は印刷側のページ余白が既に持っているため、
+     ここで重ねて取ると、収まるはずの1枚が2枚になる。実測: 310.4mm → 279.5mm。 */
+  .sf-paper { padding: 25mm 20mm 0; }
+
+  /* 送付状がページをまたぐときに、意味のかたまりを割らない。
+     記書きは「記 → 同封物 → 以上」で1つの意味になっており、
+     どれか1つだけが次のページに落ちると、受け取った人は同封物を数え直すことになる。 */
+  .sf-items { break-inside: avoid; }
+  .sf-kiji { break-after: avoid; }
+  .sf-ijo { break-before: avoid; }
+  .sf-closing { break-before: avoid; }
   table.items tr { break-inside: avoid; }
 
   /* 明細が2ページ目にまたがったとき、見出し行を各ページの先頭に繰り返す。

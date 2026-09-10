@@ -93,6 +93,30 @@ test('印影の高さ確保が、紙面でも効いている', () => {
   );
 });
 
+test('送付状の紙面は下余白を重ねて取らない(ほぼ白紙の2枚目を出さない)', function () {
+  // 2026-09-11、本番 https://invoice-tool-kohl.vercel.app/soufujo をA4幅(794px)で開き、
+  // @media print を実際に効かせて測った結果:
+  //   同封物8件・本文長め: 本文は 285.4mm で終わっているのに紙面の箱は 310.4mm
+  //   → 収まるはずの1枚が2枚になり、2枚目はほぼ白紙だった
+  //   下余白を 0 にすると 279.5mm になり、1枚に収まった(実測 30.9mm ぶん縮んだ)
+  // 下の余白は印刷側のページ余白が既に持っているため、ここで重ねて取ってはいけない。
+  const m = /\.sf-paper\s*\{([^}]*)\}/.exec(block);
+  assert.ok(m, '@media print に .sf-paper が無い');
+  assert.ok(
+    /padding\s*:\s*25mm\s+20mm\s+0\s*;/.test(m[1]),
+    '.sf-paper の下余白が 0 になっていない(ほぼ白紙の2枚目が戻る): ' + m[1].trim()
+  );
+});
+
+test('送付状の記書きは「記・同封物・以上」で割れない', function () {
+  // 記書きは3つで1つの意味になる。どれか1つだけが次のページに落ちると、
+  // 受け取った人は同封物を数え直すことになる。
+  assert.ok(/\.sf-items\s*\{[^}]*break-inside\s*:\s*avoid/.test(block), '.sf-items に break-inside: avoid が無い');
+  assert.ok(/\.sf-kiji\s*\{[^}]*break-after\s*:\s*avoid/.test(block), '.sf-kiji に break-after: avoid が無い');
+  assert.ok(/\.sf-ijo\s*\{[^}]*break-before\s*:\s*avoid/.test(block), '.sf-ijo に break-before: avoid が無い');
+  assert.ok(/\.sf-closing\s*\{[^}]*break-before\s*:\s*avoid/.test(block), '.sf-closing に break-before: avoid が無い(結語だけが次ページに残る)');
+});
+
 let passed = 0;
 let failed = 0;
 console.log('印刷紙面(@media print)');
