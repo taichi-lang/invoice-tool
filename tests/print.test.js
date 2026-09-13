@@ -49,6 +49,71 @@ function avoidsBreak(selector) {
   });
 }
 
+/** @page { ... } の中身を取り出す(@media print の外にある)。 */
+function pageBlock(source) {
+  const m = /@page\s*\{([^}]*)\}/.exec(source);
+  assert.ok(m, 'style.css に @page が無い');
+  return m[1].replace(/\/\*[\s\S]*?\*\//g, '');
+}
+
+/** 「15mm」のような長さを数値(mm)にする。0 は単位なしでも通す。 */
+function mm(value) {
+  const m = /^(\d+(?:\.\d+)?)(mm)?$/.exec(String(value).trim());
+  assert.ok(m, '長さを mm で読めない: ' + value);
+  assert.ok(m[2] || Number(m[1]) === 0, '長さの単位が mm でない: ' + value);
+  return Number(m[1]);
+}
+
+/** @page の余白を「上・左右・下」で読む(margin: 15mm 14mm 0 の形を前提にする)。 */
+const pageMargin = (() => {
+  const decl = /margin\s*:\s*([^;]+);/.exec(pageBlock(css));
+  assert.ok(decl, '@page に margin が無い');
+  const p = decl[1].trim().split(/\s+/);
+  // CSS の短縮記法をそのまま読む(1値〜4値)。テストが読み取りで落ちると、
+  // どのテストが何を守っているのか分からなくなるため、ここでは判定しない。
+  const four = p.length === 1 ? [p[0], p[0], p[0], p[0]]
+    : p.length === 2 ? [p[0], p[1], p[0], p[1]]
+    : p.length === 3 ? [p[0], p[1], p[2], p[1]]
+    : p.slice(0, 4);
+  return { top: four[0], side: four[1], bottom: four[2], raw: decl[1].trim() };
+})();
+
+test('2ページ目の本文が、紙の上端から余白なしで始まらない', function () {
+  // 2026-09-14、Chrome ヘッドレスで実際にA4のPDFを出して測って分かった欠陥:
+  //   明細14行(2ページになる請求書)の2ページ目の本文が、紙の上端から 0.4mm で始まっていた。
+  //   明細20行・30行でも 2.8mm。1ページ目は 16.0mm で正しい。
+  //   原因は、紙の余白を .paper の padding で取っていたこと。
+  //   padding は箱の上端に1回しか付かないので、2ページ目には乗らない。
+  //   多くのプリンタは上下 4〜5mm を印字できないため、これは欠けて出る。
+  // 直し: 余白を @page に移した(すべてのページに付く)。
+  //   実測: 2ページ目の本文の始まり 0.4mm → 15.5mm(明細14行)/ 2.8mm → 17.9mm(同20行・30行)。
+  //   1ページ目の本文の始まりは 16.0mm のまま変わっていない。
+  assert.ok(mm(pageMargin.top) >= 10, '@page の上余白が 10mm 未満(2ページ目の本文が紙の端から始まる): ' + pageMargin.top);
+  assert.ok(mm(pageMargin.side) >= 10, '@page の左右余白が 10mm 未満: ' + pageMargin.side);
+});
+
+test('@page の下余白は 0 のまま(1枚に載る量を減らさない)', function () {
+  // 下余白を 0 以外にすると1ページに載る量が減り、いままで1枚だった書類が2枚になる。
+  // 2026-09-14 に明細 1〜30行で測り、@page の下余白を 15mm にすると
+  // 明細12行・13行が1枚ぶん増えた。0 にしたときはページ数が全部そのままだった。
+  assert.ok(
+    /^0(mm|px|)$/.test(pageMargin.bottom),
+    '@page の下余白が 0 でない(1枚に載る量が減る): ' + pageMargin.bottom
+  );
+});
+
+test('書類の紙面は、自分では余白を取らない(余白は @page が持つ)', function () {
+  // .paper の padding で余白を取ると、2ページ目に乗らない(上のテストの欠陥そのもの)。
+  const m = /(?:^|\})\s*\.paper\s*\{([^}]*)\}/.exec(block);
+  assert.ok(m, '@media print に .paper が無い');
+  const pad = /padding\s*:\s*([^;]+);/.exec(m[1]);
+  assert.ok(pad, '@media print の .paper に padding が無い');
+  assert.ok(
+    /^0(mm|px|)$/.test(pad[1].trim()),
+    '.paper が自分で余白を取っている(2ページ目に乗らない): padding: ' + pad[1].trim()
+  );
+});
+
 test('合計欄(小計〜お振込金額)をページで割らない', () => {
   assert.ok(avoidsBreak('.totals'), '.totals に break-inside: avoid が無い');
   assert.ok(avoidsBreak('.totals table'), '.totals table に break-inside: avoid が無い');
@@ -100,12 +165,23 @@ test('送付状の紙面は下余白を重ねて取らない(ほぼ白紙の2枚
   //   → 収まるはずの1枚が2枚になり、2枚目はほぼ白紙だった
   //   下余白を 0 にすると 279.5mm になり、1枚に収まった(実測 30.9mm ぶん縮んだ)
   // 下の余白は印刷側のページ余白が既に持っているため、ここで重ねて取ってはいけない。
+  //
+  // ⚠ 2026-09-14、上と左右の余白を @page に移した(2ページ目に余白が乗らなかったため)。
+  //    そのため .sf-paper が持つのは差分だけになり、狙いの 25mm / 20mm は
+  //    「@page の余白 + .sf-paper の padding」の足し算で出す。下余白が 0 なのは変わらない。
+  //    実測(2026-09-14・A4のPDF): 本文の始まり 25.7mm・左 20.0mm。移す前は 25.5mm・20.0mm。
   const m = /\.sf-paper\s*\{([^}]*)\}/.exec(block);
   assert.ok(m, '@media print に .sf-paper が無い');
+  const sfPad = /padding\s*:\s*([^;]+);/.exec(m[1]);
+  assert.ok(sfPad, '@media print の .sf-paper に padding が無い');
+  const sfParts = sfPad[1].trim().split(/\s+/);
+  assert.strictEqual(sfParts.length, 3, '.sf-paper の padding は「上 左右 下」の3値で書く: ' + sfPad[1].trim());
   assert.ok(
-    /padding\s*:\s*25mm\s+20mm\s+0\s*;/.test(m[1]),
-    '.sf-paper の下余白が 0 になっていない(ほぼ白紙の2枚目が戻る): ' + m[1].trim()
+    /^0(mm|px|)$/.test(sfParts[2]),
+    '.sf-paper の下余白が 0 になっていない(ほぼ白紙の2枚目が戻る): padding: ' + sfPad[1].trim()
   );
+  assert.strictEqual(mm(sfParts[0]) + mm(pageMargin.top), 25, '送付状の上余白(@page + .sf-paper)が 25mm でない');
+  assert.strictEqual(mm(sfParts[1]) + mm(pageMargin.side), 20, '送付状の左右余白(@page + .sf-paper)が 20mm でない');
 });
 
 test('4書類(請求書・見積書・納品書・領収書)の紙面が、まっ白な2枚目を出さない', function () {
