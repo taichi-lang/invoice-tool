@@ -45,6 +45,7 @@ const NO_AD_PAGES = [
   'soufujo.html',
   'inshi.html',
   'legal.html',
+  'soudan.html',
   'guide/index.html',
 ];
 

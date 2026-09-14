@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>業務システムのご相談 | 請求書作成ツール</title>
+<meta name="description" content="見積書・請求書を自社の商品分類・単位・支払サイトに合わせて作る仕組みの受託開発について。ご相談はメール1通から。無料ツールはこれまでどおりご利用いただけます。">
+<meta property="og:title" content="業務システムのご相談 | 請求書作成ツール">
+<meta property="og:description" content="見積書・請求書を自社の手順に合わせて作る仕組みの受託開発について。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/soudan">
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+<!-- ⚠ このページには広告を置かない(広告_設計.md §3)。
+     広告の2本のスクリプトは意図的に読み込んでいない(tests/ads.test.js が
+     このページを「置かない面」として数えている)。
+     ⚠ フォームも置かない。受け口は mailto: リンク1本だけである。
+     理由は factory送客_設計.md §2 —「入力内容を送信しない」が本サイトの売りであり、
+     当方のサーバーを経由する箱を同居させない。CSP は1文字も変えていない。 -->
+<header class="site-header">
+  <h1>業務システムのご相談</h1>
+  <p class="tagline"><a href="/">← 請求書ジェネレーターに戻る</a></p>
+</header>
+
+<main style="max-width:760px;margin:0 auto;padding:24px;">
+
+  <section class="card">
+    <p><strong>このページは、無料ツールとは別の話です。</strong>
+    請求書・見積書・領収書・納品書・送付状・印紙判定の6つは、これまでどおり
+    <strong>登録不要・無料・入力内容は送信なし</strong>でお使いいただけます。
+    有料版に切り替わることはありません。</p>
+    <p>ここに書いてあるのは、<strong>「同じ書類を毎月、自社のやり方で出し続ける」段階に来た方向け</strong>の、
+    受託開発のご案内です。</p>
+  </section>
+
+  <section class="card">
+    <h2>どういうものを作っているか</h2>
+    <p>見積書と請求書を、<strong>その会社の商品分類・単位・番号の付け方・支払サイトに合わせて</strong>出す仕組みです。
+    汎用サービスの設定画面で近づけるのではなく、<strong>最初からその会社の形で作ります。</strong></p>
+    <ul>
+      <li>顧客マスタ / 商品マスタ</li>
+      <li>見積書(有効期限・複数プランの出し分け)</li>
+      <li>請求書(支払サイト・番号体系)</li>
+      <li>工事単価マスタ(工事を伴う業種の場合)</li>
+      <li>粗利・仕入率の表示(現場に見せるかどうかは選べます)</li>
+    </ul>
+    <p><strong>要らないものは外します。</strong>全部入りを押し付けません。
+    どれが要るかは、いまお使いの書類を見せていただくのが一番早いです。</p>
+  </section>
+
+  <section class="card">
+    <h2>費用</h2>
+    <p><strong>規模により個別のお見積りです。</strong>作る範囲で大きく変わるため、
+    このページに定価は載せていません。<strong>お見積りまでは無料です。</strong></p>
+    <p class="small">⚠ 相場感だけ先に知りたい、という段階でも構いません。その旨をお書きください。</p>
+  </section>
+
+  <section class="card">
+    <h2>ご相談の出し方</h2>
+    <p>下のボタンを押すと<strong>お使いのメールソフトが開きます。</strong>
+    件名と雛形が入った状態で開くだけで、<strong>この時点では何も送信されません。</strong>
+    書き換えても、閉じてやめても構いません。</p>
+    <p style="margin:20px 0;">
+      <a class="cta" href="mailto:nks.taichi@gmail.com?subject=%E6%A5%AD%E5%8B%99%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AE%E3%81%94%E7%9B%B8%E8%AB%87&amp;body=%E2%80%BB%E5%88%86%E3%81%8B%E3%82%8B%E7%AF%84%E5%9B%B2%E3%81%A7%E7%B5%90%E6%A7%8B%E3%81%A7%E3%81%99%E3%80%82%E7%A9%BA%E6%AC%84%E3%81%8C%E3%81%82%E3%81%A3%E3%81%A6%E3%82%82%E9%80%81%E3%81%A3%E3%81%A6%E3%81%84%E3%81%9F%E3%81%A0%E3%81%91%E3%81%BE%E3%81%99%E3%80%82%0A%0A1.%20%E6%A5%AD%E7%A8%AE%E3%83%BB%E4%BA%8B%E6%A5%AD%E5%86%85%E5%AE%B9%3A%0A%0A2.%20%E3%81%84%E3%81%BE%E8%A6%8B%E7%A9%8D%E3%83%BB%E8%AB%8B%E6%B1%82%E3%82%92%E3%81%A9%E3%81%86%E4%BD%9C%E3%81%A3%E3%81%A6%E3%81%84%E3%82%8B%E3%81%8B%3A%0A%20%20%20(%E4%BE%8B%3A%20Excel%E3%81%AE%E9%9B%9B%E5%BD%A2%E3%80%81%E6%89%8B%E6%9B%B8%E3%81%8D%E3%80%81%E4%BB%96%E7%A4%BE%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9)%0A%0A3.%20%E5%9B%B0%E3%81%A3%E3%81%A6%E3%81%84%E3%82%8B%E3%81%93%E3%81%A8%3A%0A%0A4.%20%E5%B8%8C%E6%9C%9B%E6%99%82%E6%9C%9F%3A%0A%0A5.%20%E3%81%94%E9%80%A3%E7%B5%A1%E5%85%88(%E4%BC%9A%E7%A4%BE%E5%90%8D%E3%83%BB%E3%81%8A%E5%90%8D%E5%89%8D)%3A%0A">
+        <strong>メールで相談する</strong>
+        <span>件名と雛形が入った状態で開きます。この時点では送信されません</span>
+      </a>
+    </p>
+    <p>メールソフトが開かない環境の方は、<strong>下記まで直接お送りください。</strong></p>
+    <p><strong>nks.taichi@gmail.com</strong></p>
+    <p class="small">書いていただけると話が早い5項目です。<strong>分かる範囲で結構です。</strong></p>
+    <ol class="small">
+      <li>業種・事業内容</li>
+      <li>いま見積・請求をどう作っているか(Excelの雛形 / 手書き / 他社サービス など)</li>
+      <li>困っていること</li>
+      <li>希望時期</li>
+      <li>ご連絡先(会社名・お名前)</li>
+    </ol>
+  </section>
+
+  <section class="card">
+    <h2>まだ相談する段階ではない方へ</h2>
+    <p>無料ツールのほうが向いている場合は、正直にそうお伝えします。
+    まずは書類を作ってみてください。<strong>そのままで足りるなら、それが一番安上がりです。</strong></p>
+    <ul class="linklist">
+      <li><a href="/">請求書をつくる</a></li>
+      <li><a href="/mitsumorisho">見積書をつくる</a></li>
+      <li><a href="/kaigyo">開業してはじめに出す書類の順番を見る</a></li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+</footer>
+
+</body>
+</html>
