@@ -31,7 +31,31 @@ probe.js(複製した index.html の app.js の直後に読み込ませる):
 PDFの出し方(Chrome ヘッドレス。印刷ダイアログは開かない):
 
     chrome --headless=new --disable-gpu --virtual-time-budget=5000 \
+           --user-data-dir=<毎回ちがう空きディレクトリ> \
            --no-pdf-header-footer --print-to-pdf=out.pdf "http://127.0.0.1:8765/?rows=14"
+
+⚠ 2026-09-15 に実際に踏んだ罠が2つある。どちらも「測れているように見えて測れていない」。
+
+ 1) --user-data-dir を使い回すと、前の回の localStorage が残る。
+    送付状で「本文を厚くした回」の状態が次の回に持ち越され、
+    既定の送付状が2ページだと出た。請求書側でも1ページ目の下端が
+    288.3mm のところ 293.6mm と出るなど、数字がずれた。
+    → 1回の描画ごとに新しいディレクトリを渡す(tempfile.mkdtemp() でよい)。
+
+ 2) python -m http.server は拡張子なしのURLを解決しない。
+    /soufujo は404のページを返し、その404を「送付状の紙面」として測っていた
+    (本文の始まりが 25.7mm のはずが 15.3mm と出て気づいた)。
+    → 静的サーバーで測るときは /soufujo.html のように拡張子を付ける。
+      本番(Vercel)は拡張子なしで引けるので、ここだけ本番と違う。
+
+余白を振って比べたいとき(下余白だけを差し替える。上・左右は本番のまま):
+
+    var st = document.createElement('style');
+    st.textContent = '@page { size: A4; margin: 15mm 14mm ' + Number(bm) + 'mm; }';
+    document.head.appendChild(st);
+
+  index.html 以外(送付状・解説記事)は writeState を持たないので、
+  この差し替えだけを行う小さな別スクリプトを </body> の直前に足す。
 """
 import sys
 
