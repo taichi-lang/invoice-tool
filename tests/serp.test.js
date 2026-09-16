@@ -53,7 +53,11 @@ test('公開ページ全部に、空でない <title> がある', () => {
 });
 
 test('公開ページ全部に、空でない meta description がある', () => {
-  // legal.html は免責ページで description を持たない。そこだけ除く。
+  // legal.html だけ除く。このページは description を持たない。
+  // 2026-09-17 に /legal を索引へ入れたが、description は足していない。
+  // 足すと新しい文言を書くことになり、このページに文言を足さない方針
+  // (コンサル指示 2026-08-16、<head> のコメント参照)に反するためである。
+  // 索引に入った結果どんな抜粋が出るかは検索側が決める。当方は測っていない。
   for (const f of htmlFiles().filter((f) => f !== 'legal.html')) {
     const d = descOf(read(f));
     assert.ok(d && d.trim().length > 0, f + ' に description が無い');

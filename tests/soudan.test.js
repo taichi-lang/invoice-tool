@@ -149,8 +149,13 @@ test('sitemap に /soudan が1件だけある', () => {
 
 test('/soudan は noindex ではない(出口の着地点が索引から外れない)', () => {
   assert.ok(!/name="robots"[^>]*noindex/.test(read(SOUDAN)), 'soudan が noindex になっている');
-  // 対照: /legal は noindex のままであること(B4 の持ち物なので触っていない)
-  assert.ok(/name="robots"[^>]*noindex/.test(read('legal.html')), 'legal の noindex を勝手に外している');
+  // 対照: /legal も索引を拒んでいないこと。
+  // ⚠ 2026-09-17 に向きが変わった。元は「/legal は noindex のまま」を確かめる行で、
+  //    B2 が B4 の持ち物へ触っていないことの対照だった。2026-09-17、持ち主である B4 が
+  //    索引を拒むのをやめると決めた(legal.html の <head> のコメントに理由がある)ので、
+  //    同じ対照を反対向きに置き直した。行を消していないのは、どちらの向きでも
+  //    「/legal の索引の扱いを誰かが黙って変えた」ことを、この1行で止めたいからである。
+  assert.ok(!/name="robots"[^>]*noindex/.test(read('legal.html')), 'legal が索引拒否に戻っている');
 });
 
 let passed = 0;
