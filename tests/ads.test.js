@@ -234,6 +234,37 @@ test('片方だけ設定しても有効にしない(発行者IDだけ)', () => {
   assert.ok(fs.existsSync(adsTxt), '発行者IDがあるなら ads.txt は出す');
 });
 
+/* ── 審査する側の動線(2026-09-17 B2)──────────────────────────
+   AdSense は所有者確認にルート直下の /ads.txt を読む。
+   ⚠ 広告ユニットID(ADSENSE_ARTICLE_SLOT)は審査に通るまで発行されないので、
+     審査に出す時点で手元にあるのは発行者IDだけである。
+     その状態で ads.txt の中身が正しくないと、審査が始まらない。
+   これまで「ファイルが在るか」は測っていたが、中身は1文字も測っていなかった。 */
+
+test('審査時の状態(発行者IDだけ)で、ads.txt の中身が Google の1行そのものである', () => {
+  runBuild({ ADSENSE_CLIENT: 'ca-pub-0000000000000000' });
+  const body = fs.readFileSync(adsTxt, 'utf8');
+  assert.strictEqual(body, 'google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0\n');
+  assert.strictEqual(body.trimEnd().split('\n').length, 1, '余計な行がある');
+  assert.ok(!body.includes('ca-pub-'), '`ca-` を落とさないと読まれない: ' + body);
+});
+
+test('広告ユニットIDが増えても ads.txt の中身は変わらず、IDも混ざらない', () => {
+  runBuild({ ADSENSE_CLIENT: 'ca-pub-0000000000000000' });
+  const before = fs.readFileSync(adsTxt, 'utf8');
+  runBuild({ ADSENSE_CLIENT: 'ca-pub-0000000000000000', ADSENSE_ARTICLE_SLOT: '1234567890' });
+  const after = fs.readFileSync(adsTxt, 'utf8');
+  assert.strictEqual(after, before);
+  assert.ok(!after.includes('1234567890'), '広告ユニットIDが ads.txt に混ざっている');
+});
+
+test('形が違う発行者IDでは ads.txt を出さない(対照)', () => {
+  for (const bad of ['pub-0000000000000000', 'ca-pub-', 'ca-pub-123', 'ca-pub-abcdefghij', '   ']) {
+    runBuild({ ADSENSE_CLIENT: bad });
+    assert.ok(!fs.existsSync(adsTxt), '発行者IDが ' + JSON.stringify(bad) + ' なのに ads.txt がある');
+  }
+});
+
 test('片方だけ設定しても有効にしない(広告ユニットIDだけ)', () => {
   runBuild({ ADSENSE_ARTICLE_SLOT: '1234567890' });
   assert.ok(read(pub, 'ads-config.js').includes('window.__ADSENSE__ = null'));
