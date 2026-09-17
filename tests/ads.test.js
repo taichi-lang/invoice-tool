@@ -287,6 +287,51 @@ test('両方そろうと有効になり、ads.txt も出る', () => {
   );
 });
 
+/* ── 404 を読むための目印(2026-09-18 B2)────────────────────────
+   本番の /ads.txt の 404 は、存在しないパスの 404 と1バイトも違わない
+   (2026-09-17 実測: どちらも text/plain 79B・中身も同じ)。
+   静的サイトなので当然で、欠陥ではない。だが打ち分けが成立しない以上、
+   その 404 単体からは何も言えない。
+   ⚠ 打ち分けのために経路を1つ増やすのではなく、既にある ads-config.js を目印に使う。
+     ads-config.js は4状態すべてで必ず出力されるので、
+     「200 が返る = ビルド工程が走った」と読める。組み合わせで意味が決まる:
+       ads-config.js 200(null)+ ads.txt 404 → 走ったうえで発行者ID未設定(=設計どおり)
+       ads-config.js 404            + ads.txt 404 → ビルド工程が走っていない(=欠陥)
+   この節は、その読み方が成り立つ前提そのものを固定する。 */
+
+const BUILD_STATES = [
+  {},
+  { ADSENSE_CLIENT: 'ca-pub-0000000000000000' },
+  { ADSENSE_ARTICLE_SLOT: '1234567890' },
+  { ADSENSE_CLIENT: 'ca-pub-0000000000000000', ADSENSE_ARTICLE_SLOT: '1234567890' },
+  { ADSENSE_CLIENT: 'pub-123', ADSENSE_ARTICLE_SLOT: '12' },
+];
+
+test('ads-config.js は、どの状態でも必ず出力される(ads.txt の 404 を読む目印)', () => {
+  const cfg = path.join(pub, 'ads-config.js');
+  for (const env of BUILD_STATES) {
+    /* ⚠ 毎回消してから走らせる。消さないと、前の状態が書いたファイルが
+       残っているだけで「出力された」と読めてしまい、試験が欠陥を見逃す
+       (2026-09-18、負の対照で実際に見逃した)。 */
+    if (fs.existsSync(cfg)) fs.rmSync(cfg);
+    runBuild(env);
+    assert.ok(fs.existsSync(cfg), 'ads-config.js が無い状態がある: ' + JSON.stringify(env));
+  }
+});
+
+test('設定値が有効なのに ads.txt が無い、という組み合わせは作れない', () => {
+  for (const env of BUILD_STATES) {
+    runBuild(env);
+    const enabled = /window\.__ADSENSE__ = \{/.test(read(pub, 'ads-config.js'));
+    if (enabled) {
+      assert.ok(
+        fs.existsSync(adsTxt),
+        '広告が有効なのに ads.txt が無い(本番で見えたら欠陥): ' + JSON.stringify(env),
+      );
+    }
+  }
+});
+
 test('後片付け: リポジトリの状態を未設定に戻す', () => {
   runBuild({});
   assert.ok(read(pub, 'ads-config.js').includes('window.__ADSENSE__ = null'));
