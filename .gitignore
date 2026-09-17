@@ -9,3 +9,8 @@ Thumbs.db
 # 広告の設定値はビルド時に生成する(tools/build-ads.mjs)。
 # 発行者IDが設定されていないあいだは作られない=/ads.txt は 404。
 public/ads.txt
+
+# 秘密を書いたファイルは配らない。まだ存在しないが、作られた日に無警告で入るのを止める。
+.env
+.env.*
+!.env.example
