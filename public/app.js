@@ -235,6 +235,13 @@ function renderPreview(state, totals) {
 
   setText('pNotes', state.notes);
 
+  // 画面の期限欄の名前は、紙に出る名前と一致させる。
+  // 見積書で「有効期限」に入れた日付は、納品書に切り替えると紙では「納品日」になる。
+  // 画面の名前が「支払期限」で固定だと、利用者は自分が何を入れた欄なのか分からない。
+  // 紙に行が出ない書類(領収書)では、画面にも欄を出さない。
+  $('dueLabel').textContent = preset.due;
+  $('dueField').hidden = !preset.due;
+
   const dueLine = document.querySelector('.due-line');
   if (preset.due && state.dueDate) {
     dueLine.hidden = false;
