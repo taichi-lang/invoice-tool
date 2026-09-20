@@ -97,6 +97,32 @@ test('mailto の雛形に、聞くべき5項目がすべて入っている', () 
   }
 });
 
+/** 文字を打ち込める器の数。<form> が無くても、入力欄が1つでもあれば
+ *  「この画面では何も入力させない」という約束は崩れる。 */
+function inputWidgets(html) {
+  return (html.match(/<(?:input|textarea|select)\b|contenteditable\s*=/gi) || []).length;
+}
+
+test('受け口に入力欄が1つも無い(2026-09-20 に DOM で数えた 0 を、ここで固定する)', () => {
+  const n = inputWidgets(read(SOUDAN));
+  assert.strictEqual(n, 0, `soudan に入力欄が ${n} 個ある`);
+});
+
+test('対照: 同じ数え方は、入力欄が在れば数える(0 を返すだけの関数ではない)', () => {
+  assert.strictEqual(inputWidgets('<input name="x">'), 1);
+  assert.strictEqual(inputWidgets('<textarea></textarea><div contenteditable="true"></div>'), 2);
+  assert.strictEqual(inputWidgets('<p>ただの文章</p>'), 0);
+});
+
+test('受け口に送信ボタンが無い(押して何かが起きる器を置かない)', () => {
+  const html = read(SOUDAN);
+  assert.ok(!/<button\b/i.test(html), 'soudan に button がある');
+  assert.ok(!/type\s*=\s*"submit"/i.test(html), 'soudan に submit がある');
+  // 対照: 同じ2本の判定は、在れば実際に反応する(素通りする式ではない)。
+  assert.ok(/<button\b/i.test('<button>x</button>'));
+  assert.ok(/type\s*=\s*"submit"/i.test('<input type="submit">'));
+});
+
 test('受け口は外部へ1バイトも送らない(当方サーバーへの送信経路が無い)', () => {
   const html = read(SOUDAN);
   for (const bad of ['fetch(', 'XMLHttpRequest', 'action=', '<script']) {
