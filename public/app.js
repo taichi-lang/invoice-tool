@@ -12,10 +12,17 @@ const STORAGE_KEY = 'invoice-tool:draft:v1';
 
 const { calcTotals, isValidInvoiceNo, hasContent } = window.InvoiceCalc;
 const { checkSeal } = window.InvoiceSeal;
+const { presetOf, carriesDueDate } = window.InvoiceDocType;
 
 // 印影の画像(data: URL)。入力欄を持たないので、状態としてここに置く。
 // ⚠ この値はページの中だけで使い、どこにも送信しない。
 let sealImage = '';
+
+// 期限の欄に入っている日付が、どの書類の種類のものかを覚えておく。
+// 同じ欄が書類ごとに「支払期限 / 有効期限 / 納品日」と別の項目名で紙に出るため、
+// 種類が変わったときに持ち越すと、入れた覚えのない日付が別の項目名で印刷される。
+let dueDateOwner = null;
+let dueResetShown = false;
 
 /** 税率の定義。key は内部識別子、rate は百分率。 */
 const TAX_RATES = [
@@ -34,14 +41,6 @@ const DOC_TYPE_BY_QUERY = {
   estimate: '見積書',
   delivery: '納品書',
   receipt: '領収書',
-};
-
-/** 書類の種類ごとの表示文言。 */
-const DOC_PRESETS = {
-  '請求書': { lead: '下記のとおりご請求申し上げます。', grand: 'ご請求金額', bank: 'お振込先', due: '支払期限' },
-  '見積書': { lead: '下記のとおりお見積り申し上げます。', grand: 'お見積金額', bank: 'お振込先', due: '有効期限' },
-  '納品書': { lead: '下記のとおり納品いたしました。', grand: '納品金額合計', bank: 'お振込先', due: '納品日' },
-  '領収書': { lead: '下記のとおり領収いたしました。', grand: '領収金額', bank: 'お振込先', due: '' },
 };
 
 // ---------------------------------------------------------------- 表示ヘルパ
@@ -166,6 +165,9 @@ function writeState(state) {
   itemRows.innerHTML = '';
   const items = Array.isArray(state.items) && state.items.length ? state.items : [{}];
   items.forEach((item) => createItemRow(item));
+
+  // 種類と日付が一緒に書き込まれたので、この日付はこの種類のものである。
+  dueDateOwner = $('docType').value;
 }
 
 // ------------------------------------------------------------ 収入印紙の案内
@@ -202,9 +204,7 @@ function hideWhenEmpty(selector, value) {
 
 function renderPreview(state, totals) {
   // 読み込んだJSONに未知の値が入っていても既定の書式に落とす
-  const preset = Object.prototype.hasOwnProperty.call(DOC_PRESETS, state.docType)
-    ? DOC_PRESETS[state.docType]
-    : DOC_PRESETS['請求書'];
+  const preset = presetOf(state.docType);
 
   setText('pDocType', state.docType);
   setText('pLead', preset.lead);
@@ -360,12 +360,37 @@ function baseFilename(state) {
   return parts.join('_').replace(/[\\/:*?"<>|]/g, '') || 'invoice';
 }
 
+/**
+ * 書類の種類が変わったとき、前の書類で入れた日付を持ち越さない。
+ * 持ち越すと、画面では空欄に見えないまま、紙には別の項目名で印刷される。
+ * 読み取りより先に呼ぶこと(readState はこの欄の値をそのまま紙に回す)。
+ */
+function syncDueDate() {
+  const now = $('docType').value;
+
+  if (dueDateOwner !== now) {
+    const dropped = !carriesDueDate(dueDateOwner, now) && Boolean($('dueDate').value);
+    if (dropped) $('dueDate').value = '';
+    // 黙って消すと「入れたはずの日付が無い」になるので、消したときだけ断り書きを出す。
+    // ⚠ update() は種類を変えた1回の操作で複数回呼ばれることがある(input と change)。
+    //    「消したか」を毎回計算し直すと、2回目の呼び出しで断り書きが即座に消える。
+    dueResetShown = dropped;
+    dueDateOwner = now;
+  } else if (dueResetShown && $('dueDate').value) {
+    dueResetShown = false;          // 入れ直したので断り書きは用済み
+  }
+
+  const notice = $('dueResetNotice');
+  if (notice) notice.hidden = !dueResetShown;
+}
+
 // ---------------------------------------------------------------- 更新ループ
 
 let currentState = null;
 let currentTotals = null;
 
 function update() {
+  syncDueDate();
   const state = readState();
   const totals = calcTotals(state.items, state.rounding, {
     enabled: state.withholdingOn,

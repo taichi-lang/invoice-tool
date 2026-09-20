@@ -59,6 +59,7 @@
           <input type="date" id="dueDate">
         </label>
       </div>
+      <p class="hint" id="dueResetNotice" role="status" hidden>書類の種類が変わったため、前に入れた日付は空にしました。</p>
       <p class="hint" id="receiptStampHint" hidden>
         領収書には収入印紙が必要になることがあります。
         <a id="receiptStampLink" href="/inshi">この金額で印紙が必要か調べる</a>
@@ -284,6 +285,7 @@
   </p>
 </footer>
 
+<script src="/doctype.js"></script>
 <script src="/calc.js"></script>
 <script src="/seal.js"></script>
 <script src="/app.js"></script>
