@@ -148,7 +148,7 @@ test('外部URLを1つも書いていない(偽URL禁止 / factory に公開サ�
   const html = read(SOUDAN);
   // 数えるのは本文の <a> だけ。<link rel="canonical"> は索引のための自己参照であり、
   // 読者を外へ出す導線ではないので対象外(対照: canonical は実在することを下で確かめる)。
-  const anchors = html.match(/<a[^>]*href="https?:\/\/[^"]*"/g) || [];
+  const anchors = html.match(/<a[^a-zA-Z0-9][^>]*href="https?:\/\/[^"]*"/g) || [];
   assert.strictEqual(anchors.length, 0, '外部リンクがある: ' + anchors.join(' | '));
   assert.ok(/<link rel="canonical" href="https:\/\/[^"]+\/soudan">/.test(html), 'canonical が無い');
 });
