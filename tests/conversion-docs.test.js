@@ -97,6 +97,45 @@ for (const { file, from } of CONVERSION_PAGES) {
   });
 }
 
+// ------------------------------------------------- 切り替えで何が変わるかを列挙したページ
+//
+// 2026-09-23 に数えて見つけた残り。
+//
+//   上の CONVERSION_PAGES は「その書類から請求書をつくる手順」を載せたページを守る。
+//   ところが「書類の種類を切り替えると何が変わるか」を列挙しているページが別に在り、
+//   そちらは 09-21 の変更のあとも「表題と文言が変わります」のままだった。
+//
+//     /guide/seikyusho-kakikata FAQ「見積書や領収書も作れますか」
+//
+//   → 何が変わるかを数え上げて答えている場所で、いちばん驚く1件が抜けている。
+//     読んだとおりに切り替えた人は、入れたはずの日付が消えた画面に出会う。
+//
+// 守るのは1つ。切り替えの結果を列挙するなら、消える欄も列挙に入っていること。
+
+/** 「書類の種類を切り替えると何が変わるか」を列挙している場所。 */
+const SWITCH_PAGES = [
+  { file: 'guide/seikyusho-kakikata.html', from: '請求書', to: '見積書' },
+];
+
+for (const { file, from, to } of SWITCH_PAGES) {
+  const html = read(file);
+  const carries = DOC.carriesDueDate(from, to);
+
+  test(`${file}: 切り替えの結果を数え上げた場所に、消える欄も入っている`, () => {
+    if (carries) return;
+    assert.ok(
+      html.includes('空になります'),
+      `${file} は「種類を切り替えると何が変わるか」を列挙しているのに、`
+        + `${DOC.dueLabelOf(from)}→${DOC.dueLabelOf(to)} で欄が空になることが列挙に入っていない`
+    );
+  });
+
+  test(`${file}: 画面に出る断り書きと同じ文言で予告している`, () => {
+    if (carries) return;
+    assert.ok(html.includes(NOTICE), `${file} の予告が、画面に実際に出る文言と違う`);
+  });
+}
+
 let passed = 0;
 let failed = 0;
 console.log('解説ページの変換手順と、ツールの挙動の一致');
