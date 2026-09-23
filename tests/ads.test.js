@@ -338,6 +338,52 @@ test('後片付け: リポジトリの状態を未設定に戻す', () => {
   assert.ok(!fs.existsSync(adsTxt));
 });
 
+// ── ⑥ 名簿が、実際に在るページを取りこぼしていないか ──────────
+/** public/ 以下の .html を、public/ からの相対パスで全部返す。
+ *  ⚠ AD_PAGES / NO_AD_PAGES は手書きの名簿なので、新しいページが1枚増えた日に
+ *     どちらにも載らないまま素通りする。2026-09-24 に実測した: 広告付きの14枚目を
+ *     置いても、12ファイル201件が1件も落ちなかった。
+ *     「書類を作る画面に広告を置かない」は、名簿に載っているページしか守れない。 */
+function allPages(dir = pub, prefix = '') {
+  const out = [];
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (e.isDirectory()) out.push(...allPages(path.join(dir, e.name), prefix + e.name + '/'));
+    else if (e.name.endsWith('.html')) out.push(prefix + e.name);
+  }
+  return out.sort();
+}
+
+test('公開ページは1枚残らず、広告の名簿のどちらかに載っている', () => {
+  const known = new Set([...AD_PAGES, ...NO_AD_PAGES]);
+  const missing = allPages().filter((p) => !known.has(p));
+  assert.deepStrictEqual(
+    missing,
+    [],
+    [
+      `どちらの名簿にも載っていないページがある: ${missing.join(', ')}`,
+      '→ 記事面なら AD_PAGES、ツール面・取引条件の画面なら NO_AD_PAGES へ1行足す。',
+      '→ 迷ったら NO_AD_PAGES。広告は後から足せるが、出た広告は取り消せない。',
+    ].join(' ')
+  );
+});
+
+test('対照: 同じ数え方は、名簿に無いページが在れば拾う(空配列を返すだけの式ではない)', () => {
+  const known = new Set(['a.html']);
+  assert.deepStrictEqual(['a.html', 'b.html'].filter((p) => !known.has(p)), ['b.html']);
+  assert.deepStrictEqual(['a.html'].filter((p) => !known.has(p)), []);
+});
+
+test('対照: 名簿の側に、実在しないページが混ざっていない(逆向きの取りこぼし)', () => {
+  const real = new Set(allPages());
+  const ghosts = [...AD_PAGES, ...NO_AD_PAGES].filter((p) => !real.has(p));
+  assert.deepStrictEqual(ghosts, [], `名簿に実在しないページがある: ${ghosts.join(', ')}`);
+});
+
+test('同じページが、置く名簿と置かない名簿の両方に載っていない', () => {
+  const dup = AD_PAGES.filter((p) => NO_AD_PAGES.includes(p));
+  assert.deepStrictEqual(dup, [], `両方の名簿に載っている: ${dup.join(', ')}`);
+});
+
 let passed = 0;
 let failed = 0;
 console.log('広告の入れ物(第1段の収益)');

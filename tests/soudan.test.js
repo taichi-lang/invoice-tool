@@ -184,6 +184,46 @@ test('/soudan は noindex ではない(出口の着地点が索引から外れ�
   assert.ok(!/name="robots"[^>]*noindex/.test(read('legal.html')), 'legal が索引拒否に戻っている');
 });
 
+// ── ⑤ 名簿が、実際に在るページを取りこぼしていないか ──────────
+/** public/ 以下の .html を、public/ からの相対パスで全部返す。
+ *  ⚠ 名簿(EXIT_PAGE / SOUDAN / NO_EXIT_PAGES)は手書きなので、
+ *     新しいページが1枚増えた日に、どの名簿にも載らないまま素通りする。
+ *     2026-09-24 に実測した: 出口・広告・フォーム・入力欄・外部URLを全部載せた
+ *     14枚目を置いても、12ファイル201件が1件も落ちなかった。 */
+function allPages(dir = pub, prefix = '') {
+  const out = [];
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (e.isDirectory()) out.push(...allPages(path.join(dir, e.name), prefix + e.name + '/'));
+    else if (e.name.endsWith('.html')) out.push(prefix + e.name);
+  }
+  return out.sort();
+}
+
+test('公開ページは1枚残らず、出口の名簿のどれかに載っている', () => {
+  const known = new Set([EXIT_PAGE, SOUDAN, ...NO_EXIT_PAGES]);
+  const missing = allPages().filter((p) => !known.has(p));
+  assert.deepStrictEqual(
+    missing,
+    [],
+    [
+      `どの名簿にも載っていないページがある: ${missing.join(', ')}`,
+      '→ 出口を置いてよいページなら EXIT_PAGE、置かないページなら NO_EXIT_PAGES へ1行足す。',
+    ].join(' ')
+  );
+});
+
+test('対照: 同じ数え方は、名簿に無いページが在れば拾う(空配列を返すだけの式ではない)', () => {
+  const known = new Set(['a.html']);
+  assert.deepStrictEqual(['a.html', 'b.html'].filter((p) => !known.has(p)), ['b.html']);
+  assert.deepStrictEqual(['a.html'].filter((p) => !known.has(p)), []);
+});
+
+test('対照: 名簿の側に、実在しないページが混ざっていない(逆向きの取りこぼし)', () => {
+  const real = new Set(allPages());
+  const ghosts = [EXIT_PAGE, SOUDAN, ...NO_EXIT_PAGES].filter((p) => !real.has(p));
+  assert.deepStrictEqual(ghosts, [], `名簿に実在しないページがある: ${ghosts.join(', ')}`);
+});
+
 let passed = 0;
 let failed = 0;
 console.log('第3段(factory)への出口');
