@@ -136,6 +136,59 @@ for (const { file, from, to } of SWITCH_PAGES) {
   });
 }
 
+// ------------------------------------------------- 変換ページへ送り出す側の説明文
+//
+// 2026-09-24 に決めた1件。
+//
+//   上の2ブロックは「着地したページが、消える欄を断っているか」を守る。
+//   ところが、そのページへ送り出す側の関連リンクの説明文が、
+//   クリックする前に「そのまま流用できる」と約束していた。
+//
+//     /guide/seikyusho-kakikata 関連リンク「そのまま請求書に流用する手順。」
+//
+//   → 着地先の /mitsumorisho は、同じ変換を4手順として書き、
+//     期限の欄が空になることまで断っている。「そのまま」は着地先で回収できない。
+//     しかも同じページの FAQ が12行上で「空になります」と言っており、1枚の中で食い違っていた。
+//
+// 守るのは1つ。日付が持ち越されない変換へ送り出す説明文は、その変換を「そのまま」と呼ばない。
+//
+// 判定の向きは doctype.js の表から取る。ページ側に直書きしない。
+
+/** 関連リンクの <a href="/xxx">…</a> に続く説明文を取り出す。 */
+const LINK_DESC = /<a href="\/(mitsumorisho|nohinsho)"[^>]*>[\s\S]*?<\/a>\s*<p>([\s\S]*?)<\/p>/g;
+
+/** 「そのまま」が、直後(または直前)の変換の話に係っている形だけを拾う。
+ *  読点をまたぐものは別の語に係っているため拾わない
+ *  (例「そのまま使えるただし書き文例、…請求書への流用手順。」は正しい)。 */
+const LOOSE_PROMISE = [/そのまま[^、。]{0,8}(請求書|流用)/, /流用[^、。]{0,8}そのまま/];
+
+const FROM_OF = { 'mitsumorisho': '見積書', 'nohinsho': '納品書' };
+
+for (const file of ['index.html', 'guide/index.html', 'guide/seikyusho-kakikata.html',
+                    'guide/seikyusho-teisei-saihakko.html', 'guide/gensen-choshu-keisan.html',
+                    'kaigyo.html', 'mitsumorisho.html', 'nohinsho.html', 'ryoshusho.html',
+                    'inshi.html', 'soufujo.html', 'soudan.html', 'legal.html']) {
+  const html = read(file);
+  LINK_DESC.lastIndex = 0;
+  let m;
+  let n = 0;
+  while ((m = LINK_DESC.exec(html)) !== null) {
+    const from = FROM_OF[m[1]];
+    const desc = m[2];
+    const i = ++n;
+    test(`${file}: ${from}への案内文が、回収できない「そのまま」を約束していない (${i})`, () => {
+      if (DOC.carriesDueDate(from, TO)) return;  // 持ち越せるなら「そのまま」でよい
+      const hit = LOOSE_PROMISE.find((re) => re.test(desc));
+      assert.ok(
+        !hit,
+        `${file} が ${from}→${TO} を「そのまま」と案内している: 「${desc}」。`
+          + `${DOC.dueLabelOf(from)}は${DOC.dueLabelOf(TO)}に変えると空になるので、`
+          + 'クリック前の約束を着地先で回収できない'
+      );
+    });
+  }
+}
+
 let passed = 0;
 let failed = 0;
 console.log('解説ページの変換手順と、ツールの挙動の一致');
