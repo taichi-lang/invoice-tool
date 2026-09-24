@@ -97,6 +97,30 @@ test('mailto の雛形に、聞くべき5項目がすべて入っている', () 
   }
 });
 
+/** 雛形の番号付き項目を数える。上の5項目は「在ること」しか見ていないので、
+ *  6つ目が足された日には素通りする(2026-09-25 に実測。注入して終了コード0)。
+ *  項目が増えるほど書く手間が増えて相談が来なくなるため、数のほうを固定する。 */
+function templateItems(html) {
+  const href = html.match(/href="(mailto:[^"]+)"/)[1];
+  const decoded = decodeURIComponent(href.replace(/&amp;/g, '&'));
+  return decoded.match(/^\s*\d+\.\s/gm) || [];
+}
+
+test('雛形の項目はちょうど5つ(6つ目が黙って増えない)', () => {
+  const n = templateItems(read(SOUDAN)).length;
+  assert.strictEqual(n, 5, `雛形の番号付き項目が ${n} 個ある`);
+});
+
+test('対照: 同じ数え方は、項目が6つなら6を返す(5を返すだけの式ではない)', () => {
+  const six =
+    'href="mailto:x?body=' +
+    encodeURIComponent(
+      ['', '1. a', '2. b', '3. c', '4. d', '5. e', '6. f'].join(String.fromCharCode(10))
+    ) +
+    '"';
+  assert.strictEqual(templateItems(six).length, 6);
+});
+
 /** 文字を打ち込める器の数。<form> が無くても、入力欄が1つでもあれば
  *  「この画面では何も入力させない」という約束は崩れる。 */
 function inputWidgets(html) {
@@ -128,6 +152,63 @@ test('受け口は外部へ1バイトも送らない(当方サーバーへの送
   for (const bad of ['fetch(', 'XMLHttpRequest', 'action=', '<script']) {
     assert.ok(!html.includes(bad), `soudan に ${bad} がある`);
   }
+});
+
+/** ブラウザにリクエストを出させる属性を、全部まとめて数える。
+ *
+ *  ⚠ 2026-09-25 に実測して分かったこと: 上の4語のブロックリストは、
+ *    外部へリクエストを出す形を1つも止めていなかった。注入して終了コード0だったもの:
+ *      <img src="https://…">  /  <iframe src="https://…">
+ *      <a ping="https://…">   /  <link rel="prefetch" href="https://…">
+ *    どれも 'fetch(' も 'XMLHttpRequest' も 'action=' も '<script' も含まないためである。
+ *    (本番では CSP が4つとも止める。落ちていたのは「こちらが気づくか」である。)
+ *
+ *  覚えている語を並べるのをやめて、リクエストを起こしうる属性の側から数える。
+ *  通してよいのは 相対パス / mailto: / data: と、canonical の自己参照だけ。 */
+const FETCHING_ATTRS = ['src', 'srcset', 'href', 'ping', 'action', 'formaction', 'poster', 'data', 'background'];
+const ATTR_RE = /([a-zA-Z-]+)\s*=\s*"([^"]*)"/g;
+const EXTERNAL_RE = /^(?:https?:)?\/\//i;
+
+function externalRefs(html) {
+  // canonical はリクエストを起こさない索引用の自己参照なので、数える前に外す
+  // (在ることは別のテストで確かめている)。
+  const scrubbed = html.replace(/<link[^>]*rel="canonical"[^>]*>/gi, '');
+  const out = [];
+  for (const m of scrubbed.matchAll(ATTR_RE)) {
+    const attr = m[1].toLowerCase();
+    if (!FETCHING_ATTRS.includes(attr)) continue;
+    // srcset は "URL 1x, URL 2x" の形なので、URLの部分だけを取り出す
+    for (const url of m[2].split(',').map((v) => v.trim().split(/\s+/)[0]).filter(Boolean)) {
+      if (EXTERNAL_RE.test(url)) out.push(attr + '="' + url + '"');
+    }
+  }
+  return out;
+}
+
+test('受け口から外部へリクエストを起こす属性が1つも無い', () => {
+  const refs = externalRefs(read(SOUDAN));
+  assert.deepStrictEqual(
+    refs,
+    [],
+    '外部へリクエストを起こす属性がある: ' + refs.join(' | ') +
+      ' → 受け口は mailto: 1本だけである。外部の画像・iframe・ping・prefetch は置かない。'
+  );
+});
+
+test('対照: 同じ数え方は、素通りしていた4つの形をすべて拾う', () => {
+  assert.deepStrictEqual(externalRefs('<img src="https://e.net/p.gif">'), ['src="https://e.net/p.gif"']);
+  assert.strictEqual(externalRefs('<iframe src="https://e.net/f"></iframe>').length, 1);
+  assert.strictEqual(externalRefs('<a href="/" ping="https://e.net/t">x</a>').length, 1);
+  assert.strictEqual(externalRefs('<link rel="prefetch" href="https://e.net/p">').length, 1);
+  // scheme を省いた形("//" 始まり)と srcset も取りこぼさない
+  assert.strictEqual(externalRefs('<img src="//e.net/a.png">').length, 1);
+  assert.strictEqual(externalRefs('<img srcset="https://e.net/a.png 1x, /b.png 2x">').length, 1);
+  // 通してよいもの: 相対・mailto・canonical の自己参照
+  assert.deepStrictEqual(externalRefs('<a href="/">x</a><a href="mailto:a@b.c">y</a><img src="/i.svg">'), []);
+  assert.deepStrictEqual(
+    externalRefs('<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/soudan">'),
+    []
+  );
 });
 
 // ── ④ 書いてはいけないもの ──────────────────────────────────
