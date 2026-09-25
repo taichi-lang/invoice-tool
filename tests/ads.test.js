@@ -384,6 +384,104 @@ test('同じページが、置く名簿と置かない名簿の両方に載っ�
   assert.deepStrictEqual(dup, [], `両方の名簿に載っている: ${dup.join(', ')}`);
 });
 
+// ── ⑥ /legal の告知が、述べている事実そのものに繋がっている ──────
+/* 2026-09-26(B2): ④ は「告知に4語がそろっているか」しか見ていなかった。
+   語がそろっていても、告知が述べている事実は誰も確かめていない。
+   09-25 の /soudan(4語のブロックリスト)とまったく同じ形である。
+   告知は2つの事実を述べているのに、どちらも判定0件だった:
+     (a)「アクセス解析ツールは導入していません」 → 公開物を1度も数えていない
+     (b)「解説記事と開業ガイドの末尾にのみ配信」 → AD_PAGES と無関係だった
+   ⚠ (b) は、書かれた時点で既に1ページぶん実態とずれていた(kaigyo.html)。 */
+
+/** 解析ツールの印。1つでも公開物に在れば、告知の (a) が嘘になる。 */
+const ANALYTICS_MARKS = [
+  'googletagmanager', 'google-analytics', 'gtag(', 'gtag.js',
+  'analytics.js', 'plausible.io', 'clarity.ms', 'hotjar',
+  'matomo', 'piwik', 'segment.com', 'mixpanel',
+];
+
+/** public/ 配下で外から読まれる資材(HTML/JS/CSS)を全部そろえる。 */
+function assetFiles(dir = pub, prefix = '') {
+  const out = [];
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (e.isDirectory()) out.push(...assetFiles(path.join(dir, e.name), prefix + e.name + '/'));
+    else if (/\.(html|js|css)$/.test(e.name)) out.push(prefix + e.name);
+  }
+  return out.sort();
+}
+
+/** text の中の解析ツールの印を数える(対照を当てられるよう関数に出す)。 */
+function analyticsHits(text) {
+  return ANALYTICS_MARKS.filter((m) => text.includes(m));
+}
+
+test('告知の「解析ツールは導入していません」を、公開物ぜんぶで裏づける', () => {
+  const bad = [];
+  for (const f of assetFiles()) {
+    for (const m of analyticsHits(read(pub, f))) bad.push(`${f}: ${m}`);
+  }
+  assert.deepStrictEqual(bad, [], [
+    `解析ツールの印が公開物に在る: ${bad.join(' / ')}`,
+    '→ /legal の告知は「アクセス解析ツールは導入していません」と書いてある。',
+    '→ 入れるなら、先に告知のほうを直すこと。文章が嘘になる側に倒さない。',
+  ].join(' '));
+});
+
+test('対照: 同じ数え方は、印が在れば拾う(常に空を返す式ではない)', () => {
+  assert.deepStrictEqual(analyticsHits('<script src="https://www.googletagmanager.com/gtag.js">'),
+    ['googletagmanager', 'gtag.js']);
+  assert.deepStrictEqual(analyticsHits('広告も解析も入っていない普通の本文'), []);
+});
+
+test('対照: 数える相手は実在し、0枚を数えて通っているのではない', () => {
+  const files = assetFiles();
+  assert.ok(files.length >= 20, `数えた資材が少なすぎる: ${files.length}`);
+  assert.ok(files.includes('legal.html') && files.includes('ads.js'), files.join(','));
+});
+
+/** 告知が面を名指しする語と、その語が指すページの見分け方。 */
+const AD_AREAS = [
+  { word: '解説記事', owns: (p) => p.startsWith('guide/') },
+  { word: '開業ガイド', owns: (p) => p === 'kaigyo.html' },
+];
+
+const noticeOn = () => {
+  const html = read(pub, 'legal.html');
+  const m = html.match(/<p id="ads-notice-on"[\s\S]*?<\/p>/);
+  assert.ok(m, '/legal に「広告あり」側の告知が見つからない');
+  return m[0];
+};
+
+test('告知が名指しする面の語が、広告を置く名簿をちょうど覆っている', () => {
+  const on = noticeOn();
+  // 順方向: 広告を置く各ページに、それを名指しする語が在り、告知に書いてある。
+  const unnamed = AD_PAGES.filter((p) => !AD_AREAS.some((a) => a.owns(p)));
+  assert.deepStrictEqual(unnamed, [], [
+    `広告を置くのに、/legal の告知が名指ししていないページがある: ${unnamed.join(', ')}`,
+    '→ AD_AREAS に語を1つ足し、/legal の告知本文にもその語を書くこと。',
+  ].join(' '));
+  for (const a of AD_AREAS) {
+    assert.ok(on.includes(a.word), `告知に「${a.word}」が無い(広告は出るのに名指しされない)`);
+  }
+});
+
+test('逆向き: 告知が名指しする語に、広告が1枚も出ない面が混ざっていない', () => {
+  const empty = AD_AREAS.filter((a) => !AD_PAGES.some((p) => a.owns(p)));
+  assert.deepStrictEqual(empty.map((a) => a.word), [], [
+    '告知が「ここに広告を出す」と書いているのに、実際には1枚も出ない面がある。',
+    '→ 広告を出していない面を告知に書くと、それも事実と違う。',
+  ].join(' '));
+});
+
+test('告知が「配信していません」と名指しする面が、置かない名簿に在る', () => {
+  const on = noticeOn();
+  assert.ok(on.includes('書類を作る画面'), '告知が書類を作る画面を名指ししていない');
+  assert.ok(on.includes('本ページには配信していません'), '告知が /legal 自身の除外を書いていない');
+  for (const p of ['index.html', 'mitsumorisho.html', 'legal.html']) {
+    assert.ok(NO_AD_PAGES.includes(p), `${p} が「置かない名簿」から外れている`);
+  }
+});
+
 let passed = 0;
 let failed = 0;
 console.log('広告の入れ物(第1段の収益)');
