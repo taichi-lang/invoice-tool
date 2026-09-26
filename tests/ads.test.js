@@ -43,6 +43,7 @@ const NO_AD_PAGES = [
   'ryoshusho.html',
   'nohinsho.html',
   'soufujo.html',
+  'atena.html',
   'inshi.html',
   'legal.html',
   'soudan.html',

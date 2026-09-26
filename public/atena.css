@@ -1,0 +1,135 @@
+/* ---------------------------------------------------------- 封筒の宛名(/atena)
+
+   このページだけの規則を別ファイルに置く。
+   理由: 封筒は A4 ではない。style.css の @page(A4・余白 15/14/8mm)は
+   請求書と送付状の紙面を実測で決めた値なので、1mm も動かしたくない。
+   ここでは名前付きのページ(@page atena)を使い、封筒の紙面だけを長形3号にする。
+
+   長形3号 = 幅 120mm × 高さ 235mm。A4 を三つ折りにして入れる、請求書の郵送でいちばん使う封筒。 */
+
+.at-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.at-side { margin: 0; text-align: center; font-size: 12px; color: var(--ink-sub, #555); }
+
+.at-sheet {
+  position: relative;
+  width: 120mm;
+  height: 235mm;
+  overflow: hidden;
+  background: #fff;
+  color: #000;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .12);
+  font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "Noto Serif JP", "MS Mincho", serif;
+  line-height: 1.5;
+}
+.at-sheet[hidden] { display: none; }
+.at-sheet p { margin: 0; }
+
+@media (max-width: 1400px) { .at-sheet { zoom: .8; } }
+@media (max-width: 900px)  { .at-sheet { zoom: .6; } }
+
+/* 縦書きの共通。英字と数字も縦に立てる(横倒しにしない)。 */
+.at-body, .at-names, .at-from, .at-enclosure {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
+/* 郵便番号は横書きで〒付き。
+   ⚠ 封筒に印刷済みの赤い郵便番号枠(右上)には合わせていない。
+   枠の位置を実物で測っていないので、枠の下(上端から 24mm)に置いて重ならないようにしている。 */
+.at-zip {
+  position: absolute;
+  top: 24mm;
+  right: 10mm;
+  font-size: 12pt;
+  letter-spacing: .08em;
+}
+
+/* 住所は右端から。2行目(建物名など)は1字半下げる。 */
+.at-body {
+  position: absolute;
+  top: 32mm;
+  right: 12mm;
+  bottom: 22mm;
+}
+.at-addr { font-size: 12pt; }
+.at-addr-sub { padding-inline-start: 1.5em; }
+
+/* 宛名は封筒の左右の中央に置く。住所の列とは別の箱にして、行数が変わっても中央からずれないようにする。 */
+.at-names-wrap {
+  position: absolute;
+  top: 44mm;
+  bottom: 22mm;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+.at-to { font-size: 13pt; }
+.at-to-dept { padding-inline-start: 4mm; }
+.at-to-person {
+  font-size: 19pt;
+  letter-spacing: .12em;
+  padding-inline-start: 10mm;
+  margin-inline-start: 0;
+}
+
+/* 朱書き。左下に赤い枠で。 */
+.at-enclosure {
+  position: absolute;
+  left: 12mm;
+  bottom: 22mm;
+  padding: 2mm 1.2mm;
+  border: 1.5px solid #c8161d;
+  color: #c8161d;
+  font-size: 13pt;
+  font-weight: 700;
+  letter-spacing: .15em;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* 裏面の差出人。封筒の左半分の下寄せ。 */
+.at-from {
+  position: absolute;
+  left: 14mm;
+  top: 128mm;
+  bottom: 20mm;
+}
+.at-from-addr { font-size: 10pt; }
+.at-from-name { font-size: 12pt; padding-inline-start: 10mm; margin-inline-start: 0; }
+.at-from-zip {
+  position: absolute;
+  left: 12mm;
+  top: 120mm;
+  font-size: 10pt;
+  letter-spacing: .08em;
+}
+
+/* ---------------------------------------------------------- 印刷 */
+
+@page atena {
+  size: 120mm 235mm;
+  /* 余白はここでは取らない。紙面の中の位置は上の absolute の値が直接持つ(どれも端から 10mm 以上)。 */
+  margin: 0;
+}
+
+@media print {
+  .at-preview { display: block; }
+  .at-side { display: none; }
+  .at-sheet {
+    page: atena;
+    zoom: 1;
+    box-shadow: none;
+    margin: 0;
+  }
+  /* 表面と裏面は別の1枚。封筒を裏返して2回目を刷る。 */
+  .at-sheet + .at-sheet { break-before: page; }
+}

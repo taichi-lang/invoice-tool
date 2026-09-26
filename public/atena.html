@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>封筒の宛名印刷 長形3号・縦書き 無料 — 請求書の郵送に</title>
+<meta name="description" content="請求書を郵送する封筒の宛名、御中と様の付け方や縦書きの数字で迷っていませんか。長形3号の表面と裏面を、敬称・漢数字・「請求書在中」の朱書きまでそろえて印刷できる無料ツールです。登録不要で、入力内容は送信されません。">
+<meta property="og:title" content="封筒の宛名印刷 長形3号・縦書き 無料 — 請求書の郵送に">
+<meta property="og:description" content="請求書を郵送する封筒の宛名、御中と様の付け方や縦書きの数字で迷っていませんか。長形3号の表面と裏面を、敬称・漢数字・「請求書在中」の朱書きまでそろえて印刷できる無料ツールです。登録不要で、入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/atena">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/atena.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">封筒の宛名印刷</p>
+  <p class="tagline">長形3号・縦書き / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">封筒の宛名印刷 長形3号・縦書き 無料 — 請求書の郵送に</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 宛先</summary>
+      <label>郵便番号
+        <input type="text" id="atZip" inputmode="numeric" autocomplete="off" placeholder="100-0001">
+      </label>
+      <label>住所(1行目に番地まで、2行目に建物名)
+        <textarea id="atAddress" rows="2" placeholder="東京都千代田区千代田1-1&#10;サンプルビル3階"></textarea>
+      </label>
+      <label>会社名・屋号
+        <input type="text" id="atCompany" placeholder="株式会社サンプル">
+      </label>
+      <label>部署(任意)
+        <input type="text" id="atDept" placeholder="経理部">
+      </label>
+      <label>担当者名(任意)
+        <input type="text" id="atPerson" placeholder="山田 太郎">
+      </label>
+      <p class="hint">敬称は自動で付きます。<strong>担当者名があれば担当者に「様」、無ければ会社名(部署があれば部署)に「御中」</strong>。2つが重なることはありません。自分で「様」「御中」を入力しても二重にはなりません。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 朱書き</summary>
+      <label>封筒の左下に赤で入れる文字
+        <select id="atEnclosure"></select>
+      </label>
+      <p class="hint">「請求書在中」があると、受け取った会社で<strong>開封する前に経理へ回ります</strong>。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 差出人(自分・裏面)</summary>
+      <label>郵便番号
+        <input type="text" id="atFromZip" inputmode="numeric" autocomplete="off" placeholder="000-0000">
+      </label>
+      <label>住所
+        <textarea id="atFromAddress" rows="2" placeholder="東京都…1-2-3"></textarea>
+      </label>
+      <label>氏名・屋号・会社名
+        <input type="text" id="atFromName" placeholder="中村太郎">
+      </label>
+    </details>
+
+    <details class="card" open>
+      <summary>4. 印刷のしかた</summary>
+      <label class="check">
+        <input type="checkbox" id="atKanji" checked>
+        住所の数字を漢数字にする(1-2-3 → 一ー二ー三)
+      </label>
+      <label class="check">
+        <input type="checkbox" id="atPrintZip" checked>
+        郵便番号を印字する
+      </label>
+      <label class="check">
+        <input type="checkbox" id="atPrintBack" checked>
+        裏面(差出人)も印刷する
+      </label>
+      <p class="hint">郵便番号の赤い枠が印刷済みの封筒で、枠に手書きしたいときは「郵便番号を印字する」を外してください。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="atPrint" class="btn-main">印刷 / PDFとして保存</button>
+      <button type="button" id="atClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <p class="hint warn" id="atProblems" hidden></p>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>封筒に入れるもの</h2>
+      <ul class="guide-links">
+        <li><a href="/">請求書をつくる</a></li>
+        <li><a href="/soufujo">送付状をつくる(請求書に添える1枚)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="at-preview" aria-label="プレビュー">
+    <div>
+      <p class="at-side">表面</p>
+      <div class="at-sheet" id="atFront"></div>
+    </div>
+    <div>
+      <p class="at-side">裏面</p>
+      <div class="at-sheet" id="atBack"></div>
+    </div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>請求書の郵送は、長形3号がいちばん無理がない</h2>
+  <p>A4の請求書を<strong>三つ折りにすると、そのまま長形3号(幅120mm×高さ235mm)に入ります。</strong>長形3号は定形郵便物の上限の大きさちょうどで、定形外にはなりません。送付状を添えても、A4が2〜3枚なら同じ封筒で足ります。</p>
+  <p>折らずに送りたいときは角形2号(A4がそのまま入る大きさ)を使いますが、こちらは定形外郵便物になります。<strong>このツールが刷れるのは長形3号だけです。</strong></p>
+
+  <h2>「御中」と「様」の決まりは1つだけ</h2>
+  <p><strong>人に宛てるなら「様」、組織に宛てるなら「御中」。同じ宛名に両方は付けません。</strong>上のツールは、担当者名が入っているかどうかだけで判断して、どちらか一方を付けます。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>入力したもの</th><th>封筒に出る宛名</th></tr></thead>
+    <tbody>
+      <tr><td>会社名だけ</td><td>株式会社サンプル <strong>御中</strong></td></tr>
+      <tr><td>会社名と部署</td><td>株式会社サンプル / 経理部 <strong>御中</strong></td></tr>
+      <tr><td>会社名と部署と担当者</td><td>株式会社サンプル / 経理部 / 山田 太郎 <strong>様</strong></td></tr>
+      <tr><td>担当者だけ(個人の取引先)</td><td>山田 太郎 <strong>様</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <p><strong>「経理部御中 山田太郎様」は誤り</strong></p>
+    <p>部署と担当者の両方を書くときに、部署にも「御中」を残してしまう形です。担当者の名前を書いた時点で、宛先は組織ではなく人になります。「御中」は外して、担当者の「様」だけにします。</p>
+  </div>
+
+  <h2>縦書きの住所は、数字を漢数字にする</h2>
+  <p>縦書きに算用数字を並べると、「12」が横向きに寝たり、1字ずつ縦に並んで読みにくくなったりします。<strong>縦書きの封筒では、番地を漢数字にするのが一般的です。</strong>上のツールは「1-2-3」を「一ー二ー三」に書き換えます。</p>
+  <p>このとき、<strong>「12」は「十二」ではなく「一二」にしています。</strong>番地や部屋番号は数量ではなく番号なので、1字ずつ置き換えたほうが元の番号と取り違えにくいからです。横書きのまま残したいときは、「住所の数字を漢数字にする」を外してください。</p>
+
+  <h2>「請求書在中」は左下に赤で</h2>
+  <p>会社宛ての郵便は、まず総務や受付でまとめて受け取られ、そこから各部署へ仕分けられます。<strong>表に「請求書在中」とあれば、開封される前に経理へ回ります。</strong>支払いの締め日に間に合うかどうかが、この1行で変わることがあります。</p>
+  <p>位置は表面の左下、色は赤が慣例です。上のツールは赤い枠で囲んで刷ります。<strong>白黒のプリンターでは黒か灰色で出ます</strong>ので、その場合は赤いペンで上からなぞるか、市販の「請求書在中」のスタンプを使ってください。</p>
+
+  <h2>印刷する前に、普通紙で1回確かめる</h2>
+  <p>封筒に刷れるかどうか、どこまで端に寄せて刷れるかは、<strong>プリンターによって違います。</strong>このツールはどの文字も封筒の端から10mm以上離していますが、すべての機種で確かめたわけではありません。</p>
+  <ol>
+    <li>「印刷 / PDFとして保存」を押し、印刷の画面で<strong>用紙サイズを「長形3号」</strong>(一覧に無ければ「ユーザー定義 120×235mm」)にする</li>
+    <li><strong>倍率は100%</strong>(「用紙に合わせる」を外す)にする</li>
+    <li>まず<strong>普通紙に1回刷り、封筒と重ねて</strong>位置を確かめる</li>
+    <li>封筒を差し込み、表面を刷る。裏面も刷るなら、<strong>封筒を裏返してもう1回</strong>刷る(2ページ目が裏面です)</li>
+  </ol>
+  <p>封筒の差し込む向き(封の口が上か下か)も機種ごとに違います。プリンターの説明書の「封筒」の項を見てください。</p>
+
+  <div class="note">
+    <p><strong>郵便番号の赤い枠には合わせていません</strong></p>
+    <p>封筒に印刷済みの郵便番号枠の位置を、このツールは実物で測っていません。そのため郵便番号は<strong>枠の下に「〒」付きの横書きで</strong>刷ります。枠に数字を入れたいときは、「郵便番号を印字する」を外して手で書き込んでください。</p>
+  </div>
+
+  <a class="cta" href="/">
+    <strong>封筒に入れる請求書をつくる(登録不要)</strong>
+    <span>宛名と同じく、この端末の中だけで組み立てます。PDFに透かしは入りません</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/atena-core.js"></script>
+<script src="/atena.js"></script>
+</body>
+</html>
