@@ -138,6 +138,42 @@ test('封筒の紙の大きさは、請求書の A4 の @page を1mmも変えず
   assert.ok(/@page\s*\{\s*size:\s*A4/.test(baseCss), 'style.css の A4 の @page が消えている');
 });
 
+/*
+ * 紙端から 10mm。多くの家庭用プリンタは、紙の端から数mmには印字できない。
+ * 封筒の @page は余白 0 なので、紙面の文字の位置は atena.css の absolute の値がそのまま紙端からの距離になる。
+ * だからその値を読めば、PDF を出さなくても「端に寄りすぎた」変更を落とせる。
+ *
+ * 2026-09-28 に Chrome ヘッドレスで PDF に出して実測した(tools/paper_probe.py)。
+ * 標準・部署なし・長い入力(住所3行・会社名26字・担当者名11字)の3通りで、
+ * 全文字の紙端からの最小距離は 表面 10.3mm(郵便番号の右)・裏面 12.0mm(郵便番号の左)。
+ * 長い入力でも住所の列と宛名の列は重ならなかった(住所 x=90〜107mm・宛名 x=50〜71mm)。
+ * ⚠ 実物の封筒と実機のプリンタでは測っていない。
+ */
+test('紙面の文字は、どの紙端からも 10mm 以上内側に置く(@page の余白 0 と absolute の値の組)', () => {
+  assert.ok(/@page atena\s*\{[^}]*margin:\s*0\s*;/.test(css), '@page atena の余白が 0 でない(下の判定の前提が崩れる)');
+  const plain = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  // 左右いっぱいの箱の中で中央に寄せるものだけは 0 を許す。中身の位置は中央寄せが決める。
+  const FULL_WIDTH = { '.at-names-wrap': ['left', 'right'] };
+  let checked = 0;
+  for (const m of plain.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    const selector = m[1].trim();
+    if (!selector.startsWith('.at-')) continue;
+    for (const d of m[2].matchAll(/(?:^|;)\s*(top|right|bottom|left)\s*:\s*([^;]+)/g)) {
+      const side = d[1];
+      const value = d[2].trim();
+      if (value === '0' && (FULL_WIDTH[selector] || []).includes(side)) {
+        assert.ok(/justify-content:\s*center/.test(m[2]), selector + ' が 0 なのに中央寄せでない');
+        continue;
+      }
+      const mm = /^(\d+(?:\.\d+)?)mm$/.exec(value);
+      assert.ok(mm, selector + ' の ' + side + ': ' + value + ' は mm で書かれていない(紙端からの距離として読めない)');
+      assert.ok(Number(mm[1]) >= 10, selector + ' の ' + side + ' が ' + value + '(紙端から 10mm 未満)');
+      checked++;
+    }
+  }
+  assert.ok(checked >= 10, '位置の指定を ' + checked + ' 個しか読めなかった(読み方が壊れている)');
+});
+
 test('入力パネルと解説は印刷されない', () => {
   assert.ok(html.includes('<section class="editor no-print"'), '入力パネルに no-print が無い');
   assert.ok(html.includes('<article class="article no-print">'), '解説に no-print が無い');

@@ -83,9 +83,14 @@ def main(path):
         top = min(s["bbox"][1] for s in spans) * MM
         bottom = max(s["bbox"][3] for s in spans) * MM
         left = min(s["bbox"][0] for s in spans) * MM
+        right = max(s["bbox"][2] for s in spans) * MM
         print(f"   本文の始まり {top:.1f}mm / 終わり {bottom:.1f}mm / 左 {left:.1f}mm / 文字のかたまり {len(spans)}")
-        if top < 10:
-            print("   ⚠ 本文が紙の上端から 10mm 未満で始まっている。多くのプリンタは印字できない")
+        # 2026-09-28 追加: 封筒(/atena)は余白 0 の紙に absolute で置くので、上端だけでは足りない。4辺とも見る。
+        edges = {"上": top, "下": r.height * MM - bottom, "左": left, "右": r.width * MM - right}
+        print("   紙端からの距離 " + " / ".join(f"{k} {v:.1f}mm" for k, v in edges.items()))
+        for k, v in edges.items():
+            if v < 10:
+                print(f"   ⚠ 文字が紙の{k}端から 10mm 未満にある。多くのプリンタは印字できない")
 
 
 if __name__ == "__main__":
