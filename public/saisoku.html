@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>請求書の催促状を無料で作成 — 入金がないときの1通をPDFで</title>
+<meta name="description" content="支払期日を過ぎても入金がないとき、何と書いて送ればよいか迷っていませんか。無料・登録不要の作成ツールです。経過日数と曜日つきの回答期限を入れた催促状を、1回目・2回目の段階に分けてその場でPDFにできます。入力内容は送信されません。">
+<meta property="og:title" content="請求書の催促状を無料で作成 — 入金がないときの1通をPDFで">
+<meta property="og:description" content="支払期日を過ぎても入金がないとき、何と書いて送ればよいか迷っていませんか。無料・登録不要の作成ツールです。経過日数と曜日つきの回答期限を入れた催促状を、1回目・2回目の段階に分けてその場でPDFにできます。入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/saisoku">
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">催促状ジェネレーター</p>
+  <p class="tagline">入金がないときの1通 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">請求書の催促状を無料で作成 — 入金がないときの1通をPDFで</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 何回目か</summary>
+      <label>段階
+        <select id="ssStage"></select>
+      </label>
+      <p class="hint">1回目は行き違いの可能性を残し、請求書の再送を申し出ます。2回目は経過日数を数字で書き、期限までの入金をお願いします。</p>
+      <div class="grid2">
+        <label>発行日
+          <input type="date" id="ssDate">
+        </label>
+        <label>回答期限
+          <input type="date" id="ssReplyBy">
+        </label>
+      </div>
+      <p class="hint">回答期限は紙面に<strong>曜日つき</strong>で入ります。「なるべく早く」とは書きません。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 宛先</summary>
+      <div class="grid2">
+        <label>会社名・屋号
+          <input type="text" id="ssToName" placeholder="株式会社サンプル">
+        </label>
+        <label>敬称
+          <select id="ssToHonorific">
+            <option value="御中">御中</option>
+            <option value="様">様</option>
+            <option value="">(なし)</option>
+          </select>
+        </label>
+      </div>
+      <label>部署・担当者(任意)
+        <input type="text" id="ssToDept" placeholder="経理部 山田太郎 様">
+      </label>
+      <p class="hint">担当者名まで書くときは、会社名の敬称を空にして担当者に「様」を付けます。<strong>「御中」と「様」は重ねません。</strong></p>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 未入金の請求書</summary>
+      <div class="grid2">
+        <label>請求書番号(任意)
+          <input type="text" id="ssInvoiceNo" placeholder="2026-0012">
+        </label>
+        <label>請求日(任意)
+          <input type="date" id="ssInvoiceDate">
+        </label>
+      </div>
+      <label>件名(任意)
+        <input type="text" id="ssSubject" placeholder="9月分 Webサイト保守">
+      </label>
+      <div class="grid2">
+        <label>請求金額(円)
+          <input type="text" id="ssAmount" inputmode="numeric" placeholder="110000">
+        </label>
+        <label>支払期日
+          <input type="date" id="ssDueDate">
+        </label>
+      </div>
+      <p class="hint" id="ssElapsed"></p>
+      <label>お振込先(任意)
+        <textarea id="ssBank" rows="2" placeholder="○○銀行 ○○支店 普通 0000000 ナカムラ タロウ"></textarea>
+      </label>
+      <p class="hint">請求書と同じ内容を書きます。<strong>紙面に出るのは、入力した行だけです。</strong></p>
+    </details>
+
+    <details class="card" open>
+      <summary>4. 差出人(自分)</summary>
+      <label>氏名・屋号・会社名
+        <input type="text" id="ssFromName" placeholder="中村太郎">
+      </label>
+      <label>住所・連絡先(任意)
+        <textarea id="ssFromAddress" rows="3" placeholder="〒000-0000 東京都…&#10;TEL 000-0000-0000&#10;MAIL info@example.com"></textarea>
+      </label>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="ssPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="ssClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="ssProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>次に必要になるもの</h2>
+      <ul class="guide-links">
+        <li><a href="/">請求書をつくる(再送するとき)</a></li>
+        <li><a href="/soufujo">送付状をつくる</a></li>
+        <li><a href="/atena">封筒の宛名を印刷する(長形3号)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="preview" aria-label="プレビュー">
+    <div class="paper sf-paper" id="ssSheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>催促状に書くのは、金額と期日と経過日数だけ</h2>
+  <p>入金が遅れているとき、手が止まる理由はたいてい<strong>書き出しが思いつかないこと</strong>です。「催促したら次の仕事が来なくなるのでは」と考えているうちに1週間が過ぎ、ますます言い出しにくくなります。</p>
+  <p>文面に気持ちを込める必要はありません。<strong>感情を書かず、事実だけを書く</strong>ほうが、相手も社内で処理しやすくなります。上のツールの紙面は、次の3つでできています。</p>
+  <ol>
+    <li><strong>どの請求書か</strong> — 請求書番号・請求日・件名・金額・支払期日。相手が社内で探せるように</li>
+    <li><strong>いまどうなっているか</strong> — 期日を過ぎて入金が確認できないこと。2回目は経過日数を数字で</li>
+    <li><strong>いつまでに何をしてほしいか</strong> — 曜日つきの日付と、1つの行動</li>
+  </ol>
+
+  <h2>1回目と2回目で、書くことを変える</h2>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th></th><th>1回目</th><th>2回目</th></tr></thead>
+    <tbody>
+      <tr><td>送る時期</td><td>期日の翌営業日から3営業日後</td><td>1回目から1週間後</td></tr>
+      <tr><td>前提</td><td><strong>行き違いかもしれない</strong></td><td>1回目に返答が無かった</td></tr>
+      <tr><td>経過日数</td><td>書かない</td><td><strong>数字で書く</strong></td></tr>
+      <tr><td>お願いすること</td><td>入金予定日を知らせてほしい</td><td>期限までに入金するか、予定日を知らせてほしい</td></tr>
+      <tr><td>添える一文</td><td>請求書の再送を申し出る</td><td>行き違いならご容赦を</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>1回目に「再送します」の一文を入れる理由</h3>
+  <p>入金が遅れる原因は、支払う気が無いことより<strong>請求書が相手の手元で止まっていること</strong>のほうが多いからです。担当が代わって引き継がれていない、別の書類に紛れた、メールが迷惑フォルダに入った。どれも実際に起きます。「再送しましょうか」の一文があれば、相手は恥をかかずに「もう一度送ってください」と言えます。</p>
+
+  <h3>「ご確認ください」で終わらせない</h3>
+  <p>「ご確認のほどよろしくお願いいたします」で終わる文面は、読んだ人に次の行動を決めさせません。<strong>「◯月◯日(◯)までに、ご入金のご予定日をお知らせください」</strong>まで書くと、返事をしないこと自体が相手の側の判断になります。上のツールは、回答期限を必ず曜日つきで紙面に入れます。</p>
+
+  <a class="cta" href="/">
+    <strong>請求書をもう一度つくる(登録不要)</strong>
+    <span>「見当たらない」と言われたら、同じ内容で作り直してPDFで送れます。透かしは入りません</span>
+  </a>
+
+  <h2>送る前に、この3つを確かめる</h2>
+  <ul>
+    <li><strong>本当に入金されていないか。</strong>通帳やネットバンキングを、振込名義が違う入金も含めて見直します。取引先の会社名ではなく、親会社名や担当者の個人名で振り込まれていることがあります</li>
+    <li><strong>支払期日を過ぎているか。</strong>期日当日はまだ遅れではありません。上のツールは、発行日が期日を過ぎていないと注意を出します</li>
+    <li><strong>記録に残る手段で送るか。</strong>電話で「来週払います」と言われたときも、聞いた内容をそのままメールか書面で送ります。<strong>口頭だけのやり取りは、あとで経過をたどれません</strong></li>
+  </ul>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>取引を続ける前提の、1回目と2回目のお願い</strong>までです。遅延損害金の請求、内容証明郵便、支払督促のような法的な手続きの文面は用意していません。どれを使うか、いくら請求できるかは契約の定めと個別の事情で変わり、ここで一律に決められないためです。2回目にも返答が無いときは、契約書を確かめたうえで弁護士などの専門家にご相談ください。</p>
+  <p>催促状は事務の書面で、<strong>収入印紙は要りません。</strong>制度の一般的な説明であり、個別の判断は専門家にご確認ください。</p>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/saisoku-core.js"></script>
+<script src="/saisoku.js"></script>
+</body>
+</html>
