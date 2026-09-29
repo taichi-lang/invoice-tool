@@ -166,6 +166,57 @@ test('「送信しない」の表示が、ヘッダーと本文の両方に在�
   assert.ok(html.includes('サーバーへ送信・保存されることはありません'));
 });
 
+// ── 下書きの保存と「入力をすべて消す」を、saisoku.js を実際に動かして確かめる ──
+// storage-claims.test.js は removeItem が書かれていることまでしか見ない。
+// 消したあと render() → save() が同じキーへ書き戻すので、書き戻す値に利用者の入力が残っていないかは
+// 動かさないと分からない(2026-09-30 本番で 8欄 → 0 を実測。その結果をここに固定する)。
+function runView(storage) {
+  const els = {};
+  const fakeEl = () => ({
+    value: '', textContent: '', hidden: false, className: '', listeners: {},
+    appendChild() {}, addEventListener(type, fn) { (this.listeners[type] = this.listeners[type] || []).push(fn); }
+  });
+  const document = {
+    getElementById: (id) => (els[id] = els[id] || fakeEl()),
+    createElement: () => fakeEl()
+  };
+  const localStorage = {
+    getItem: (k) => (k in storage ? storage[k] : null),
+    setItem: (k, v) => { storage[k] = String(v); },
+    removeItem: (k) => { delete storage[k]; }
+  };
+  const window = { Saisoku: SS, confirm: () => true, print() {} };
+  new Function('window', 'document', 'localStorage', view)(window, document, localStorage);
+  const type = (id, v) => { els[id].value = v; els[id].listeners.input.forEach((f) => f()); };
+  const click = (id) => els[id].listeners.click.forEach((f) => f());
+  return { els, type, click };
+}
+
+const TYPED = {
+  ssToName: 'ZZ宛名', ssToDept: 'ZZ部署', ssInvoiceNo: 'ZZ-0012', ssSubject: 'ZZ件名',
+  ssAmount: '987654', ssBank: 'ZZ銀行', ssFromName: 'ZZ差出人', ssFromAddress: 'ZZ住所'
+};
+
+test('入力は下書きとして残り、開き直すと戻る', () => {
+  const storage = {};
+  const a = runView(storage);
+  Object.entries(TYPED).forEach(([id, v]) => a.type(id, v));
+  const b = runView(storage);
+  Object.entries(TYPED).forEach(([id, v]) => assert.strictEqual(b.els[id].value, v, id));
+});
+
+test('「入力をすべて消す」のあと、保存にも画面にも入力が1つも残らない', () => {
+  const storage = {};
+  const v = runView(storage);
+  Object.entries(TYPED).forEach(([id, val]) => v.type(id, val));
+  v.click('ssClear');
+  const saved = Object.values(storage).join('\n');
+  const left = Object.values(TYPED).filter((val) => saved.includes(val));
+  assert.deepStrictEqual(left, [], '保存に残った入力: ' + left.join(','));
+  const onScreen = Object.keys(TYPED).filter((id) => v.els[id].value !== '');
+  assert.deepStrictEqual(onScreen, [], '画面に残った欄: ' + onScreen.join(','));
+});
+
 test('<title> と <h1> が同じ', () => {
   const title = /<title>([^<]+)<\/title>/.exec(html)[1];
   const h1 = /<h1[^>]*>([^<]+)<\/h1>/.exec(html)[1];
