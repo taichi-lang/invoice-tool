@@ -1,0 +1,75 @@
+/*
+ * 開業挨拶状(/aisatsujo)だけが使う紙面。はがき(100×148mm)縦書き。
+ * style.css の A4 の @page には触らない。はがきは名前付きページ @page aisatsujo で持つ。
+ */
+
+.as-preview {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.as-sheet {
+  position: relative;
+  width: 100mm;
+  height: 148mm;
+  background: #fff;
+  color: #111;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, .18);
+  overflow: hidden;
+  font-family: "Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "Noto Serif JP", "MS Mincho", serif;
+}
+.as-sheet p { margin: 0; }
+
+@media (max-width: 900px) { .as-sheet { zoom: .8; } }
+
+/* 文面は右上から左へ流す。四辺とも紙端から 10mm 以上離す。 */
+.as-text {
+  position: absolute;
+  top: 12mm;
+  right: 11mm;
+  bottom: 12mm;
+  left: 11mm;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  /* 収まらないときは aisatsujo.js が --as-scale を下げる(下限 0.75)。 */
+  font-size: calc(9pt * var(--as-scale, 1));
+  line-height: 1.7;
+}
+
+/* 段落の頭は1字下げない(挨拶状は「拝啓」から上端にそろえる)。段落の間だけ少し空ける。 */
+.as-para + .as-para { margin-block-start: .6em; }
+
+/* 敬具は下端にそろえる。 */
+.as-closing { text-align: end; }
+
+/* 日付は2字下げ。 */
+.as-date { padding-inline-start: 2em; margin-block-start: .5em; }
+
+/* 差出人は下寄せ。住所・電話は小さく、屋号と名前は大きく。
+   〒と住所の1行目、電話とメールは同じ列に入れて、列の数を減らす(はがきの幅は78mmしか使えない)。 */
+.as-sign { margin-block-start: .5em; }
+.as-sign p { text-align: end; }
+.as-addr, .as-contact { font-size: .9em; }
+/* メールアドレスは英字なので縦に1字ずつ立てず、横倒しで流す。 */
+.as-email { text-orientation: mixed; }
+.as-shop { font-size: 1.15em; margin-block-start: .3em; }
+.as-name { font-size: 1.15em; }
+
+/* ---------------------------------------------------------- 印刷 */
+
+@page aisatsujo {
+  size: 100mm 148mm;
+  /* 余白はここでは取らない。紙面の中の位置は上の absolute の値が直接持つ(どれも端から 10mm 以上)。 */
+  margin: 0;
+}
+
+@media print {
+  .as-preview { display: block; }
+  .as-sheet {
+    page: aisatsujo;
+    zoom: 1;
+    box-shadow: none;
+    margin: 0;
+  }
+}

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>開業挨拶状の例文とはがき印刷 無料・縦書き</title>
+<meta name="description" content="開業や独立のあいさつを、はがきで何と書けばよいか迷っていませんか。屋号と開業日を入れるだけで、時候の挨拶・和暦・句読点なしの慣例までそろえた縦書きの挨拶状をはがきに刷れる無料ツールです。例文も載せています。入力内容は送信されません。">
+<meta property="og:title" content="開業挨拶状の例文とはがき印刷 無料・縦書き">
+<meta property="og:description" content="開業や独立のあいさつを、はがきで何と書けばよいか迷っていませんか。屋号と開業日を入れるだけで、時候の挨拶・和暦・句読点なしの慣例までそろえた縦書きの挨拶状をはがきに刷れる無料ツールです。例文も載せています。入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/aisatsujo">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/aisatsujo.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">開業挨拶状</p>
+  <p class="tagline">はがき・縦書き / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">開業挨拶状の例文とはがき印刷 無料・縦書き</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. どんな開業か</summary>
+      <label>種類
+        <select id="asKind">
+          <option value="new">新しく事業を始めた</option>
+          <option value="independent">勤め先を辞めて独立した</option>
+        </select>
+      </label>
+      <label>開業日
+        <input type="date" id="asOpenDate">
+      </label>
+      <label>屋号・会社名
+        <input type="text" id="asShopName" placeholder="中村デザイン事務所">
+      </label>
+      <label>事業の内容(任意・「〇〇を通じて」に入ります)
+        <input type="text" id="asBusiness" placeholder="Webサイトの制作">
+      </label>
+      <div id="asFormerRow" hidden>
+        <label>前の勤め先(任意)
+          <input type="text" id="asFormerEmployer" placeholder="株式会社サンプル">
+        </label>
+        <p class="hint">空欄なら「勤務先を退職し」と書きます。前の勤め先の取引先に出すときは、下の「前職の取引先に出す前に」も読んでください。</p>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 差出人</summary>
+      <label>肩書き(任意)
+        <input type="text" id="asTitle" placeholder="代表">
+      </label>
+      <label>氏名
+        <input type="text" id="asName" placeholder="中村 太郎">
+      </label>
+      <label>郵便番号
+        <input type="text" id="asZip" inputmode="numeric" autocomplete="off" placeholder="000-0000">
+      </label>
+      <label>住所
+        <textarea id="asAddress" rows="2" placeholder="東京都…1-2-3&#10;サンプルビル2階"></textarea>
+      </label>
+      <label>電話番号(任意)
+        <input type="text" id="asTel" inputmode="tel" autocomplete="off" placeholder="03-1234-5678">
+      </label>
+      <label>メールアドレス(任意)
+        <input type="text" id="asEmail" autocomplete="off" placeholder="info@example.com">
+      </label>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 書き方</summary>
+      <label>差出日(投函する日)
+        <input type="date" id="asLetterDate">
+      </label>
+      <p class="hint">時候の挨拶(「秋冷の候」など)は、<strong>差出日の月で自動で決まります</strong>。紙面の日付は「令和〇年〇月」と月までにします。</p>
+      <label class="check">
+        <input type="checkbox" id="asPunctuation">
+        句読点(、。)を入れる
+      </label>
+      <label class="check">
+        <input type="checkbox" id="asKanji" checked>
+        住所と電話番号の数字を漢数字にする
+      </label>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="asPrint" class="btn-main">印刷 / PDFとして保存</button>
+      <button type="button" id="asClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <p class="hint warn" id="asProblems" hidden></p>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>開業したら次に要るもの</h2>
+      <ul class="guide-links">
+        <li><a href="https://seal-generator.vercel.app/">会社印をつくる(姉妹サイト)</a></li>
+        <li><a href="/mitsumorisho">見積書をつくる</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="as-preview" aria-label="プレビュー">
+    <div class="as-sheet" id="asSheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>開業挨拶状の例文(上のツールが刷る文面)</h2>
+  <p>屋号を「中村デザイン事務所」、開業日を令和八年十月一日、差出日を十月として入れると、はがきの裏面に次の文面が縦書きで刷られます。<strong>句読点は打たず、区切りは字間の空白で示します。</strong></p>
+  <div class="note">
+    <p>拝啓　秋冷の候　皆様にはますますご清祥のこととお慶び申し上げます</p>
+    <p>さて　私こと　令和八年十月一日をもちまして中村デザイン事務所を開業いたしました</p>
+    <p>今後はWebサイトの制作を通じて　皆様のお役に立てるよう誠心誠意努めてまいる所存でございます</p>
+    <p>なにとぞ一層のご指導ご鞭撻を賜りますよう　よろしくお願い申し上げます</p>
+    <p>まずは略儀ながら書中をもちまして開業のご挨拶を申し上げます</p>
+    <p>敬具</p>
+    <p>令和八年十月</p>
+  </div>
+  <p>最後に差出人の住所・電話番号・屋号・氏名が続きます。</p>
+
+  <h2>勤め先を辞めて独立したときの例文</h2>
+  <p>「勤め先を辞めて独立した」を選ぶと、開業の一文の前に退職の報告が入り、その後に<strong>在職中のお礼</strong>の一文が足されます。</p>
+  <div class="note">
+    <p>さて　私こと　このたび株式会社サンプルを退職し　令和八年十月一日をもちまして中村デザイン事務所を開業いたしました</p>
+    <p>在職中は公私にわたり格別のご厚情を賜り　心より御礼申し上げます</p>
+  </div>
+  <p>前の勤め先の名前は空欄にもできます。その場合は「勤務先を退職し」と書きます。</p>
+
+  <h2>時候の挨拶は、差出日の月で決まる</h2>
+  <p>「拝啓」のすぐ後の「〇〇の候」は、<strong>投函する月</strong>に合わせます。上のツールは差出日の月から、次の表の1つを選んで刷ります。月と合わない季語を刷る誤りを避けるため、選択肢は各月1つにしてあります。</p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>月</th><th>時候の挨拶</th><th>月</th><th>時候の挨拶</th></tr></thead>
+    <tbody>
+      <tr><td>1月</td><td>新春の候</td><td>7月</td><td>盛夏の候</td></tr>
+      <tr><td>2月</td><td>立春の候</td><td>8月</td><td>晩夏の候</td></tr>
+      <tr><td>3月</td><td>早春の候</td><td>9月</td><td>初秋の候</td></tr>
+      <tr><td>4月</td><td>陽春の候</td><td>10月</td><td>秋冷の候</td></tr>
+      <tr><td>5月</td><td>新緑の候</td><td>11月</td><td>晩秋の候</td></tr>
+      <tr><td>6月</td><td>初夏の候</td><td>12月</td><td>師走の候</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>開業日と差出日は別の日付です。<strong>開業日は本文に「令和〇年〇月〇日」と日まで、差出日は末尾に「令和〇年〇月」と月まで</strong>書きます。</p>
+
+  <h2>句読点を打たないのは、挨拶状の慣例</h2>
+  <p>開業・移転・退職などの挨拶状は、<strong>「、」「。」を打たずに、区切りを空白で示す</strong>書き方が広く使われています。由来には諸説あり、決まりとして定められたものではありません。上のツールは打たない形を既定にしています。社内の書式などで句読点を入れたいときは、「句読点(、。)を入れる」にチェックを入れてください。</p>
+
+  <h2>いつ、誰に出すか</h2>
+  <p>出す時期に決まった期限はありませんが、<strong>開業日の前後、遅くとも1〜2か月のうち</strong>に届くように出すのが一般的です。開業からあまり日が空くと、「開業のお知らせ」ではなく近況報告のように読まれます。</p>
+  <p>宛先の例は次のとおりです。</p>
+  <ul>
+    <li>これから取引をお願いしたい会社・お店</li>
+    <li>前の勤め先でお世話になった上司・同僚</li>
+    <li>仕事を紹介してくれそうな知人・同業者</li>
+  </ul>
+  <p>年賀状と違い、<strong>「これから仕事を頼んでもよい相手です」と知らせる</strong>のが挨拶状の役目です。事業の内容を1行入れておくと、受け取った人が誰かに紹介するときの手がかりになります。</p>
+
+  <div class="note">
+    <p><strong>前職の取引先に出す前に</strong></p>
+    <p>退職のときに、前の勤め先の顧客へ連絡しないことや、同じ業種で働かないことを約束する書面(誓約書・就業規則の定めなど)に署名している場合があります。<strong>前職の取引先に挨拶状を出す前に、その書面の内容を読み返してください。</strong>このツールは、出してよいかどうかの判断はしません。</p>
+  </div>
+
+  <h2>はがきに刷るときの手順</h2>
+  <p>このツールが刷るのは、<strong>はがきの裏面(文面)だけ</strong>です。表面の宛名は手書きするか、宛名印刷のできるソフトを使ってください。</p>
+  <ol>
+    <li>「印刷 / PDFとして保存」を押し、印刷の画面で<strong>用紙サイズを「はがき」</strong>(一覧に無ければ「ユーザー定義 100×148mm」)にする</li>
+    <li><strong>倍率は100%</strong>(「用紙に合わせる」を外す)にする</li>
+    <li>まず<strong>普通紙に1回刷り、はがきと重ねて</strong>位置を確かめる</li>
+    <li>はがきを<strong>裏面(宛名の無い面)が印刷される向き</strong>に差し込んで刷る</li>
+  </ol>
+  <p>はがきを差し込む向きはプリンターの機種ごとに違います。プリンターの説明書の「はがき」の項を見てください。このツールはどの文字もはがきの端から10mm以上離していますが、すべての機種で確かめたわけではありません。</p>
+
+  <a class="cta" href="/kaigyo">
+    <strong>開業したらやること — 印鑑から請求書・領収書までの順番</strong>
+    <span>挨拶状と同じく、どれも登録不要・この端末の中だけで作れます</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/aisatsujo-core.js"></script>
+<script src="/aisatsujo.js"></script>
+</body>
+</html>

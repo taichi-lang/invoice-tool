@@ -36,6 +36,7 @@ const NO_EXIT_PAGES = [
   'soufujo.html',
   'atena.html',
   'saisoku.html',
+  'aisatsujo.html',
   'inshi.html',
   'legal.html',
   'guide/index.html',
