@@ -58,6 +58,7 @@ PDFの出し方(Chrome ヘッドレス。印刷ダイアログは開かない):
   この差し替えだけを行う小さな別スクリプトを </body> の直前に足す。
 """
 import sys
+from collections import Counter
 
 MM = 25.4 / 72.0
 
@@ -85,6 +86,10 @@ def main(path):
         left = min(s["bbox"][0] for s in spans) * MM
         right = max(s["bbox"][2] for s in spans) * MM
         print(f"   本文の始まり {top:.1f}mm / 終わり {bottom:.1f}mm / 左 {left:.1f}mm / 文字のかたまり {len(spans)}")
+        # 2026-10-02 追加: /aisatsujo は画面で --as-scale を下げて収める。紙にも同じ縮小が効いたかは文字の pt で見る
+        # (9pt × 縮小率。画面幅 800px で 0.85 → 7.65pt、1280px で 0.90 → 8.1pt と、画面幅で縮小率が変わる)。
+        sizes = Counter(round(s["size"], 2) for s in spans)
+        print("   文字の大きさ(pt: かたまりの数) " + " / ".join(f"{k}: {v}" for k, v in sizes.most_common(4)))
         # 2026-09-28 追加: 封筒(/atena)は余白 0 の紙に absolute で置くので、上端だけでは足りない。4辺とも見る。
         edges = {"上": top, "下": r.height * MM - bottom, "左": left, "右": r.width * MM - right}
         print("   紙端からの距離 " + " / ".join(f"{k} {v:.1f}mm" for k, v in edges.items()))
