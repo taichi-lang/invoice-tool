@@ -21,6 +21,9 @@
     '見積書': { lead: '下記のとおりお見積り申し上げます。', grand: 'お見積金額', bank: 'お振込先', due: '有効期限' },
     '納品書': { lead: '下記のとおり納品いたしました。', grand: '納品金額合計', bank: 'お振込先', due: '納品日' },
     '領収書': { lead: '下記のとおり領収いたしました。', grand: '領収金額', bank: 'お振込先', due: '' },
+    // 発注書は書き手と受け手が逆になる(自分=発注する側)。自分の振込先を載せる書類ではないので、
+    // bank を空にして振込先の欄ごと出さない。期限の欄は「納期」(相手に納めてもらう日)。
+    '発注書': { lead: '下記のとおり発注いたします。', grand: '発注金額', bank: '', due: '納期' },
   };
 
   var DEFAULT_TYPE = '請求書';
@@ -50,12 +53,18 @@
     return dueLabelOf(from) === dueLabelOf(to);
   }
 
+  /** その書類で、振込先の欄を紙と画面に出すか。 */
+  function showsBank(docType) {
+    return presetOf(docType).bank !== '';
+  }
+
   var api = {
     PRESETS: PRESETS,
     DEFAULT_TYPE: DEFAULT_TYPE,
     presetOf: presetOf,
     dueLabelOf: dueLabelOf,
     carriesDueDate: carriesDueDate,
+    showsBank: showsBank,
   };
 
   if (typeof module === 'object' && module.exports) {

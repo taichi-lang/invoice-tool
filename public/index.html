@@ -47,6 +47,7 @@
             <option value="見積書">見積書</option>
             <option value="納品書">納品書</option>
             <option value="領収書">領収書</option>
+            <option value="発注書">発注書</option>
           </select>
         </label>
         <label>書類番号
@@ -103,7 +104,7 @@
       <label>住所・連絡先(任意)
         <textarea id="fromAddress" rows="3" placeholder="〒000-0000 …&#10;TEL 000-0000-0000"></textarea>
       </label>
-      <label>振込先(任意)
+      <label id="bankField">振込先(任意)
         <textarea id="bank" rows="2" placeholder="○○銀行 △△支店 普通 1234567 ナカムラタロウ"></textarea>
       </label>
       <label>印影(任意)
@@ -197,6 +198,7 @@
         <li><a href="/guide/seikyusho-kakikata">請求書の書き方 — 必須9項目とインボイス対応</a></li>
         <li><a href="/guide/gensen-choshu-keisan">源泉徴収の計算方法(10.21%と20.42%)</a></li>
         <li><a href="/mitsumorisho">見積書の書き方とただし書き文例</a></li>
+        <li><a href="/hacchusho">発注書の書き方 — 納期と支払条件の文例</a></li>
         <li><a href="/ryoshusho">領収書の書き方 — 宛名と但し書きで迷わない</a></li>
         <li><a href="/inshi">収入印紙はいくら? — 領収書の印紙判定ツール</a></li>
       </ul>
@@ -259,7 +261,7 @@
       </div>
 
       <div class="paper-foot">
-        <div class="bank">
+        <div class="bank" id="pBankBlock">
           <h2 id="pBankLabel">お振込先</h2>
           <p id="pBank"></p>
         </div>

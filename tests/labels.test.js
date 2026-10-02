@@ -30,7 +30,7 @@ const HTML = read('index.html');
 const APP = read('app.js');
 const DOC = require('../public/doctype.js');
 
-const TYPES = ['請求書', '見積書', '納品書', '領収書'];
+const TYPES = ['請求書', '見積書', '納品書', '領収書', '発注書'];
 
 // ---------------------------------------------------------------- 画面の側
 
@@ -69,6 +69,34 @@ test('対照: 4書類の紙の期限の語は、いまも 支払期限・有効�
   assert.strictEqual(DOC.dueLabelOf('見積書'), '有効期限', '見積書の期限の語が変わっている');
   assert.strictEqual(DOC.dueLabelOf('納品書'), '納品日', '納品書の期限の語が変わっている');
   assert.strictEqual(DOC.dueLabelOf('領収書'), '', '領収書に期限の語が付いた(紙に行が出るようになった)');
+  assert.strictEqual(DOC.dueLabelOf('発注書'), '納期', '発注書の期限の語が変わっている');
+});
+
+// ---------------------------------------------------------------- 発注書(2026-10-03)
+// 発注書は書き手が「発注する側」になる。請求書の下書きから切り替えると、
+// 自分の振込先が入ったまま発注先へ印刷されてしまう。振込先は紙にも画面にも出さない。
+
+test('発注書だけが振込先の欄を出さない', () => {
+  for (const t of TYPES) {
+    assert.strictEqual(DOC.showsBank(t), t !== '発注書', `${t} の振込先の出し方が想定と違う`);
+  }
+});
+
+test('画面と紙の振込先の欄を、同じ showsBank から隠している', () => {
+  assert.ok(/id="pBankBlock"/.test(HTML), '紙の振込先の欄に名札が無い');
+  assert.ok(/id="bankField"/.test(HTML), '画面の振込先の欄に名札が無い');
+  assert.ok(/pBankBlock'\)\.hidden\s*=\s*!bankShown/.test(APP), '紙の振込先を隠していない');
+  assert.ok(/bankField'\)\.hidden\s*=\s*!bankShown/.test(APP), '画面の振込先を隠していない');
+  assert.ok(/bankShown\s*=\s*showsBank\(state\.docType\)/.test(APP), '隠す判定が doctype.js の表から来ていない');
+});
+
+test('/?type=order で発注書として開ける', () => {
+  assert.ok(/order:\s*'発注書'/.test(APP), 'type=order が発注書に対応していない');
+  assert.ok(/<option value="発注書">発注書<\/option>/.test(HTML), '書類の種類に発注書が無い');
+});
+
+test('CSV の期限の列名も紙と同じ語で書く', () => {
+  assert.ok(/presetOf\(state\.docType\)\.due \|\| '期限'/.test(APP), 'CSV の期限の列名が「支払期限」で固定に戻っている');
 });
 
 test('表は1か所にしかない(app.js が自前の表を持ち直していない)', () => {

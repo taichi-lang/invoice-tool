@@ -31,6 +31,7 @@ const EXIT_PAGE = 'kaigyo.html';
 const NO_EXIT_PAGES = [
   'index.html',
   'mitsumorisho.html',
+  'hacchusho.html',
   'ryoshusho.html',
   'nohinsho.html',
   'soufujo.html',

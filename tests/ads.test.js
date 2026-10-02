@@ -40,6 +40,7 @@ const AD_PAGES = [
 const NO_AD_PAGES = [
   'index.html',
   'mitsumorisho.html',
+  'hacchusho.html',
   'ryoshusho.html',
   'nohinsho.html',
   'soufujo.html',

@@ -12,7 +12,7 @@ const STORAGE_KEY = 'invoice-tool:draft:v1';
 
 const { calcTotals, isValidInvoiceNo, hasContent } = window.InvoiceCalc;
 const { checkSeal } = window.InvoiceSeal;
-const { presetOf, carriesDueDate } = window.InvoiceDocType;
+const { presetOf, carriesDueDate, showsBank } = window.InvoiceDocType;
 
 // 印影の画像(data: URL)。入力欄を持たないので、状態としてここに置く。
 // ⚠ この値はページの中だけで使い、どこにも送信しない。
@@ -41,6 +41,7 @@ const DOC_TYPE_BY_QUERY = {
   estimate: '見積書',
   delivery: '納品書',
   receipt: '領収書',
+  order: '発注書',
 };
 
 // ---------------------------------------------------------------- 表示ヘルパ
@@ -258,6 +259,12 @@ function renderPreview(state, totals) {
   hideWhenEmpty('#pNotesBlock', state.notes);
   // お振込先はここに入れない。空のまま隠すと、振込先の無い請求書が
   // そのまま出てしまう。見出しを残して未入力に気づけるようにする。
+  // ただし発注書は、自分(発注する側)の振込先を載せる書類ではない。
+  // 入力が残っていても紙にも画面にも出さない(請求書の下書きから切り替えた場合に、
+  // 自分の口座が発注先へ印刷されるのを防ぐ)。
+  const bankShown = showsBank(state.docType);
+  $('pBankBlock').hidden = !bankShown;
+  $('bankField').hidden = !bankShown;
 
   setText('pGrandTotal', yen(totals.payable));
   updateStampHint(state, totals);
@@ -328,7 +335,7 @@ function download(filename, content, mime) {
 function toCsv(state, totals) {
   const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
   const lines = [
-    ['書類種別', '書類番号', '発行日', '支払期限', '請求先', '請求元', '登録番号'].map(esc).join(','),
+    ['書類種別', '書類番号', '発行日', presetOf(state.docType).due || '期限', '請求先', '請求元', '登録番号'].map(esc).join(','),
     [state.docType, state.docNo, state.issueDate, state.dueDate,
       state.toName + state.toHonorific, state.fromName, state.fromInvoiceNo].map(esc).join(','),
     '',
