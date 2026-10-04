@@ -242,6 +242,10 @@ function renderPreview(state, totals) {
   // 紙に行が出ない書類(領収書)では、画面にも欄を出さない。
   $('dueLabel').textContent = preset.due;
   $('dueField').hidden = !preset.due;
+  // 宛先と自分の欄の見出しも同じ表から書く。発注書の自分は払う側なので、
+  // 「請求元」と名乗ると意味が逆になる(2026-10-05、本番 375px の操作で発見)。
+  $('toLabel').textContent = preset.to;
+  $('fromLabel').textContent = preset.from;
 
   const dueLine = document.querySelector('.due-line');
   if (preset.due && state.dueDate) {
@@ -334,10 +338,12 @@ function download(filename, content, mime) {
 /** Excel でそのまま開けるよう UTF-8 BOM を付ける。 */
 function toCsv(state, totals) {
   const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const preset = presetOf(state.docType);
   const lines = [
-    ['書類種別', '書類番号', '発行日', presetOf(state.docType).due || '期限', '請求先', '請求元', '登録番号'].map(esc).join(','),
+    ['書類種別', '書類番号', '発行日', preset.due || '期限', preset.to, preset.from, '登録番号'].map(esc).join(','),
+    // 宛名が空のときは敬称も書かない(紙と同じ。「御中」だけの宛先は書きかけに見える)
     [state.docType, state.docNo, state.issueDate, state.dueDate,
-      state.toName + state.toHonorific, state.fromName, state.fromInvoiceNo].map(esc).join(','),
+      state.toName ? state.toName + state.toHonorific : '', state.fromName, state.fromInvoiceNo].map(esc).join(','),
     '',
     ['品目', '数量', '単位', '単価', '税率', '金額', '源泉対象'].map(esc).join(','),
   ];

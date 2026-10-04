@@ -96,7 +96,44 @@ test('/?type=order で発注書として開ける', () => {
 });
 
 test('CSV の期限の列名も紙と同じ語で書く', () => {
-  assert.ok(/presetOf\(state\.docType\)\.due \|\| '期限'/.test(APP), 'CSV の期限の列名が「支払期限」で固定に戻っている');
+  assert.ok(/preset\.due \|\| '期限'/.test(APP), 'CSV の期限の列名が「支払期限」で固定に戻っている');
+});
+
+// ------------------------------------------- 宛先と自分の欄の名前(2026-10-05)
+//
+// 本番 /?type=order を 375px で操作して見つけた。発注書を選んでも、画面の見出しは
+// 「2. 請求先」「3. 自分(請求元)」のまま、CSV の列名も「請求先」「請求元」だった。
+// 発注書の自分は払う側であり、「請求元」と名乗ると意味が逆になる。
+
+test('対照: 宛先と自分の欄の名前は、発注書だけが 発注先・発注元 で、他の4書類は従来どおり', () => {
+  for (const t of ['請求書', '見積書', '納品書', '領収書']) {
+    assert.strictEqual(DOC.presetOf(t).to, '請求先', `${t} の宛先の欄の名前が変わっている`);
+    assert.strictEqual(DOC.presetOf(t).from, '請求元', `${t} の自分の欄の名前が変わっている`);
+  }
+  assert.strictEqual(DOC.presetOf('発注書').to, '発注先', '発注書の宛先が「発注先」になっていない');
+  assert.strictEqual(DOC.presetOf('発注書').from, '発注元', '発注書の自分が「発注元」になっていない');
+});
+
+test('画面の見出しの宛先・自分の語を、紙と同じ表(preset.to / preset.from)から書いている', () => {
+  assert.ok(/id="toLabel"/.test(HTML) && /id="fromLabel"/.test(HTML), '見出しに書き換えるための名札が無い');
+  assert.ok(/\$\('toLabel'\)\.textContent = preset\.to/.test(APP), '画面の宛先の見出しが preset.to から書かれていない');
+  assert.ok(/\$\('fromLabel'\)\.textContent = preset\.from/.test(APP), '画面の自分の見出しが preset.from から書かれていない');
+});
+
+test('CSV の宛先・自分の列名も同じ表から書く(「請求先」「請求元」の固定に戻っていない)', () => {
+  assert.ok(!/'請求先', '請求元'/.test(APP), 'CSV の列名が「請求先」「請求元」で固定に戻っている');
+  assert.ok(/preset\.to, preset\.from/.test(APP), 'CSV の列名が preset.to / preset.from から書かれていない');
+});
+
+test('宛名が空のとき、CSV に敬称だけ(「御中」)を書かない(紙と同じ)', () => {
+  assert.ok(/state\.toName \? state\.toName \+ state\.toHonorific : ''/.test(APP),
+    '宛名が空でも CSV の宛先に敬称だけが出る');
+});
+
+test('/hacchusho の案内が、画面の見出しと同じ語で欄を指している', () => {
+  const GUIDE = read('hacchusho.html');
+  assert.ok(/2\. 発注先/.test(GUIDE) && /3\. 自分\(発注元\)/.test(GUIDE), '案内が画面に無い見出しで欄を指している');
+  assert.ok(!/2\. 請求先/.test(GUIDE) && !/3\. 自分\(請求元\)/.test(GUIDE), '案内に古い見出しが残っている');
 });
 
 test('表は1か所にしかない(app.js が自前の表を持ち直していない)', () => {
