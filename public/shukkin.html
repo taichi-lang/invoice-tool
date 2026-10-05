@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>出金伝票を無料で作成 — A4に3枚、そのままPDF・印刷</title>
+<meta name="description" content="領収書がもらえない支払いを、どう記録しておけばよいか迷っていませんか。日付・支払先・摘要・金額を入れるだけで、出金伝票をA4に3枚ずつ並べてPDFにできる無料ツールです。交通費・自販機・香典の書き方例つき。入力内容は送信されません。">
+<meta property="og:title" content="出金伝票を無料で作成 — A4に3枚、そのままPDF・印刷">
+<meta property="og:description" content="領収書がもらえない支払いを、どう記録しておけばよいか迷っていませんか。日付・支払先・摘要・金額を入れるだけで、出金伝票をA4に3枚ずつ並べてPDFにできる無料ツールです。交通費・自販機・香典の書き方例つき。入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/shukkin">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/shukkin.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">出金伝票ジェネレーター</p>
+  <p class="tagline">領収書が出ない支払いの記録 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">出金伝票を無料で作成 — A4に3枚、そのままPDF・印刷</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 伝票の番号と起票者</summary>
+      <div class="grid2">
+        <label>最初の番号
+          <input type="text" id="skStartNo" inputmode="numeric" placeholder="1">
+        </label>
+        <label>起票者(任意)
+          <input type="text" id="skIssuer" placeholder="中村太郎">
+        </label>
+      </div>
+      <p class="hint">前回の続きの番号から始められます。番号は伝票ごとに1つずつ増えます。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 支払い(伝票1枚に1件)</summary>
+      <div id="skRows"></div>
+      <button type="button" id="skAdd" class="btn-sub">伝票を1枚足す(6枚まで)</button>
+      <p class="hint" id="skTotal"></p>
+      <p class="hint">勘定科目は<strong>書いたとおりに紙に出ます</strong>。このツールは科目の候補を出しません。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="skPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="skClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="skProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/ryoshusho">領収書をつくる(受け取った側として出すとき)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="preview" aria-label="プレビュー">
+    <div class="sk-sheets" id="skSheets"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>出金伝票は、領収書が出ない支払いを自分で書き残す紙</h2>
+  <p>電車やバスの運賃、自動販売機、香典、領収書の出ない駐車場。仕事のためにお金を払ったのに、<strong>手元に紙が1枚も残らない支払い</strong>は意外に多くあります。出金伝票は、そうした支払いを<strong>払った側が自分で記録しておく</strong>ための紙です。</p>
+  <p>書く欄は4つだけです。上のツールも、この4つがそろうと1枚の伝票になります。</p>
+  <ol>
+    <li><strong>日付</strong> — 払った日。書いた日ではありません</li>
+    <li><strong>支払先</strong> — 誰に払ったか。会社名・店名・場所</li>
+    <li><strong>摘要</strong> — 何のために払ったか。あとから読んで思い出せる具体さで</li>
+    <li><strong>金額</strong> — 払った額。1枚に1件</li>
+  </ol>
+  <p>勘定科目の欄は任意です。<strong>その支払いが経費になるか、どの科目にするかは、このツールでは判断しません。</strong>迷うときは、税務署または税理士にご確認ください。</p>
+
+  <h2>書き方の例 — 交通費・自販機・香典・駐車場代</h2>
+  <p>支払先と摘要に何を書けばよいかで手が止まりやすい4つを並べます。摘要には<strong>「誰と・どこへ・何のために」</strong>のうち分かるものを入れておくと、あとで見返したときに迷いません。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>支払い</th><th>支払先</th><th>摘要</th></tr></thead>
+    <tbody>
+      <tr><td>電車・バスの交通費</td><td>東京メトロ</td><td>新宿→渋谷 ○○社打合せ 往復</td></tr>
+      <tr><td>自販機の飲み物</td><td>自動販売機(○○ビル1階)</td><td>来客用 お茶2本</td></tr>
+      <tr><td>香典</td><td>○○家</td><td>香典 ○○社 ○○様 ご尊父</td></tr>
+      <tr><td>領収書の出ない駐車場代</td><td>○○パーキング(○○町)</td><td>駐車料 ○○社訪問</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>交通費は「区間」と「用件」を1行に</h3>
+  <p>運賃は乗った区間で決まるので、<strong>区間がないと金額が正しいかを誰も確かめられません</strong>。「新宿→渋谷」のように乗った駅と降りた駅を書き、往復なら往復と書きます。ICカードで払った場合は、利用履歴を印字して伝票と一緒にとっておくと、区間と金額の裏づけになります。</p>
+
+  <h3>香典は、会葬礼状と一緒にとっておく</h3>
+  <p>香典に領収書は出ません。支払先には喪家の名前を、摘要には誰の、どの取引先に関わる弔事かを書きます。<strong>手元に会葬礼状や訃報の案内があれば、伝票と一緒に保管</strong>しておくと、あとで何の支払いだったかをたどれます。</p>
+
+  <h2>出金伝票をつくるときの3つの約束</h2>
+  <ul>
+    <li><strong>払ったその日のうちに書く。</strong>月末にまとめて思い出して書くと、日付も金額もずれます</li>
+    <li><strong>1回の支払いに1枚。</strong>同じ日の電車代を往路と復路で分けるかどうかは自由ですが、まとめた場合は摘要に「往復」と書きます</li>
+    <li><strong>領収書が出る支払いには使わない。</strong>レシートや領収書をもらえるなら、それが一番の記録です。出金伝票は、紙がもらえなかったときのためのものです</li>
+  </ul>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>支払いを記録する紙そのもの</strong>までです。出金伝票が領収書の代わりとしてどこまで認められるか、その支払いが経費になるか、どの勘定科目に入れるか、帳簿にどうつけるかは扱いません。どれも取引の中身と個別の事情で変わり、ここで一律に決められないためです。制度の一般的な説明であり、個別の判断は所轄の税務署または税理士にご確認ください。</p>
+
+  <a class="cta" href="/ryoshusho">
+    <strong>領収書をつくる(登録不要)</strong>
+    <span>お金を受け取った側として領収書を出すときは、こちらの画面で。但し書きの文例つきです</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/shukkin-core.js"></script>
+<script src="/shukkin.js"></script>
+</body>
+</html>

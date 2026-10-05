@@ -1,0 +1,109 @@
+/* ---------------------------------------------------------- 出金伝票(/shukkin)
+
+   このページだけの規則を別ファイルに置く。
+   用紙は A4 で、style.css の @page(余白 15/14/8mm)をそのまま使う。**ここでは @page を持たない。**
+   A4 の印字できる高さは 297 - 15 - 8 = 274mm。伝票 84mm × 3枚 + 間 2か所 × 9mm = 270mm で収める。
+   伝票と伝票の間には切り取り用の点線を引く。 */
+
+.sk-row {
+  margin: 0 0 12px;
+  padding: 10px 12px 12px;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px;
+}
+.sk-row .sk-remove { margin-top: 6px; }
+
+.sk-sheets { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+.sk-paper { min-height: 297mm; }
+
+.sk-slip {
+  box-sizing: border-box;
+  height: 84mm;
+  padding: 5mm 6mm;
+  border: 1.2pt solid #000;
+  font-size: 10pt;
+  line-height: 1.4;
+  break-inside: avoid;
+}
+.sk-slip + .sk-slip { margin-top: 9mm; position: relative; }
+/* 切り取り線。伝票と伝票の間のちょうど真ん中に引く */
+.sk-slip + .sk-slip::before {
+  content: "";
+  position: absolute;
+  left: -6mm;
+  right: -6mm;
+  top: calc(-4.5mm - 1.2pt);
+  border-top: .5pt dashed #888;
+}
+.sk-slip p { margin: 0; }
+
+.sk-head { display: flex; justify-content: space-between; align-items: flex-start; }
+.sk-title {
+  font-size: 15pt;
+  font-weight: 700;
+  letter-spacing: .4em;
+  border-bottom: 1.2pt double #000;
+  padding-bottom: .5mm;
+}
+.sk-meta { text-align: right; }
+.sk-no { font-size: 9pt; }
+.sk-date { font-size: 10.5pt; }
+
+.sk-cap {
+  display: inline-block;
+  min-width: 14mm;
+  font-size: 8.5pt;
+  color: #333;
+}
+.sk-payee {
+  margin-top: 3mm !important;
+  padding-bottom: 1mm;
+  border-bottom: .5pt solid #000;
+  font-size: 11pt;
+}
+.sk-payee-name { overflow-wrap: anywhere; }
+
+.sk-table {
+  width: 100%;
+  margin-top: 3mm;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.sk-table th, .sk-table td {
+  border: .5pt solid #000;
+  padding: 1.5mm 2mm;
+  height: 7mm;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+.sk-table thead th { font-size: 8.5pt; font-weight: 400; background: #f3f3f3; }
+.sk-table th:nth-child(1) { width: 30mm; }
+.sk-table th:nth-child(3) { width: 34mm; }
+.sk-table .sk-account { font-size: 9pt; }
+.sk-table .sk-memo { font-size: 10pt; }
+.sk-table .sk-amount { text-align: right; font-variant-numeric: tabular-nums; }
+.sk-table .sk-sum th { font-weight: 700; text-align: right; }
+.sk-table .sk-sum td:first-child { border: none; }
+.sk-table .sk-sum .sk-amount { font-weight: 700; font-size: 11pt; }
+
+.sk-foot { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 3mm; }
+.sk-issuer { font-size: 10pt; }
+.sk-stamps { display: flex; }
+.sk-stamp {
+  width: 15mm;
+  height: 15mm;
+  border: .5pt solid #000;
+  font-size: 7pt;
+  text-align: center;
+}
+.sk-stamp + .sk-stamp { border-left: none; }
+.sk-stamp span { display: block; border-bottom: .5pt solid #000; line-height: 1.5; }
+
+@media print {
+  .sk-sheets { display: block; }
+  .sk-paper { min-height: 0; }
+  /* 4枚目以降は次の紙へ。1枚の紙に3枚ずつ */
+  .sk-paper + .sk-paper { break-before: page; }
+  .sk-table thead th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
