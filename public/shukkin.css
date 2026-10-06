@@ -103,6 +103,11 @@
 @media print {
   .sk-sheets { display: block; }
   .sk-paper { min-height: 0; }
+  /* 切り取り線は枠の外へ左右 6mm はみ出す。そのはみ出しを紙面の箱の外へ出さずに切る。
+     ⚠ 切らないと Chrome は「内容が紙より横に広い」と判断して紙面全体を縮める。
+     実測(2026-10-07・A4 の PDF): 伝票 84mm → 81.1mm、本文 10pt → 9.7pt、3枚の高さ 270mm → 261.4mm。
+     clip にすると 84mm・10pt に戻り、切り取り線は枠と枠のちょうど真ん中(実測 103.45mm = (98.8+108.1)/2)。 */
+  .sk-paper { overflow: clip; }
   /* 4枚目以降は次の紙へ。1枚の紙に3枚ずつ */
   .sk-paper + .sk-paper { break-before: page; }
   .sk-table thead th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }

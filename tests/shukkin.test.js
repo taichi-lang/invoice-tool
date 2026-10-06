@@ -151,6 +151,15 @@ test('伝票3枚と間2か所が、A4 の印字できる高さ 274mm に収ま�
   assert.ok(/\.sk-paper \+ \.sk-paper\s*\{\s*break-before:\s*page/.test(css), '2ページ目の改ページが無い');
 });
 
+test('印刷時、紙面の箱は横のはみ出しを切る(切らないと Chrome が紙面全体を約97%に縮める)', () => {
+  // 2026-10-07 の実測。切り取り線の左右 6mm のはみ出しだけで、伝票 84mm→81.1mm・本文 10pt→9.7pt に縮んでいた。
+  const print = /@media print\s*\{([\s\S]*)\}\s*$/.exec(css.replace(/\/\*[\s\S]*?\*\//g, ''));
+  assert.ok(print, '@media print が無い');
+  assert.ok(/\.sk-paper\s*\{[^}]*overflow:\s*clip/.test(print[1]), '印刷時の .sk-paper に overflow: clip が無い');
+  // 切り取り線が枠の外へ出る設計そのものは残す(はみ出しを消して直すのではなく、切って直す)
+  assert.ok(/::before\s*\{[^}]*left:\s*-6mm/.test(css), '切り取り線の左のはみ出しが消えている');
+});
+
 test('「送信しない」の表示が、ヘッダーと本文の両方に在る', () => {
   const header = html.slice(html.indexOf('<header'), html.indexOf('</header>'));
   assert.ok(header.includes('入力内容は送信されません'));
