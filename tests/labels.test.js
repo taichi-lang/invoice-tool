@@ -30,7 +30,7 @@ const HTML = read('index.html');
 const APP = read('app.js');
 const DOC = require('../public/doctype.js');
 
-const TYPES = ['請求書', '見積書', '納品書', '領収書', '発注書'];
+const TYPES = ['請求書', '見積書', '納品書', '領収書', '発注書', '注文請書'];
 
 // ---------------------------------------------------------------- 画面の側
 
@@ -70,15 +70,17 @@ test('対照: 4書類の紙の期限の語は、いまも 支払期限・有効�
   assert.strictEqual(DOC.dueLabelOf('納品書'), '納品日', '納品書の期限の語が変わっている');
   assert.strictEqual(DOC.dueLabelOf('領収書'), '', '領収書に期限の語が付いた(紙に行が出るようになった)');
   assert.strictEqual(DOC.dueLabelOf('発注書'), '納期', '発注書の期限の語が変わっている');
+  assert.strictEqual(DOC.dueLabelOf('注文請書'), '納期', '注文請書の期限の語が変わっている');
 });
 
 // ---------------------------------------------------------------- 発注書(2026-10-03)
 // 発注書は書き手が「発注する側」になる。請求書の下書きから切り替えると、
 // 自分の振込先が入ったまま発注先へ印刷されてしまう。振込先は紙にも画面にも出さない。
 
-test('発注書だけが振込先の欄を出さない', () => {
+test('発注書と注文請書だけが振込先の欄を出さない', () => {
+  const NO_BANK = ['発注書', '注文請書'];
   for (const t of TYPES) {
-    assert.strictEqual(DOC.showsBank(t), t !== '発注書', `${t} の振込先の出し方が想定と違う`);
+    assert.strictEqual(DOC.showsBank(t), !NO_BANK.includes(t), `${t} の振込先の出し方が想定と違う`);
   }
 });
 
@@ -93,6 +95,32 @@ test('画面と紙の振込先の欄を、同じ showsBank から隠している
 test('/?type=order で発注書として開ける', () => {
   assert.ok(/order:\s*'発注書'/.test(APP), 'type=order が発注書に対応していない');
   assert.ok(/<option value="発注書">発注書<\/option>/.test(HTML), '書類の種類に発注書が無い');
+});
+
+// ---------------------------------------------------------------- 注文請書(2026-10-09)
+// 発注書を受け取った側が返す書面。自分=受注者、宛先=注文者。支払いを求める紙ではないので振込先は出さない。
+
+test('/?type=acceptance で注文請書として開ける', () => {
+  assert.ok(/acceptance:\s*'注文請書'/.test(APP), 'type=acceptance が注文請書に対応していない');
+  assert.ok(/<option value="注文請書">注文請書<\/option>/.test(HTML), '書類の種類に注文請書が無い');
+});
+
+test('注文請書の宛先と自分の欄は 注文者/受注者 で、他の書類と取り違えない', () => {
+  const p = DOC.presetOf('注文請書');
+  assert.strictEqual(p.to, '注文者');
+  assert.strictEqual(p.from, '受注者');
+  assert.ok(/お請け/.test(p.lead), '文言が「お請けします」になっていない');
+});
+
+test('/chumon-ukesho の案内が、画面の見出しと同じ語で欄を指している', () => {
+  const GUIDE = read('chumon-ukesho.html');
+  const p = DOC.presetOf('注文請書');
+  assert.ok(GUIDE.includes(`2. ${p.to}`), `案内の宛先の欄名が「${p.to}」でない`);
+  assert.ok(GUIDE.includes(`3. 自分(${p.from})`), `案内の自分の欄名が「${p.from}」でない`);
+  assert.ok(GUIDE.includes(p.lead), '案内の文言が紙の文言と違う');
+  assert.ok(GUIDE.includes(p.grand), '案内の金額の見出しが紙と違う');
+  assert.ok(/\/\?type=acceptance/.test(GUIDE), '案内から type=acceptance へ飛んでいない');
+  assert.ok(/判定しません/.test(GUIDE), '印紙の要否を判定しないと書いていない');
 });
 
 test('CSV の期限の列名も紙と同じ語で書く', () => {
@@ -146,16 +174,24 @@ test('表は1か所にしかない(app.js が自前の表を持ち直してい�
 
 test('項目名が変わる組み合わせでは、日付を持ち越さない', () => {
   // 2026-09-21。見積書の「有効期限」が納品書の「納品日」として黙って紙に出ていた。
+  // 2026-10-09。発注書 → 注文請書 は紙の項目名が同じ「納期」なので持ち越してよい
+  // (注文請書は発注書と同じ納期を書き写す書類)。判定は項目名の異同で行う。
+  let changed = 0;
   for (const from of TYPES) {
     for (const to of TYPES) {
       if (from === to) continue;
+      const same = DOC.dueLabelOf(from) === DOC.dueLabelOf(to);
+      if (!same) changed++;
       assert.strictEqual(
-        DOC.carriesDueDate(from, to), false,
-        `${from} → ${to} で日付が持ち越される(紙の項目名は ` +
-        `${DOC.dueLabelOf(from) || 'なし'} → ${DOC.dueLabelOf(to) || 'なし'} と変わる)`
+        DOC.carriesDueDate(from, to), same,
+        `${from} → ${to} の持ち越しが想定と違う(紙の項目名は ` +
+        `${DOC.dueLabelOf(from) || 'なし'} → ${DOC.dueLabelOf(to) || 'なし'})`
       );
     }
   }
+  assert.ok(changed >= 20, '項目名が変わる組み合わせがほとんど無い(表が壊れている)');
+  assert.strictEqual(DOC.carriesDueDate('発注書', '注文請書'), true, '発注書 → 注文請書(どちらも納期)で日付が消える');
+  assert.strictEqual(DOC.carriesDueDate('見積書', '納品書'), false, '見積書 → 納品書で日付が持ち越される(2026-09-21 の再発)');
 });
 
 test('同じ種類のままなら持ち越す(消しすぎていない)', () => {

@@ -32,6 +32,7 @@ const NO_EXIT_PAGES = [
   'index.html',
   'mitsumorisho.html',
   'hacchusho.html',
+  'chumon-ukesho.html',
   'ryoshusho.html',
   'nohinsho.html',
   'soufujo.html',
