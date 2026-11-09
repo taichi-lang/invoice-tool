@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>入金伝票を無料で作成 — A4に3枚、そのままPDF・印刷</title>
+<meta name="description" content="現金で受け取ったお金を、どう書き残せばよいか迷っていませんか。日付・入金先・摘要・金額を入れるだけで、入金伝票をA4に3枚ずつ並べてPDFにできる無料ツールです。現金売上・立替金の精算・預金の引出しの書き方例つき。入力内容は送信されません。">
+<meta property="og:title" content="入金伝票を無料で作成 — A4に3枚、そのままPDF・印刷">
+<meta property="og:description" content="現金で受け取ったお金を、どう書き残せばよいか迷っていませんか。日付・入金先・摘要・金額を入れるだけで、入金伝票をA4に3枚ずつ並べてPDFにできる無料ツールです。現金売上・立替金の精算・預金の引出しの書き方例つき。入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/nyukin">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/shukkin.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">入金伝票ジェネレーター</p>
+  <p class="tagline">現金で受け取ったお金の記録 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">入金伝票を無料で作成 — A4に3枚、そのままPDF・印刷</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 伝票の番号と起票者</summary>
+      <div class="grid2">
+        <label>最初の番号
+          <input type="text" id="skStartNo" inputmode="numeric" placeholder="1">
+        </label>
+        <label>起票者(任意)
+          <input type="text" id="skIssuer" placeholder="中村太郎">
+        </label>
+      </div>
+      <p class="hint">前回の続きの番号から始められます。番号は伝票ごとに1つずつ増えます。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 入金(伝票1枚に1件)</summary>
+      <div id="skRows"></div>
+      <button type="button" id="skAdd" class="btn-sub">伝票を1枚足す(6枚まで)</button>
+      <p class="hint" id="skTotal"></p>
+      <p class="hint">勘定科目は<strong>書いたとおりに紙に出ます</strong>。このツールは科目の候補を出しません。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="skPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="skClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="skProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/shukkin">出金伝票をつくる(自分が払った側で領収書が出ないとき)</a></li>
+        <li><a href="/ryoshusho">領収書をつくる(受け取った相手に渡すとき)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="preview" aria-label="プレビュー">
+    <div class="sk-sheets" id="skSheets" data-kind="nyukin"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>入金伝票は、現金で受け取ったお金を自分で書き残す紙</h2>
+  <p>お客様から代金を現金で受け取った、立て替えたお金を返してもらった、預金を引き出して手元の現金に入れた。<strong>手元の現金が増えたのに、それを示す紙が手元に残らない</strong>ことがあります。入金伝票は、そうした入金を<strong>受け取った側が自分で記録しておく</strong>ための紙です。</p>
+  <p>書く欄は4つだけです。上のツールも、この4つがそろうと1枚の伝票になります。</p>
+  <ol>
+    <li><strong>日付</strong> — 受け取った日。書いた日ではありません</li>
+    <li><strong>入金先</strong> — 誰から受け取ったか。会社名・お名前</li>
+    <li><strong>摘要</strong> — 何のお金か。あとから読んで思い出せる具体さで</li>
+    <li><strong>金額</strong> — 受け取った額。1枚に1件</li>
+  </ol>
+  <p>勘定科目の欄は任意です。<strong>どの科目にするかは、このツールでは判断しません。</strong>迷うときは、税務署または税理士にご確認ください。</p>
+
+  <h2>書き方の例 — 現金売上・立替金の精算・預金の引出し</h2>
+  <p>入金先と摘要に何を書けばよいかで手が止まりやすい3つを並べます。摘要には<strong>「何の代金か・いつの分か」</strong>を入れておくと、あとで請求書や通帳と突き合わせるときに迷いません。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>入金</th><th>入金先</th><th>摘要</th></tr></thead>
+    <tbody>
+      <tr><td>現金での売上代金</td><td>株式会社○○</td><td>10月分 制作費 現金受取(請求書 No.12)</td></tr>
+      <tr><td>立て替えたお金の返金</td><td>○○様</td><td>9/30 立替分(会場費)精算</td></tr>
+      <tr><td>預金を引き出して手元に入れた</td><td>○○銀行 普通預金</td><td>小口現金へ補充</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>売上代金は、請求書の番号を摘要に書く</h3>
+  <p>請求書を出したあとに現金で受け取った場合は、<strong>摘要にその請求書の番号や月を書いておく</strong>と、どの請求がいつ払われたかを1枚でたどれます。受け取ったときに相手へ領収書を渡したなら、その控えも伝票と一緒にとっておきます。</p>
+
+  <h3>銀行の窓口にある「入金伝票」とは別のもの</h3>
+  <p>銀行の窓口で口座にお金を入れるときに書く用紙も「入金伝票」と呼ばれますが、それは<strong>銀行に出す申込みの用紙</strong>です。このページで作るのは、<strong>自分の事業の記録としてとっておく伝票</strong>で、銀行には出せません。</p>
+
+  <h2>入金伝票をつくるときの3つの約束</h2>
+  <ul>
+    <li><strong>受け取ったその日のうちに書く。</strong>月末にまとめて思い出して書くと、日付も金額もずれます</li>
+    <li><strong>1回の入金に1枚。</strong>同じ相手から2回受け取ったら、伝票も2枚にします</li>
+    <li><strong>払った側の記録には使わない。</strong>自分が払ったのに領収書がもらえなかったときは、<a href="/shukkin">出金伝票</a>のほうに書きます</li>
+  </ul>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>入金を記録する紙そのもの</strong>までです。その入金が売上になるか、どの勘定科目に入れるか、帳簿にどうつけるかは扱いません。どれも取引の中身と個別の事情で変わり、ここで一律に決められないためです。制度の一般的な説明であり、個別の判断は所轄の税務署または税理士にご確認ください。</p>
+
+  <a class="cta" href="/ryoshusho">
+    <strong>領収書をつくる(登録不要)</strong>
+    <span>受け取った相手に領収書を渡すときは、こちらの画面で。但し書きの文例つきです</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/shukkin-core.js"></script>
+<script src="/shukkin.js"></script>
+</body>
+</html>

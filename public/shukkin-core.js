@@ -8,6 +8,9 @@
  *   3. 勘定科目は利用者が書いたまま出す。こちらから候補を出さない・補わない。
  *      その支払いが経費になるか、どの科目にするかは税務の判断で、このツールの範囲の外にある
  *
+ * 入金伝票(/nyukin)も同じ紙面の形なので、この関数を共用する。違うのは欄の呼び名だけで、
+ * input.payeeLabel(既定「支払先」)と input.memoLabel(既定「摘要(何に払ったか)」)で言い換える。
+ *
  * ブラウザでは window.Shukkin、node では module.exports から使う。
  */
 (function (root) {
@@ -129,9 +132,12 @@
   function findProblems(input, built) {
     input = input || {};
     built = built || buildSlips(input);
+    var payeeLabel = trimmed(input.payeeLabel) || LIMIT_LABELS.payee;
+    var memoLabel = trimmed(input.memoLabel) || '摘要(何に払ったか)';
+    var labels = { payee: payeeLabel, memo: LIMIT_LABELS.memo, account: LIMIT_LABELS.account };
     var out = [];
     if (built.slips.length === 0) {
-      out.push('伝票が1枚もありません。日付・支払先・摘要・金額を入れてください。');
+      out.push('伝票が1枚もありません。日付・' + payeeLabel + '・摘要・金額を入れてください。');
       return out;
     }
     var rows = Array.isArray(input.rows) ? input.rows.slice(0, MAX_SLIPS).filter(function (r) { return !isBlankRow(r); }) : [];
@@ -139,12 +145,12 @@
       var head = 'No.' + slip.no + ': ';
       var raw = rows[i] || {};
       if (!slip.dateText) out.push(head + '日付が入っていません。');
-      if (!slip.payee) out.push(head + '支払先が入っていません。');
-      if (!slip.memo) out.push(head + '摘要(何に払ったか)が入っていません。');
+      if (!slip.payee) out.push(head + payeeLabel + 'が入っていません。');
+      if (!slip.memo) out.push(head + memoLabel + 'が入っていません。');
       Object.keys(LIMITS).forEach(function (k) {
         var len = Array.from(slip[k]).length;
         if (len > LIMITS[k]) {
-          out.push(head + LIMIT_LABELS[k] + 'が' + len + '字あります。' + LIMITS[k] + '字を超えると伝票の枠からはみ出すことがあります。');
+          out.push(head + labels[k] + 'が' + len + '字あります。' + LIMITS[k] + '字を超えると伝票の枠からはみ出すことがあります。');
         }
       });
       if (slip.amount === null) {

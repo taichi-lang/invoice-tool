@@ -2,15 +2,41 @@
  * 出金伝票(/shukkin)の画面制御。
  * 紙面の組み立ては shukkin-core.js の純粋関数が行い、ここは入力の取得と紙面の描画だけを担当する。
  * 入力内容はこの端末から出ない。下書きは localStorage にだけ置く。
+ *
+ * 入金伝票(/nyukin)もこのファイルで動かす。#skSheets に data-kind="nyukin" があれば、
+ * 紙面の題・欄の呼び名・下書きの保存先だけを入金伝票のものに替える。それ以外の動きは同じ。
  */
 'use strict';
 
 (function () {
 
   var SK = window.Shukkin;
-  var STORAGE_KEY = 'shukkin-draft-v1';
 
   var $ = function (id) { return document.getElementById(id); };
+
+  var KINDS = {
+    shukkin: {
+      storageKey: 'shukkin-draft-v1',
+      title: '出金伝票',
+      payeeLabel: '支払先',
+      memoLabel: '摘要(何に払ったか)',
+      payeePlaceholder: '例: 東京メトロ',
+      memoPlaceholder: '例: 新宿→渋谷 打合せ 往復',
+      amountPlaceholder: '例: 400'
+    },
+    nyukin: {
+      storageKey: 'nyukin-draft-v1',
+      title: '入金伝票',
+      payeeLabel: '入金先',
+      memoLabel: '摘要(何のお金か)',
+      payeePlaceholder: '例: 株式会社○○',
+      memoPlaceholder: '例: 10月分 制作費 現金受取',
+      amountPlaceholder: '例: 33000'
+    }
+  };
+  var sheetsNode = $('skSheets');
+  var KIND = KINDS[(sheetsNode && sheetsNode.dataset && sheetsNode.dataset.kind) || 'shukkin'] || KINDS.shukkin;
+  var STORAGE_KEY = KIND.storageKey;
 
   var els = {
     startNo: $('skStartNo'),
@@ -27,9 +53,9 @@
   /* 1行(=伝票1枚)の入力欄。label は画面の見出し、type は input の種類 */
   var ROW_FIELDS = [
     { key: 'date', label: '日付', type: 'date' },
-    { key: 'payee', label: '支払先', type: 'text', placeholder: '例: 東京メトロ' },
-    { key: 'memo', label: '摘要(何に払ったか)', type: 'text', placeholder: '例: 新宿→渋谷 打合せ 往復' },
-    { key: 'amount', label: '金額(円)', type: 'text', placeholder: '例: 400', inputmode: 'numeric' },
+    { key: 'payee', label: KIND.payeeLabel, type: 'text', placeholder: KIND.payeePlaceholder },
+    { key: 'memo', label: KIND.memoLabel, type: 'text', placeholder: KIND.memoPlaceholder },
+    { key: 'amount', label: '金額(円)', type: 'text', placeholder: KIND.amountPlaceholder, inputmode: 'numeric' },
     { key: 'account', label: '勘定科目(任意)', type: 'text', placeholder: '任意' }
   ];
 
@@ -85,7 +111,7 @@
       });
       rows.push(row);
     });
-    return { startNo: els.startNo.value, issuer: els.issuer.value, rows: rows };
+    return { startNo: els.startNo.value, issuer: els.issuer.value, rows: rows, payeeLabel: KIND.payeeLabel, memoLabel: KIND.memoLabel };
   }
 
   /* ------------------------------------------------------------- 紙面 */
@@ -94,7 +120,7 @@
     var box = el('div', 'sk-slip');
 
     var head = el('div', 'sk-head');
-    head.appendChild(el('p', 'sk-title', '出金伝票'));
+    head.appendChild(el('p', 'sk-title', KIND.title));
     var meta = el('div', 'sk-meta');
     meta.appendChild(el('p', 'sk-no', 'No. ' + slip.no));
     meta.appendChild(el('p', 'sk-date', slip.dateText || '　　年　　月　　日'));
@@ -102,7 +128,7 @@
     box.appendChild(head);
 
     var payee = el('p', 'sk-payee');
-    payee.appendChild(el('span', 'sk-cap', '支払先'));
+    payee.appendChild(el('span', 'sk-cap', KIND.payeeLabel));
     payee.appendChild(el('span', 'sk-payee-name', slip.payee));
     box.appendChild(payee);
 

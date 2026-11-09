@@ -207,8 +207,9 @@ function fakeEl(tag) {
   return node;
 }
 
-function runView(storage) {
+function runView(storage, kind) {
   const els = {};
+  if (kind) { els.skSheets = fakeEl(); els.skSheets.dataset.kind = kind; }
   const document = {
     getElementById: (id) => (els[id] = els[id] || fakeEl()),
     createElement: (tag) => fakeEl(tag)
@@ -284,6 +285,59 @@ test('「入力をすべて消す」のあと、保存にも画面にも入力�
   const left = v.rowInputs(0).filter((x) => x.dataset.key !== 'date' && x.value !== '');
   assert.deepStrictEqual(left.map((x) => x.dataset.key), [], '画面に残った欄');
   assert.strictEqual(v.els.skIssuer.value, '');
+});
+
+// ── 入金伝票(/nyukin)— 同じ js/css を data-kind で切り替える ───────────
+const nyukinHtml = fs.readFileSync(path.join(PUBLIC, 'nyukin.html'), 'utf8');
+
+function allText(node) {
+  return node._text + node.children.map(allText).join('');
+}
+
+test('入金伝票の画面は data-kind="nyukin" で同じ js と css を読み込む', () => {
+  assert.ok(/id="skSheets"[^>]*data-kind="nyukin"/.test(nyukinHtml));
+  assert.ok(nyukinHtml.includes('<script src="/shukkin-core.js"></script>'));
+  assert.ok(nyukinHtml.includes('<script src="/shukkin.js"></script>'));
+  assert.ok(nyukinHtml.includes('href="/shukkin.css"'));
+  assert.ok(html.includes('href="/nyukin"'), '出金伝票から入金伝票へのリンクが無い');
+  assert.ok(nyukinHtml.includes('href="/shukkin"'), '入金伝票から出金伝票へのリンクが無い');
+});
+
+test('入金伝票の紙面は題と欄の呼び名が入金のものになり、出金の語は出ない', () => {
+  const v = runView({}, 'nyukin');
+  Object.entries({ payee: 'ZZ相手', memo: 'ZZ内容', amount: '33000' }).forEach(([k, val]) => v.typeRow(0, k, val));
+  const paper = allText(v.els.skSheets);
+  assert.ok(paper.includes('入金伝票'));
+  assert.ok(paper.includes('入金先'));
+  assert.ok(!paper.includes('出金伝票'));
+  assert.ok(!paper.includes('支払先'));
+});
+
+test('入金伝票と出金伝票の下書きは別のキーに入り、互いを上書きしない', () => {
+  const storage = {};
+  const a = runView(storage, 'nyukin');
+  a.typeRow(0, 'memo', 'ZZ入金の摘要');
+  const b = runView(storage);
+  assert.strictEqual(b.rowInputs(0).find((x) => x.dataset.key === 'memo').value, '');
+  assert.ok(storage['nyukin-draft-v1'].includes('ZZ入金の摘要'));
+  b.typeRow(0, 'memo', 'ZZ出金の摘要');
+  b.click('skClear');
+  assert.ok(storage['nyukin-draft-v1'].includes('ZZ入金の摘要'), '出金の消去が入金の下書きまで消した');
+});
+
+test('警告文は渡した呼び名で出る(既定は支払先のまま)', () => {
+  const rows = [row({ payee: '', memo: '' })];
+  const def = SK.findProblems({ rows });
+  assert.ok(def.some((m) => m.includes('支払先が入っていません')));
+  const ny = SK.findProblems({ rows, payeeLabel: '入金先', memoLabel: '摘要(何のお金か)' });
+  assert.ok(ny.some((m) => m.includes('入金先が入っていません')));
+  assert.ok(ny.some((m) => m.includes('摘要(何のお金か)が入っていません')));
+  assert.ok(!ny.some((m) => m.includes('支払先')));
+});
+
+test('入金伝票の説明文が約束した「現金売上・立替金・預金の引出し」の例が本文に在る', () => {
+  const body = nyukinHtml.slice(nyukinHtml.indexOf('<article'), nyukinHtml.indexOf('</article>'));
+  for (const w of ['売上', '立替', '預金']) assert.ok(body.includes(w), w);
 });
 
 console.log('shukkin.test.js: ' + passed + ' 件すべて通過');
