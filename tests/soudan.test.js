@@ -40,6 +40,7 @@ const NO_EXIT_PAGES = [
   'saisoku.html',
   'shukkin.html',
   'nyukin.html',
+  'keihi.html',
   'aisatsujo.html',
   'inshi.html',
   'legal.html',

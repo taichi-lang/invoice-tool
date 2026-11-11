@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>経費精算書を無料で作成 — 15行・仮払金の差引もA4でPDF</title>
+<meta name="description" content="立て替えた交通費や備品代の精算書を、エクセルなしで作りたいですか。日付・支払先・内容・金額を入れると、合計と仮払金の差引を計算してA4の経費精算書をPDFにできる無料ツールです。会社設立の費用を立て替えた方にも。入力内容は送信されません。">
+<meta property="og:title" content="経費精算書を無料で作成 — 15行・仮払金の差引もA4でPDF">
+<meta property="og:description" content="立て替えた交通費や備品代の精算書を、エクセルなしで作りたいですか。日付・支払先・内容・金額を入れると、合計と仮払金の差引を計算してA4の経費精算書をPDFにできる無料ツールです。会社設立の費用を立て替えた方にも。入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/keihi">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/keihi.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">経費精算書ジェネレーター</p>
+  <p class="tagline">立て替えたお金の精算 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">経費精算書を無料で作成 — 15行・仮払金の差引もA4でPDF</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 提出日・提出先・申請者</summary>
+      <div class="grid2">
+        <label>提出日
+          <input type="date" id="kiSubmitDate">
+        </label>
+        <label>提出先(任意)
+          <input type="text" id="kiTo" placeholder="株式会社○○">
+        </label>
+        <label>申請者
+          <input type="text" id="kiApplicant" placeholder="中村太郎">
+        </label>
+        <label>仮払金(任意・円)
+          <input type="text" id="kiAdvance" inputmode="numeric" placeholder="無ければ空欄">
+        </label>
+      </div>
+      <p class="hint">先にお金を預かっていた(仮払い)ときだけ、その額を入れます。合計との差を「支給額」または「返金額」として紙に出します。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 明細(1行に1件・15行まで)</summary>
+      <div id="kiRows"></div>
+      <button type="button" id="kiAdd" class="btn-sub">行を1つ足す(15行まで)</button>
+      <p class="hint" id="kiTotal"></p>
+      <p class="hint">その支払いが経費になるかどうか、どの勘定科目にするかは、<strong>このツールでは判断しません</strong>。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="kiPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="kiClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="kiProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/shukkin">出金伝票をつくる(領収書が出ない支払いを1件ずつ書き残すとき)</a></li>
+        <li><a href="/nyukin">入金伝票をつくる(精算のお金を現金で受け取ったとき)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="preview" aria-label="プレビュー">
+    <div id="kiSheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>経費精算書は、立て替えたお金を返してもらうための1枚</h2>
+  <p>仕事で使う交通費や備品代を、いったん自分の財布やカードで払う。あとで会社からその分を受け取る。そのときに<strong>「いつ・どこに・何のために・いくら払ったか」を1枚にまとめて出す紙</strong>が経費精算書です。</p>
+  <p>会社を作ったばかりのころは、登記に行く交通費や印鑑代を<strong>代表者が自分のお金で立て替える</strong>ことがよくあります。それを会社のお金から受け取るときにも、この1枚が記録になります。</p>
+  <p>明細の1行に書く欄は4つです。</p>
+  <ol>
+    <li><strong>日付</strong> — 払った日。精算書を書いた日ではありません</li>
+    <li><strong>支払先</strong> — お店・会社・交通機関の名前</li>
+    <li><strong>内容</strong> — 何のために払ったか。あとから読んで思い出せる具体さで</li>
+    <li><strong>金額</strong> — 実際に払った額。1行に1件</li>
+  </ol>
+  <p>領収書・レシートがある支払いは「有」、無い支払いは「無」にします。紙の精算書なら、領収書は裏に貼って一緒に出すのが一般的です。</p>
+
+  <h2>書き方の例 — 交通費・備品代・会社設立の立替</h2>
+  <p>内容の欄で手が止まりやすい3つを並べます。<strong>「どこへ・何をしに」「何を・いくつ」</strong>まで書いておくと、確認する人が聞き返さずに済みます。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>支払い</th><th>支払先</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>電車で打合せに行った</td><td>東京メトロ</td><td>新宿→大手町 ○○社打合せ 往復</td></tr>
+      <tr><td>事務用品を買った</td><td>○○文具店</td><td>コピー用紙 A4 2箱・封筒 長形3号</td></tr>
+      <tr><td>会社設立の手続きで立て替えた</td><td>○○印章店</td><td>会社の実印・銀行印・角印 3本</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>仮払金があるときは、差引を見る</h3>
+  <p>出張の前などに<strong>先にお金を預かっていた(仮払い)</strong>なら、その額を「仮払金」に入れます。使った合計のほうが多ければ差額を<strong>受け取り(支給額)</strong>、少なければ差額を<strong>返します(返金額)</strong>。このツールは、この引き算を紙に書くところまでを行います。</p>
+
+  <h3>領収書が出ない支払いは、出金伝票も使える</h3>
+  <p>電車の切符や自販機など、領収書が出ない支払いが多いときは、1件ずつを<a href="/shukkin">出金伝票</a>に書き残しておき、精算書の内容欄にその伝票番号を書いておくと、あとでたどれます。</p>
+
+  <h2>経費精算書をつくるときの3つの約束</h2>
+  <ul>
+    <li><strong>払った日のうちにメモしておく。</strong>月末にまとめて思い出すと、日付も金額もずれます</li>
+    <li><strong>1回の支払いに1行。</strong>同じお店で2回払ったら、行も2つにします</li>
+    <li><strong>立て替えていないお金は書かない。</strong>会社のカードや口座から払ったものは、精算する必要がありません</li>
+  </ul>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>立て替えた支払いを並べて精算を申請する紙そのもの</strong>までです。その支払いが経費として認められるか、どの勘定科目に入れるか、会社設立前の支払いを帳簿でどう扱うかは扱いません。どれも取引の中身と個別の事情で変わり、ここで一律に決められないためです。制度の一般的な説明であり、個別の判断は所轄の税務署または税理士にご確認ください。</p>
+
+  <a class="cta" href="/ryoshusho">
+    <strong>領収書をつくる(登録不要)</strong>
+    <span>お金を受け取った側が領収書を渡すときは、こちらの画面で。但し書きの文例つきです</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/shukkin-core.js"></script>
+<script src="/keihi-core.js"></script>
+<script src="/keihi.js"></script>
+</body>
+</html>
