@@ -50,6 +50,7 @@ const NO_AD_PAGES = [
   'shukkin.html',
   'nyukin.html',
   'keihi.html',
+  'shiharai-meisai.html',
   'aisatsujo.html',
   'inshi.html',
   'legal.html',

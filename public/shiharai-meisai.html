@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>支払明細書を無料で作成 — 控除と差引支払額もA4でPDF</title>
+<meta name="description" content="外注先や業務委託の方に渡す支払明細書を、エクセルなしで作りたいですか。内容と金額を入れると、合計から源泉所得税や振込手数料を差し引いた差引支払額を計算し、A4の支払明細書をPDFにできる無料ツールです。入力内容は送信されません。">
+<meta property="og:title" content="支払明細書を無料で作成 — 控除と差引支払額もA4でPDF">
+<meta property="og:description" content="外注先や業務委託の方に渡す支払明細書を、エクセルなしで作りたいですか。内容と金額を入れると、合計から源泉所得税や振込手数料を差し引いた差引支払額を計算し、A4の支払明細書をPDFにできる無料ツールです。入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/shiharai-meisai">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/shiharai-meisai.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">支払明細書ジェネレーター</p>
+  <p class="tagline">外注先・業務委託への支払いの内訳 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">支払明細書を無料で作成 — 控除と差引支払額もA4でPDF</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. だれに・いつ払うか</summary>
+      <div class="grid2">
+        <label>支払先(受け取る方)
+          <input type="text" id="smTo" placeholder="山田デザイン事務所">
+        </label>
+        <label>敬称
+          <select id="smHonorific">
+            <option value="様">様</option>
+            <option value="御中">御中</option>
+          </select>
+        </label>
+        <label>支払う側(あなた)の名前
+          <input type="text" id="smFrom" placeholder="株式会社○○">
+        </label>
+        <label>住所・電話(任意)
+          <input type="text" id="smFromAddress" placeholder="東京都○○区…">
+        </label>
+        <label>発行日
+          <input type="date" id="smIssueDate">
+        </label>
+        <label>支払日
+          <input type="date" id="smPayDate">
+        </label>
+        <label>支払方法(任意)
+          <input type="text" id="smMethod" placeholder="銀行振込">
+        </label>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 支払う内容(1行に1件・10行まで)</summary>
+      <div id="smRows"></div>
+      <button type="button" id="smAdd" class="btn-sub">行を1つ足す(10行まで)</button>
+      <p class="hint">金額は、相手の請求書に書いてある額(消費税を含めた額)をそのまま入れます。消費税の計算はこのツールでは行いません。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 差し引くもの(あるときだけ・3つまで)</summary>
+      <div id="smDeds"></div>
+      <p class="hint">源泉所得税や振込手数料など、支払額から引いて払うものがあれば、名目と金額を入れます。<strong>引くべきかどうか・いくら引くかは、このツールでは判断しません</strong>。</p>
+      <p class="hint" id="smTotal"></p>
+    </details>
+
+    <details class="card" open>
+      <summary>4. 備考(任意)</summary>
+      <label>備考
+        <input type="text" id="smNote" placeholder="例: 請求書 No.2026-011 のお支払い分です">
+      </label>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="smPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="smClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="smProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/hacchusho">発注書をつくる(仕事を頼むときに、先に出す1枚)</a></li>
+        <li><a href="/guide/gensen-choshu-keisan">源泉徴収の計算方法(差し引く額を自分で確かめるとき)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="preview" aria-label="プレビュー">
+    <div id="smSheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>支払明細書は、「いくら払ったか・なぜその額か」を相手に伝える1枚</h2>
+  <p>外注先や業務委託の方にお金を振り込むとき、<strong>請求書の額と、実際に振り込む額が違う</strong>ことがあります。源泉所得税を引いた、振込手数料を引いた、2か月分をまとめて払った、などです。</p>
+  <p>受け取った側は、通帳の数字だけを見ても理由が分かりません。そこで、払う側が<strong>「何の代金を・いくら・何を引いて・いつ払うか」を1枚に書いて渡す</strong>のが支払明細書です。会社によっては「支払通知書」と呼びます。</p>
+  <p>書く欄は5つです。</p>
+  <ol>
+    <li><strong>支払先</strong> — お金を受け取る方の名前。個人なら「様」、会社なら「御中」</li>
+    <li><strong>支払日</strong> — 実際に振り込む日。明細書を書いた日ではありません</li>
+    <li><strong>内容と金額</strong> — 何の代金か。1件ずつ1行に</li>
+    <li><strong>差し引くもの</strong> — 源泉所得税・振込手数料など、引いて払うものの名目と額</li>
+    <li><strong>差引支払額</strong> — 相手の口座に実際に入る額。このツールが引き算して出します</li>
+  </ol>
+
+  <h2>書き方の例 — 業務委託のデザイン料を払うとき</h2>
+  <p>デザイナーの方から55,000円の請求書が届き、源泉所得税5,105円を引いて振り込む場合の例です。<strong>差し引く額そのものは、ご自身で確かめた数字を入れてください。</strong></p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>欄</th><th>書くこと</th></tr></thead>
+    <tbody>
+      <tr><td>内容</td><td>11月分 ロゴ制作費(請求書 No.2026-011)</td></tr>
+      <tr><td>金額</td><td>55,000</td></tr>
+      <tr><td>差し引くもの</td><td>源泉所得税 5,105</td></tr>
+      <tr><td>差引支払額</td><td>49,895(自動で計算されます)</td></tr>
+      <tr><td>支払日</td><td>2026年11月30日</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>内容には、相手の請求書の番号を書いておく</h3>
+  <p>受け取った側は、自分が出した請求書と照らし合わせます。<strong>「11月分」「請求書 No.○○」</strong>まで書いておくと、どの請求への支払いかを聞き返されずに済みます。</p>
+
+  <h3>振込手数料を引くなら、先に決めておく</h3>
+  <p>振込手数料をどちらが持つかは、払う側が勝手に決められるものではありません。<strong>仕事を頼む前に取り決めておき</strong>、引いたときは明細書に名目と額を書きます。取り決めは<a href="/hacchusho">発注書</a>の支払条件に書いておくと、あとで見返せます。</p>
+
+  <h2>支払明細書をつくるときの3つの約束</h2>
+  <ul>
+    <li><strong>振り込む前か、振り込んだ日に渡す。</strong>入金のあとで届くと、相手はその間「金額が違う」と悩みます</li>
+    <li><strong>差し引いたものは、すべて名目を書く。</strong>「その他」でまとめると、問い合わせが来ます</li>
+    <li><strong>控えを自分の手元にも残す。</strong>PDFを1部、相手の請求書と同じ場所に置いておきます</li>
+  </ul>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>支払いの内訳を並べて差引支払額を伝える紙そのもの</strong>までです。その支払いに源泉徴収が要るか、いくら引くか、消費税をどう扱うか、この紙が領収書や適格請求書(インボイス)の代わりになるかは扱いません。どれも取引の中身と個別の事情で変わり、ここで一律に決められないためです。制度の一般的な説明であり、個別の判断は所轄の税務署または税理士にご確認ください。</p>
+
+  <a class="cta" href="/guide/gensen-choshu-keisan">
+    <strong>源泉徴収の計算方法を読む</strong>
+    <span>10.21%と20.42%の使い分け、税抜と税込のどちらを対象にするかを、計算例つきで</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/shukkin-core.js"></script>
+<script src="/shiharai-meisai-core.js"></script>
+<script src="/shiharai-meisai.js"></script>
+</body>
+</html>
