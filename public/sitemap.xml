@@ -85,6 +85,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://invoice-tool-kohl.vercel.app/mitsumori-irai</loc>
+    <lastmod>2026-11-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://invoice-tool-kohl.vercel.app/inshi</loc>
     <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>

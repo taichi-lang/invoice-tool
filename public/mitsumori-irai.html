@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>見積依頼書を無料で作成 — 品名と数量を並べてA4でPDF</title>
+<meta name="description" content="外注先や仕入先に出す見積依頼書を、エクセルやワードなしで作りたいですか。品名・仕様・数量と、回答期限・希望納期・納入場所・支払条件を入れると、A4の見積依頼書をPDFにできる無料ツールです。相見積もりにも使えます。入力内容は送信されません。">
+<meta property="og:title" content="見積依頼書を無料で作成 — 品名と数量を並べてA4でPDF">
+<meta property="og:description" content="外注先や仕入先に出す見積依頼書を、エクセルやワードなしで作りたいですか。品名・仕様・数量と、回答期限・希望納期・納入場所・支払条件を入れると、A4の見積依頼書をPDFにできる無料ツールです。相見積もりにも使えます。入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/mitsumori-irai">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/mitsumori-irai.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">見積依頼書ジェネレーター</p>
+  <p class="tagline">外注・仕入れの値段を聞く1枚 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">見積依頼書を無料で作成 — 品名と数量を並べてA4でPDF</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. だれに頼むか</summary>
+      <div class="grid2">
+        <label>依頼先(見積もりを出してもらう相手)
+          <input type="text" id="miTo" placeholder="○○印刷株式会社">
+        </label>
+        <label>敬称
+          <select id="miHonorific">
+            <option value="御中">御中</option>
+            <option value="様">様</option>
+          </select>
+        </label>
+        <label>依頼する側(あなた)の名前
+          <input type="text" id="miFrom" placeholder="山田商店">
+        </label>
+        <label>住所・電話・メール(任意)
+          <input type="text" id="miFromAddress" placeholder="東京都○○区… / 03-0000-0000">
+        </label>
+        <label>担当者(任意)
+          <input type="text" id="miPerson" placeholder="山田 太郎">
+        </label>
+        <label>発行日
+          <input type="date" id="miIssueDate">
+        </label>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 見積もりの条件</summary>
+      <div class="grid2">
+        <label>件名(任意)
+          <input type="text" id="miSubject" placeholder="例: 開店告知チラシの印刷">
+        </label>
+        <label>回答期限(いつまでに見積もりがほしいか)
+          <input type="date" id="miReplyDate">
+        </label>
+        <label>希望納期(任意)
+          <input type="date" id="miDeliveryDate">
+        </label>
+        <label>納入場所(任意)
+          <input type="text" id="miPlace" placeholder="例: 当店(上記住所)">
+        </label>
+        <label>支払条件(任意)
+          <input type="text" id="miPayTerms" placeholder="例: 月末締め・翌月末払い(銀行振込)">
+        </label>
+      </div>
+      <p class="hint">空けた欄は、紙でも空欄のまま出ます。<strong>何日あれば見積もりや納品に足りるかは、このツールでは判断しません</strong>。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 見積もってほしいもの(1行に1件・10行まで)</summary>
+      <div id="miRows"></div>
+      <button type="button" id="miAdd" class="btn-sub">行を1つ足す(10行まで)</button>
+      <p class="hint">金額の欄はありません。値段を書くのは相手だからです。数量が決まっていないときは「一式」などと書けます(書いたとおりに出します)。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>4. 備考(任意)</summary>
+      <label>備考
+        <input type="text" id="miNote" placeholder="例: 送料を含めた金額でお願いします。データはこちらで用意します">
+      </label>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="miPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="miClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="miProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/hacchusho">発注書をつくる(見積もりを見て、頼むと決めたあとに出す1枚)</a></li>
+        <li><a href="/mitsumorisho">見積書をつくる(自分が見積もりを出す側のとき)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="preview" aria-label="プレビュー">
+    <div id="miSheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>見積依頼書は、「同じ条件で値段を聞く」ための1枚</h2>
+  <p>外注先や仕入先に値段を聞くとき、電話や口頭だけで頼むと、<strong>相手ごとに前提がずれた見積もりが返ってきます</strong>。数量が違う、送料が入っていない、納期が合っていない、などです。</p>
+  <p>そこで、頼む側が<strong>「何を・いくつ・いつまでに・どこへ」を1枚に書いて渡す</strong>のが見積依頼書です。書いておけば、返ってきた見積書をそのまま比べられます。</p>
+  <p>書く欄は5つです。</p>
+  <ol>
+    <li><strong>依頼先</strong> — 見積もりを出してもらう相手の名前。会社なら「御中」、個人なら「様」</li>
+    <li><strong>品名・仕様と数量</strong> — 何をいくつ。大きさ・材質・色など、値段が変わるところまで書く</li>
+    <li><strong>回答期限</strong> — いつまでに見積書がほしいか</li>
+    <li><strong>希望納期と納入場所</strong> — いつ・どこに届けてほしいか</li>
+    <li><strong>支払条件</strong> — いつ締めて、いつ、どう払うつもりか</li>
+  </ol>
+
+  <h2>書き方の例 — 開店チラシの印刷を頼むとき</h2>
+  <p>開店を知らせるチラシ1,000枚の値段を、印刷会社に聞く場合の例です。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>欄</th><th>書くこと</th></tr></thead>
+    <tbody>
+      <tr><td>件名</td><td>開店告知チラシの印刷</td></tr>
+      <tr><td>品名・仕様</td><td>A4チラシ 両面カラー コート紙90kg</td></tr>
+      <tr><td>数量・単位</td><td>1000 枚</td></tr>
+      <tr><td>回答期限</td><td>2026年11月20日</td></tr>
+      <tr><td>希望納期</td><td>2026年12月5日</td></tr>
+      <tr><td>納入場所</td><td>当店(上記住所)</td></tr>
+      <tr><td>備考</td><td>送料を含めた金額でお願いします</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>仕様は「値段が変わるところ」まで書く</h3>
+  <p>「チラシ 1000枚」だけでは、相手は紙の厚さや色の数を自分で決めて見積もるしかありません。<strong>大きさ・材質・色・加工</strong>のように、変えると値段が動くところを1行に書きます。分からないところは、備考に「おすすめの仕様があればご提案ください」と書いておけば足ります。</p>
+
+  <h3>数が決まっていないときは、2通り頼む</h3>
+  <p>500枚にするか1,000枚にするか迷っているなら、<strong>行を2つに分けて両方の値段を聞きます</strong>。あとから聞き直すより、1回で済みます。</p>
+
+  <h2>相見積もりを取るときの3つの約束</h2>
+  <p>2社以上に同じ依頼を出して比べることを、相見積もり(あいみつもり)と言います。</p>
+  <ul>
+    <li><strong>全社に同じ内容の依頼書を渡す。</strong>宛名だけを変え、品名・数量・期限は1字も変えません。条件が違うと、値段を比べられなくなります</li>
+    <li><strong>相見積もりであることは、隠さず伝える。</strong>備考に「複数社にお見積りをお願いしています」と1行書いておくと、あとで断るときに話が早く済みます</li>
+    <li><strong>頼まなかった相手にも、結果を知らせる。</strong>見積もりを作るのには手間がかかっています。お礼と、今回は見送る旨を返します</li>
+  </ul>
+
+  <h2>メールで頼むときも、PDFを1枚つける</h2>
+  <p>見積もりの依頼は、メールの本文だけでも出せます。それでも<strong>品名と数量が3行を超えるなら、依頼書をPDFにして添付する</strong>ほうが、相手が見積書を作るときに写し間違えません。本文には「添付の依頼書のとおり、○月○日までにお見積りをお願いします」と書けば足ります。</p>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>見積もりの条件を並べて相手に伝える紙そのもの</strong>までです。値段の計算はしません。この紙を出したあとに契約がいつ成り立つか、取引に下請法やフリーランス法などの決まりがかかるか、支払条件が妥当かは扱いません。どれも取引の中身と個別の事情で変わり、ここで一律に決められないためです。一般的な説明であり、個別の判断は専門家にご確認ください。</p>
+
+  <a class="cta" href="/hacchusho">
+    <strong>発注書をつくる</strong>
+    <span>見積もりを見て頼む相手が決まったら、次に出す1枚。納期と支払条件の文例つき</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/shukkin-core.js"></script>
+<script src="/mitsumori-irai-core.js"></script>
+<script src="/mitsumori-irai.js"></script>
+</body>
+</html>

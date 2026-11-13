@@ -1,0 +1,76 @@
+/* ---------------------------------------------------------- 見積依頼書(/mitsumori-irai)
+
+   このページだけの規則を別ファイルに置く。
+   用紙は A4 縦1枚で、style.css の .paper と @page をそのまま使う。**ここでは @page を持たない。**
+   明細は常に10行の枠を引く。入れなかった行は空欄のまま残り、手書きで足せる。金額の欄は無い。 */
+
+.mi-row {
+  margin: 0 0 12px;
+  padding: 10px 12px 12px;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px;
+}
+.mi-row .mi-remove { margin-top: 6px; }
+
+.mi-paper p { margin: 0; }
+
+.mi-head { display: flex; justify-content: space-between; align-items: flex-end; }
+.mi-title {
+  font-size: 18pt;
+  font-weight: 700;
+  letter-spacing: .4em;
+  border-bottom: 1.2pt double #000;
+  padding-bottom: .5mm;
+}
+.mi-date { font-size: 10.5pt; }
+
+.mi-parties { display: flex; justify-content: space-between; align-items: flex-start; gap: 8mm; margin-top: 8mm; }
+.mi-to { flex: 1 1 auto; min-width: 0; }
+.mi-to-name {
+  min-height: 7mm;
+  padding-bottom: 1mm;
+  border-bottom: .5pt solid #000;
+  font-size: 13pt;
+  overflow-wrap: anywhere;
+}
+.mi-lead { margin-top: 3mm !important; font-size: 10pt; }
+.mi-from { flex: 0 0 68mm; font-size: 10pt; line-height: 1.5; overflow-wrap: anywhere; }
+.mi-from-name { font-size: 11pt; font-weight: 700; }
+.mi-from-addr { font-size: 9pt; }
+
+.mi-box { margin-top: 6mm; border-collapse: collapse; width: 100%; table-layout: fixed; }
+.mi-box th, .mi-box td { border: .5pt solid #000; padding: 1.5mm 3mm; height: 8mm; font-size: 10pt; }
+.mi-box th { width: 30mm; font-weight: 400; text-align: left; background: #f3f3f3; }
+.mi-box td { overflow-wrap: anywhere; }
+.mi-box .mi-box-main th, .mi-box .mi-box-main td { border-width: 1.2pt; font-weight: 700; }
+
+.mi-table {
+  width: 100%;
+  margin-top: 6mm;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 9.5pt;
+  line-height: 1.35;
+}
+.mi-table th, .mi-table td {
+  border: .5pt solid #000;
+  padding: 1mm 1.5mm;
+  height: 8.5mm;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+.mi-table thead th { height: 6mm; font-size: 8.5pt; font-weight: 400; background: #f3f3f3; }
+.mi-table th:nth-child(1) { width: 8mm; }
+.mi-table th:nth-child(3) { width: 26mm; }
+.mi-table th:nth-child(4) { width: 18mm; }
+.mi-table .mi-no { text-align: center; font-size: 8pt; color: #333; }
+.mi-table .mi-qty { text-align: right; font-variant-numeric: tabular-nums; }
+.mi-table .mi-unit { text-align: center; }
+
+.mi-note { margin-top: 6mm; border: .5pt solid #000; min-height: 28mm; padding: 1.5mm 3mm; }
+.mi-note-cap { font-size: 8.5pt; color: #333; }
+.mi-note-body { font-size: 9.5pt; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+@media print {
+  .mi-table thead th, .mi-box th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
