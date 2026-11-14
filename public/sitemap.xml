@@ -91,6 +91,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://invoice-tool-kohl.vercel.app/kanryo-hokoku</loc>
+    <lastmod>2026-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://invoice-tool-kohl.vercel.app/inshi</loc>
     <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>

@@ -43,6 +43,7 @@ const NO_EXIT_PAGES = [
   'keihi.html',
   'shiharai-meisai.html',
   'mitsumori-irai.html',
+  'kanryo-hokoku.html',
   'aisatsujo.html',
   'inshi.html',
   'legal.html',

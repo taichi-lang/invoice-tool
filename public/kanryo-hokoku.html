@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>業務完了報告書を無料で作成 — 作業内容を並べてA4でPDF</title>
+<meta name="description" content="業務委託の仕事を終えたときに出す業務完了報告書(作業完了報告書)を、ワードやエクセルなしで作りたいですか。件名・作業期間・完了日と、行った作業を入れると、相手の確認欄つきのA4の報告書をPDFにできる無料ツールです。入力内容は送信されません。">
+<meta property="og:title" content="業務完了報告書を無料で作成 — 作業内容を並べてA4でPDF">
+<meta property="og:description" content="業務委託の仕事を終えたときに出す業務完了報告書(作業完了報告書)を、ワードやエクセルなしで作りたいですか。件名・作業期間・完了日と、行った作業を入れると、相手の確認欄つきのA4の報告書をPDFにできる無料ツールです。入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/kanryo-hokoku">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/kanryo-hokoku.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">業務完了報告書ジェネレーター</p>
+  <p class="tagline">仕事を終えたことを伝える1枚 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">業務完了報告書を無料で作成 — 作業内容を並べてA4でPDF</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. だれに報告するか</summary>
+      <div class="grid2">
+        <label>報告先(仕事を頼んでくれた相手)
+          <input type="text" id="khTo" placeholder="株式会社○○">
+        </label>
+        <label>敬称
+          <select id="khHonorific">
+            <option value="御中">御中</option>
+            <option value="様">様</option>
+          </select>
+        </label>
+        <label>報告する側(あなた)の名前
+          <input type="text" id="khFrom" placeholder="山田デザイン事務所">
+        </label>
+        <label>住所・電話・メール(任意)
+          <input type="text" id="khFromAddress" placeholder="東京都○○区… / 03-0000-0000">
+        </label>
+        <label>担当者(任意)
+          <input type="text" id="khPerson" placeholder="山田 太郎">
+        </label>
+        <label>報告日
+          <input type="date" id="khIssueDate">
+        </label>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary>2. どの仕事を、いつ終えたか</summary>
+      <div class="grid2">
+        <label>件名(どの仕事の報告か)
+          <input type="text" id="khSubject" placeholder="例: コーポレートサイト制作業務">
+        </label>
+        <label>完了日(仕事を終えた日)
+          <input type="date" id="khDoneDate">
+        </label>
+        <label>作業期間の始まり(任意)
+          <input type="date" id="khStartDate">
+        </label>
+        <label>作業期間の終わり(任意)
+          <input type="date" id="khEndDate">
+        </label>
+        <label>作業場所(任意)
+          <input type="text" id="khPlace" placeholder="例: 当事務所 / 貴社本社">
+        </label>
+      </div>
+      <p class="hint">空けた欄は、紙でも空欄のまま出ます。<strong>いつまでに報告すればよいか、相手の確認に何日かかるかは、このツールでは判断しません</strong>(契約書や発注書の決めに従ってください)。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 行った作業・納めた成果物(1行に1件・10行まで)</summary>
+      <div id="khRows"></div>
+      <button type="button" id="khAdd" class="btn-sub">行を1つ足す(10行まで)</button>
+      <p class="hint">金額の欄はありません。金額は請求書に書くものだからです。数量と単位は空けたままでも出せます(入れたときは、書いたとおりに出します)。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>4. 備考と確認欄</summary>
+      <div class="grid2">
+        <label>備考(任意)
+          <input type="text" id="khNote" placeholder="例: 納品データは共有フォルダに置いています">
+        </label>
+        <label>確認欄(相手が確認日と名前を書く枠)
+          <select id="khConfirm">
+            <option value="on">つける</option>
+            <option value="off">つけない</option>
+          </select>
+        </label>
+      </div>
+      <p class="hint">確認欄の中は、いつも空欄で出ます。相手が手で書くための枠です。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="khPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="khClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="khProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/">請求書をつくる(報告のあとに出す1枚)</a></li>
+        <li><a href="/nohinsho">納品書をつくる(物を渡す仕事のとき)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="preview" aria-label="プレビュー">
+    <div id="khSheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>業務完了報告書は、「終わりました」を紙に残す1枚</h2>
+  <p>サイト制作、原稿の執筆、月ごとの保守、清掃や設置の作業。業務委託の仕事には、<strong>箱に入れて渡せる品物が無いもの</strong>がたくさんあります。品物があれば納品書をつけられますが、形のない仕事では「いつ終わったか」が口約束になりがちです。</p>
+  <p>そこで、仕事を受けた側が<strong>「どの仕事を・いつからいつまで・何をして・いつ終えたか」を1枚に書いて渡す</strong>のが業務完了報告書です。作業完了報告書と呼ぶこともあり、書くことは同じです。</p>
+  <p>書く欄は5つです。</p>
+  <ol>
+    <li><strong>報告先</strong> — 仕事を頼んでくれた相手の名前。会社なら「御中」、個人なら「様」</li>
+    <li><strong>件名</strong> — どの仕事の報告か。発注書や契約書に書いてある名前とそろえる</li>
+    <li><strong>作業期間と完了日</strong> — いつからいつまで作業し、いつ終えたか</li>
+    <li><strong>行った作業・成果物</strong> — 何をしたか、何を納めたかを1行に1件ずつ</li>
+    <li><strong>確認欄</strong> — 相手が中身を見て、確認日と名前を書く枠</li>
+  </ol>
+
+  <h2>書き方の例 — サイト制作を終えたとき</h2>
+  <p>会社のサイトを作る仕事を、11月14日に終えた場合の例です。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>欄</th><th>書くこと</th></tr></thead>
+    <tbody>
+      <tr><td>件名</td><td>コーポレートサイト制作業務</td></tr>
+      <tr><td>作業期間</td><td>2026年10月1日 〜 2026年11月14日</td></tr>
+      <tr><td>完了日</td><td>2026年11月14日</td></tr>
+      <tr><td>行った作業・成果物(1行目)</td><td>トップページのデザインと実装 1 式</td></tr>
+      <tr><td>行った作業・成果物(2行目)</td><td>下層ページの作成 5 ページ</td></tr>
+      <tr><td>行った作業・成果物(3行目)</td><td>公開作業と表示確認 1 式</td></tr>
+      <tr><td>備考</td><td>納品データは共有フォルダに置いています</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>作業は「発注書の言葉」で書く</h3>
+  <p>行った作業の欄は、<strong>発注書や見積書に書いた項目と同じ言葉・同じ順番</strong>で並べます。相手は、頼んだことが全部終わっているかを、発注書と見比べて確かめるからです。言葉が違うと、確かめるのに時間がかかります。</p>
+
+  <h3>月ごとの仕事は、月に1枚</h3>
+  <p>保守や記事の執筆のように毎月続く仕事では、<strong>作業期間を「11月1日〜11月30日」のように1か月で区切り、月に1枚</strong>出します。行には「記事の執筆 4 本」「定例の打ち合わせ 2 回」のように、その月にやった数を書きます。</p>
+
+  <h2>確認欄をつけると、あとの話が早い</h2>
+  <p>紙のいちばん下に、相手が<strong>確認日と名前を書く枠</strong>をつけられます。書いてもらった1枚を手元に置いておけば、「終わったことを相手も見た」という記録になります。</p>
+  <ul>
+    <li><strong>紙で渡すとき。</strong>2枚刷って、1枚に書いてもらって持ち帰ります</li>
+    <li><strong>メールで送るとき。</strong>PDFを添付し、「ご確認いただけましたら、ご返信ください」と書きます。返信のメールが記録の代わりになります</li>
+    <li><strong>相手に決まった書式があるとき。</strong>相手の書式を使います。この紙は、書式が決まっていないときのためのものです</li>
+  </ul>
+  <p>確認欄が要らない取引では、「つけない」を選ぶと枠ごと消えます。</p>
+
+  <h2>請求書は、報告書のあとに出す</h2>
+  <p>順番は、<strong>仕事を終える → 業務完了報告書を出す → 請求書を出す</strong>、です。報告書と請求書を同じメールに添付して、いっしょに送ることもよくあります。請求書の件名を報告書の件名とそろえておくと、相手の経理の人が2枚をつなげて読めます。</p>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>終えた仕事の中身を並べて相手に伝える紙そのもの</strong>までです。金額の計算はしません。この紙を出すことで検収が済んだことになるか、契約どおりに仕事が終わったと言えるか、支払いの期日がいつから数え始まるか、取引に下請法やフリーランス法などの決まりがかかるかは扱いません。どれも契約の中身と個別の事情で変わり、ここで一律に決められないためです。一般的な説明であり、個別の判断は専門家にご確認ください。</p>
+
+  <a class="cta" href="/">
+    <strong>請求書をつくる</strong>
+    <span>報告が済んだら、次に出す1枚。インボイス・源泉徴収に対応</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/shukkin-core.js"></script>
+<script src="/kanryo-hokoku-core.js"></script>
+<script src="/kanryo-hokoku.js"></script>
+</body>
+</html>
