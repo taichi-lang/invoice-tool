@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>受領書を無料で作成 — 品名を並べてA4でPDF</title>
+<meta name="description" content="品物や書類を受け取ったときに返す受領書(物品受領書)を、ワードやエクセルなしで作りたいですか。受領日と、受け取った物の品名・数量を入れると、受領印の枠つきのA4の受領書をPDFにできる無料ツールです。入力内容は送信されません。">
+<meta property="og:title" content="受領書を無料で作成 — 品名を並べてA4でPDF">
+<meta property="og:description" content="品物や書類を受け取ったときに返す受領書(物品受領書)を、ワードやエクセルなしで作りたいですか。受領日と、受け取った物の品名・数量を入れると、受領印の枠つきのA4の受領書をPDFにできる無料ツールです。入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/juryosho">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/juryosho.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">受領書ジェネレーター</p>
+  <p class="tagline">「受け取りました」を伝える1枚 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">受領書を無料で作成 — 品名を並べてA4でPDF</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. だれから受け取ったか</summary>
+      <div class="grid2">
+        <label>宛先(渡してくれた相手)
+          <input type="text" id="jrTo" placeholder="株式会社○○">
+        </label>
+        <label>敬称
+          <select id="jrHonorific">
+            <option value="御中">御中</option>
+            <option value="様">様</option>
+          </select>
+        </label>
+        <label>受け取った側(あなた)の名前
+          <input type="text" id="jrFrom" placeholder="山田デザイン事務所">
+        </label>
+        <label>住所・電話・メール(任意)
+          <input type="text" id="jrFromAddress" placeholder="東京都○○区… / 03-0000-0000">
+        </label>
+        <label>担当者(任意)
+          <input type="text" id="jrPerson" placeholder="山田 太郎">
+        </label>
+        <label>発行日
+          <input type="date" id="jrIssueDate">
+        </label>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary>2. いつ受け取ったか</summary>
+      <div class="grid2">
+        <label>受領日(受け取った日)
+          <input type="date" id="jrReceivedDate">
+        </label>
+        <label>件名(任意)
+          <input type="text" id="jrSubject" placeholder="例: 11月分の事務用品">
+        </label>
+        <label>納品書の番号(任意)
+          <input type="text" id="jrRefNo" placeholder="例: N-2026-0123">
+        </label>
+      </div>
+      <p class="hint">空けた欄は、紙でも空欄のまま出ます。<strong>受け取った物の中身や数が注文どおりかは、このツールでは判断しません</strong>(品物と納品書を見比べて確かめてください)。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 受け取った物(1行に1件・10行まで)</summary>
+      <div id="jrRows"></div>
+      <button type="button" id="jrAdd" class="btn-sub">行を1つ足す(10行まで)</button>
+      <p class="hint">金額の欄はありません。お金を受け取ったときに出す紙は<a href="/ryoshusho">領収書</a>です。数量と単位は空けたままでも出せます(入れたときは、書いたとおりに出します)。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>4. 備考と受領印の枠</summary>
+      <div class="grid2">
+        <label>備考(任意)
+          <input type="text" id="jrNote" placeholder="例: 外箱に小さなへこみがありました">
+        </label>
+        <label>受領印の枠(受け取った側がはんこを押す場所)
+          <select id="jrStamp">
+            <option value="on">つける</option>
+            <option value="off">つけない</option>
+          </select>
+        </label>
+      </div>
+      <p class="hint">受領印の枠の中は、いつも空欄で出ます。刷ったあとに手ではんこを押すための枠です。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="jrPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="jrClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="jrProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/nohinsho">納品書をつくる(品物を渡す側の1枚)</a></li>
+        <li><a href="/ryoshusho">領収書をつくる(お金を受け取ったとき)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="preview" aria-label="プレビュー">
+    <div id="jrSheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>受領書は、「受け取りました」を紙に残す1枚</h2>
+  <p>注文した品物が届いた。預けていた書類が返ってきた。そのときに、<strong>受け取った側が「たしかに受け取りました」と書いて、渡してくれた相手に返す紙</strong>が受領書です。品物のときは物品受領書と呼ぶこともあり、書くことは同じです。</p>
+  <p>渡した側にとっては、「届けた・届いていない」の行き違いを防ぐ記録になります。だから、<strong>相手から「受領書をください」と言われたら、その日のうちに返す</strong>のが親切です。</p>
+  <p>書く欄は5つです。</p>
+  <ol>
+    <li><strong>宛先</strong> — 渡してくれた相手の名前。会社なら「御中」、個人なら「様」</li>
+    <li><strong>受領日</strong> — 受け取った日。紙を書いた日ではなく、品物が手元に来た日</li>
+    <li><strong>受け取った側の名前</strong> — あなたの屋号や会社名</li>
+    <li><strong>品名と数量</strong> — 何を、いくつ受け取ったかを1行に1件ずつ</li>
+    <li><strong>受領印</strong> — 受け取った側のはんこを押す枠</li>
+  </ol>
+
+  <h2>書き方の例 — 事務用品が届いたとき</h2>
+  <p>注文していた事務用品が、11月16日に届いた場合の例です。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>欄</th><th>書くこと</th></tr></thead>
+    <tbody>
+      <tr><td>受領日</td><td>2026年11月16日</td></tr>
+      <tr><td>件名</td><td>11月分の事務用品</td></tr>
+      <tr><td>納品書の番号</td><td>N-2026-0123</td></tr>
+      <tr><td>品名(1行目)</td><td>コピー用紙 A4 5 箱</td></tr>
+      <tr><td>品名(2行目)</td><td>トナーカートリッジ 黒 2 本</td></tr>
+      <tr><td>品名(3行目)</td><td>クリアファイル 100 枚</td></tr>
+      <tr><td>備考</td><td>外箱に小さなへこみがありました</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>品名は「納品書の言葉」で書く</h3>
+  <p>品名の欄は、<strong>いっしょに届いた納品書と同じ言葉・同じ順番</strong>で並べます。相手は、自分が出した納品書と受領書を見比べて、全部が届いたかを確かめるからです。納品書に番号があれば、その番号も書いておくと、相手が探す手間が減ります。</p>
+
+  <h3>数が足りなかったときは、届いた数を書く</h3>
+  <p>納品書に「5箱」とあっても、届いたのが4箱なら、<strong>受領書には「4」と書きます</strong>。受領書は「実際に受け取った物」を書く紙だからです。足りなかったことは備考に一言添えて、相手にも電話やメールで伝えます。</p>
+
+  <h2>受領書・領収書・検収書の違い</h2>
+  <p>名前が似た紙が3つあります。<strong>「何を受け取ったか」と「どこまで確かめたか」</strong>で分かれます。</p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>紙の名前</th><th>伝えること</th></tr></thead>
+    <tbody>
+      <tr><td>受領書</td><td>品物や書類を<strong>受け取った</strong></td></tr>
+      <tr><td>検収書</td><td>受け取った物の中身を確かめて、<strong>注文どおりだった</strong></td></tr>
+      <tr><td>領収書</td><td><strong>お金</strong>を受け取った</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>このページで作れるのは、いちばん上の受領書です。お金を受け取ったときは<a href="/ryoshusho">領収書</a>を使ってください。</p>
+
+  <h2>控えを残したいときは、2枚刷る</h2>
+  <p>受領書は相手に渡してしまう紙です。手元にも残したいときは、<strong>同じものを2枚刷り、1枚を控えとして取っておきます</strong>。PDFで送るときは、送ったPDFをそのまま保存しておけば控えになります。</p>
+  <ul>
+    <li><strong>紙で返すとき。</strong>受領印の枠にはんこを押して、配達の人に渡すか、郵送で返します</li>
+    <li><strong>メールで返すとき。</strong>PDFを添付します。はんこが要らない取引なら、受領印の枠を「つけない」にすると枠ごと消えます</li>
+    <li><strong>相手の納品書に受領書がついているとき。</strong>相手の紙を使います。このページの紙は、書式が決まっていないときのためのものです</li>
+  </ul>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>受け取った物の名前と数を並べて相手に伝える紙そのもの</strong>までです。金額の計算はしません。届いた物が注文どおりか、この紙を出すことで検収が済んだことになるか、支払いの期日がいつから数え始まるか、この紙に収入印紙が要るか、取引に下請法やフリーランス法などの決まりがかかるかは扱いません。どれも契約の中身と個別の事情で変わり、ここで一律に決められないためです。一般的な説明であり、個別の判断は専門家にご確認ください。</p>
+
+  <a class="cta" href="/nohinsho">
+    <strong>納品書をつくる</strong>
+    <span>品物を渡す側になったときの1枚。請求書へそのまま移せます</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/shukkin-core.js"></script>
+<script src="/juryosho-core.js"></script>
+<script src="/juryosho.js"></script>
+</body>
+</html>

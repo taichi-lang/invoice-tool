@@ -1,0 +1,86 @@
+/* ---------------------------------------------------------- 受領書(/juryosho)
+
+   このページだけの規則を別ファイルに置く。
+   用紙は A4 縦1枚で、style.css の .paper と @page をそのまま使う。**ここでは @page を持たない。**
+   明細は常に10行の枠を引く。入れなかった行は空欄のまま残り、手書きで足せる。金額の欄は無い。
+   いちばん下の右に、受け取った側が手で押す「受領印」の枠を置ける(つけない設定のときは出さない)。 */
+
+.jr-row {
+  margin: 0 0 12px;
+  padding: 10px 12px 12px;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px;
+}
+.jr-row .jr-remove { margin-top: 6px; }
+
+.jr-paper p { margin: 0; }
+
+.jr-head { display: flex; justify-content: space-between; align-items: flex-end; }
+.jr-title {
+  font-size: 18pt;
+  font-weight: 700;
+  letter-spacing: .4em;
+  border-bottom: 1.2pt double #000;
+  padding-bottom: .5mm;
+}
+.jr-date { font-size: 10.5pt; }
+
+.jr-parties { display: flex; justify-content: space-between; align-items: flex-start; gap: 8mm; margin-top: 8mm; }
+.jr-to { flex: 1 1 auto; min-width: 0; }
+.jr-to-name {
+  min-height: 7mm;
+  padding-bottom: 1mm;
+  border-bottom: .5pt solid #000;
+  font-size: 13pt;
+  overflow-wrap: anywhere;
+}
+.jr-lead { margin-top: 3mm !important; font-size: 10pt; }
+.jr-from { flex: 0 0 68mm; font-size: 10pt; line-height: 1.5; overflow-wrap: anywhere; }
+.jr-from-name { font-size: 11pt; font-weight: 700; }
+.jr-from-addr { font-size: 9pt; }
+
+.jr-box { margin-top: 6mm; border-collapse: collapse; width: 100%; table-layout: fixed; }
+.jr-box th, .jr-box td { border: .5pt solid #000; padding: 1.5mm 3mm; height: 8mm; font-size: 10pt; }
+.jr-box th { width: 30mm; font-weight: 400; text-align: left; background: #f3f3f3; }
+.jr-box td { overflow-wrap: anywhere; }
+.jr-box .jr-box-main th, .jr-box .jr-box-main td { border-width: 1.2pt; font-weight: 700; }
+
+.jr-table {
+  width: 100%;
+  margin-top: 6mm;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 9.5pt;
+  line-height: 1.35;
+}
+.jr-table th, .jr-table td {
+  border: .5pt solid #000;
+  padding: 1mm 1.5mm;
+  height: 8.5mm;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+.jr-table thead th { height: 6mm; font-size: 8.5pt; font-weight: 400; background: #f3f3f3; }
+.jr-table th:nth-child(1) { width: 8mm; }
+.jr-table th:nth-child(3) { width: 26mm; }
+.jr-table th:nth-child(4) { width: 18mm; }
+.jr-table .jr-no { text-align: center; font-size: 8pt; color: #333; }
+.jr-table .jr-qty { text-align: right; font-variant-numeric: tabular-nums; }
+.jr-table .jr-unit { text-align: center; }
+
+.jr-note { margin-top: 6mm; border: .5pt solid #000; min-height: 20mm; padding: 1.5mm 3mm; }
+.jr-note-cap { font-size: 8.5pt; color: #333; }
+.jr-note-body { font-size: 9.5pt; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+@media print {
+  .jr-table thead th, .jr-box th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+.jr-stamp { margin: 5mm 0 0 auto; border-collapse: collapse; table-layout: fixed; }
+.jr-stamp th, .jr-stamp td { border: .5pt solid #000; }
+.jr-stamp th { width: 22mm; padding: 1.5mm 3mm; font-size: 9.5pt; font-weight: 400; text-align: center; background: #f3f3f3; }
+.jr-stamp .jr-stamp-box { width: 24mm; height: 22mm; }
+
+@media print {
+  .jr-stamp th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

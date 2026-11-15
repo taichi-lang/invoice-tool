@@ -97,6 +97,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://invoice-tool-kohl.vercel.app/juryosho</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://invoice-tool-kohl.vercel.app/inshi</loc>
     <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
