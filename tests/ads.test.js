@@ -54,6 +54,7 @@ const NO_AD_PAGES = [
   'mitsumori-irai.html',
   'kanryo-hokoku.html',
   'juryosho.html',
+  'kyugyo.html',
   'aisatsujo.html',
   'inshi.html',
   'legal.html',

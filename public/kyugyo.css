@@ -1,0 +1,44 @@
+/* ---------------------------------------------------------- 休業のお知らせ(/kyugyo)
+
+   このページだけの規則を別ファイルに置く。
+   用紙は A4 縦1枚で、style.css の .paper と @page をそのまま使う。**ここでは @page を持たない。**
+   入口やレジ横に貼る紙なので、離れても読めるように文字を大きく取る。
+   いちばん大きく出すのは「いつからいつまで休むか」。 */
+
+.ky-paper p { margin: 0; }
+.ky-paper { text-align: center; overflow-wrap: anywhere; }
+
+.ky-title {
+  margin-top: 14mm !important;
+  padding-bottom: 4mm;
+  border-bottom: 2pt solid #000;
+  font-size: 28pt;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: .04em;
+}
+
+.ky-lead { margin-top: 14mm !important; font-size: 15pt; line-height: 1.7; }
+
+.ky-period {
+  margin-top: 12mm;
+  padding: 8mm 4mm 9mm;
+  border: 1.5pt solid #000;
+}
+.ky-period-cap { font-size: 14pt; letter-spacing: .3em; }
+.ky-start, .ky-end {
+  margin-top: 4mm !important;
+  font-size: 26pt;
+  font-weight: 700;
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+}
+.ky-days { margin-top: 3mm !important; font-size: 15pt; }
+
+.ky-reopen { margin-top: 12mm !important; font-size: 18pt; font-weight: 700; line-height: 1.5; }
+.ky-message { margin-top: 9mm !important; font-size: 14pt; line-height: 1.7; }
+.ky-closing { margin-top: 9mm !important; font-size: 13pt; line-height: 1.7; }
+
+.ky-sign { margin-top: 18mm; }
+.ky-shop { min-height: 10mm; font-size: 20pt; font-weight: 700; line-height: 1.4; }
+.ky-contact { margin-top: 2mm !important; font-size: 12pt; line-height: 1.6; }

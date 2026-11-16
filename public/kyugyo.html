@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>休業のお知らせを無料で作成 — 年末年始の張り紙をA4で</title>
+<meta name="description" content="年末年始や夏季の休業のお知らせを、ワードやエクセルなしで作りたいですか。休みの最初の日と最後の日を入れると、曜日と日数を添えた張り紙をA4でPDFにできる無料ツールです。臨時休業にも使えます。入力内容は送信されません。">
+<meta property="og:title" content="休業のお知らせを無料で作成 — 年末年始の張り紙をA4で">
+<meta property="og:description" content="年末年始や夏季の休業のお知らせを、ワードやエクセルなしで作りたいですか。休みの最初の日と最後の日を入れると、曜日と日数を添えた張り紙をA4でPDFにできる無料ツールです。臨時休業にも使えます。入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/kyugyo">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/kyugyo.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">休業のお知らせジェネレーター</p>
+  <p class="tagline">入口に貼る1枚 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">休業のお知らせを無料で作成 — 年末年始の張り紙をA4で</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 見出し</summary>
+      <div class="grid2">
+        <label>見出しをえらぶ
+          <select id="kyTitlePreset">
+            <option value="年末年始休業のお知らせ">年末年始休業のお知らせ</option>
+            <option value="夏季休業のお知らせ">夏季休業のお知らせ</option>
+            <option value="臨時休業のお知らせ">臨時休業のお知らせ</option>
+            <option value="休業のお知らせ">休業のお知らせ</option>
+            <option value="custom">自分で書く</option>
+          </select>
+        </label>
+        <label>見出し(「自分で書く」のとき・16字まで)
+          <input type="text" id="kyTitleCustom" placeholder="例: 棚卸しによる休業のお知らせ">
+        </label>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary>2. いつからいつまで休むか</summary>
+      <div class="grid2">
+        <label>休みの最初の日
+          <input type="date" id="kyStartDate">
+        </label>
+        <label>休みの最後の日(1日だけなら空けたまま)
+          <input type="date" id="kyEndDate">
+        </label>
+        <label>営業を始める日(任意)
+          <input type="date" id="kyReopenDate">
+        </label>
+      </div>
+      <p class="hint">曜日と日数は、入れた日付から自動で出します。<strong>その日が祝日かどうかは、このツールでは判断しません</strong>(曜日は暦のとおりに出るだけです)。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 店の名前とひとこと</summary>
+      <div class="grid2">
+        <label>店や事務所の名前
+          <input type="text" id="kyShop" placeholder="山田デザイン事務所">
+        </label>
+        <label>連絡先(任意)
+          <input type="text" id="kyContact" placeholder="例: メール info@example.com">
+        </label>
+        <label>ひとこと(任意・60字まで)
+          <input type="text" id="kyMessage" placeholder="例: 休業中にいただいたメールは、1月4日から順にお返事します。">
+        </label>
+      </div>
+      <p class="hint">空けた欄は、紙に出ません。あいさつの文(「誠に勝手ながら…」「ご不便をおかけいたしますが…」)は、決まった文が入ります。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="kyPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="kyClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="kyProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/aisatsujo">開業挨拶状をはがきに刷る(開業を知らせる1枚)</a></li>
+        <li><a href="/soufujo">送付状をつくる(書類を郵送するとき)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="preview" aria-label="プレビュー">
+    <div id="kySheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>休業のお知らせは、「いつからいつまで」をいちばん大きく書く</h2>
+  <p>休業のお知らせで読む人が知りたいのは、<strong>「いつから休みで、いつから開くのか」の1点</strong>です。入口の前で足を止めた人は、長い文を読みません。だから、あいさつは短くして、日付をいちばん大きく書きます。</p>
+  <p>書くことは4つです。</p>
+  <ol>
+    <li><strong>休みの最初の日と最後の日</strong> — 曜日を添えて書く</li>
+    <li><strong>営業を始める日</strong> — 「1月4日(月)から通常どおり営業」のように</li>
+    <li><strong>休みのあいだの連絡のしかた</strong> — メールは見るのか、返事はいつになるのか</li>
+    <li><strong>店や事務所の名前</strong> — 貼る場所が共用の入口なら、とくに要ります</li>
+  </ol>
+
+  <h2>書き方の例 — 年末年始に6日間休むとき</h2>
+  <p>12月29日から1月3日まで休み、1月4日から開ける場合の例です。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>欄</th><th>書くこと</th></tr></thead>
+    <tbody>
+      <tr><td>見出し</td><td>年末年始休業のお知らせ</td></tr>
+      <tr><td>休みの最初の日</td><td>2026年12月29日(火)</td></tr>
+      <tr><td>休みの最後の日</td><td>2027年1月3日(日)</td></tr>
+      <tr><td>営業を始める日</td><td>2027年1月4日(月)</td></tr>
+      <tr><td>ひとこと</td><td>休業中にいただいたメールは、1月4日から順にお返事します。</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>日付には曜日を添える</h3>
+  <p>「12月29日から」とだけ書くと、読む人はカレンダーを開いて確かめることになります。<strong>「12月29日(火)から」と曜日を添える</strong>と、その場で予定と照らせます。このページは、日付を入れると曜日と日数(この例では6日間)を自動で出します。</p>
+
+  <h3>「最終営業日」ではなく、休む日を書く</h3>
+  <p>「年内は12月28日まで営業」と「12月29日から休業」は同じ意味ですが、<strong>2つを1枚に混ぜると、28日が休みなのか営業なのか迷わせます</strong>。張り紙には、休む最初の日と最後の日だけを書きます。</p>
+
+  <h2>臨時休業・夏季休業にも同じ紙を使う</h2>
+  <p>見出しを選び直すだけで、同じ形の紙になります。</p>
+  <ul>
+    <li><strong>臨時休業。</strong>1日だけ休むときは、最後の日を空けたままにします。紙には「休業日」として1日だけ出ます</li>
+    <li><strong>夏季休業。</strong>お盆の前後に休むとき。年末年始と同じく、営業を始める日まで書きます</li>
+    <li><strong>それ以外。</strong>棚卸しや研修で休むときは、「自分で書く」を選んで見出しを入れます</li>
+  </ul>
+
+  <h2>いつ貼るか、どこに知らせるか</h2>
+  <p>何日前までに貼る、という決まりはありません。<strong>相手が注文や納期の予定を立て直せるよう、早めに知らせる</strong>のが目安です。年末年始や夏季のように前から決まっている休みなら、決まった日に貼ってしまって困ることはありません。</p>
+  <p>張り紙を見るのは、店や事務所まで来た人だけです。来ない相手には、別の場所でも知らせます。</p>
+  <ul>
+    <li><strong>ホームページやSNS。</strong>張り紙と同じ日付を、同じ書き方で載せます</li>
+    <li><strong>地図アプリの営業時間。</strong>休みの日を入れておくと、来る前に気づいてもらえます</li>
+    <li><strong>取引先へのメール。</strong>休みの前に納める物・払う物がある相手には、個別に伝えます</li>
+    <li><strong>郵送する書類に同封。</strong>請求書を送るついでに、PDFを1枚刷って入れます</li>
+  </ul>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>休む日を知らせる紙そのもの</strong>までです。曜日は入れた日付から暦のとおりに出すだけで、その日が祝日かどうかは見ません。休んでよい日かどうか、休みのあいだの納期や支払期日がどうなるか、従業員の休みや給与の扱いがどうなるかは扱いません。どれも契約や就業の決まりと個別の事情で変わり、ここで一律に決められないためです。一般的な説明であり、個別の判断は専門家にご確認ください。</p>
+
+  <a class="cta" href="/kaigyo">
+    <strong>開業したらやること — 書類の順番</strong>
+    <span>見積書から領収書まで、仕事1件の流れに沿って無料のツールを並べています</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/kyugyo-core.js"></script>
+<script src="/kyugyo.js"></script>
+</body>
+</html>
