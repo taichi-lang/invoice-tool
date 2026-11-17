@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAX送付状を無料で作成 — 枚数と用件つきでA4に</title>
+<meta name="description" content="FAX送付状を、ワードやエクセルなしで作りたいですか。送付先・発信元・件名・送付枚数を入れると、用件のしるしと通信欄つきの送付状をA4でPDFにできる無料ツールです。書き方と例文つき。空欄のまま刷って手書きにも使えます。入力内容は送信されません。">
+<meta property="og:title" content="FAX送付状を無料で作成 — 枚数と用件つきでA4に">
+<meta property="og:description" content="FAX送付状を、ワードやエクセルなしで作りたいですか。送付先・発信元・件名・送付枚数を入れると、用件のしるしと通信欄つきの送付状をA4でPDFにできる無料ツールです。書き方と例文つき。空欄のまま刷って手書きにも使えます。入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/fax-soufujo">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/fax-soufujo.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">FAX送付状ジェネレーター</p>
+  <p class="tagline">原稿に重ねる1枚 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">FAX送付状を無料で作成 — 枚数と用件つきでA4に</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 送付先(FAXを受け取る相手)</summary>
+      <div class="grid2">
+        <label>会社名
+          <input type="text" id="fxToCompany" placeholder="株式会社サンプル">
+        </label>
+        <label>担当者名(任意)
+          <input type="text" id="fxToName" placeholder="営業部 鈴木一郎">
+        </label>
+        <label>FAX番号
+          <input type="text" id="fxToFax" inputmode="tel" placeholder="03-0000-0000">
+        </label>
+      </div>
+      <p class="hint">担当者名を入れると担当者に「様」、会社名だけなら会社名に「御中」を付けます(重ねません)。<strong>FAX番号が正しいかは、このツールでは確かめません。</strong></p>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 発信元(自分)</summary>
+      <div class="grid2">
+        <label>会社名・屋号
+          <input type="text" id="fxFromCompany" placeholder="山田デザイン事務所">
+        </label>
+        <label>担当者名
+          <input type="text" id="fxFromName" placeholder="山田太郎">
+        </label>
+        <label>電話番号
+          <input type="text" id="fxFromTel" inputmode="tel" placeholder="03-0000-0001">
+        </label>
+        <label>FAX番号
+          <input type="text" id="fxFromFax" inputmode="tel" placeholder="03-0000-0002">
+        </label>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 日付・件名・枚数</summary>
+      <div class="grid2">
+        <label>日付
+          <input type="date" id="fxDate">
+        </label>
+        <label>送付枚数(この送付状を含む)
+          <input type="text" id="fxPages" inputmode="numeric" placeholder="3">
+        </label>
+        <label>件名
+          <input type="text" id="fxSubject" placeholder="例: お見積書送付の件">
+        </label>
+        <label>しるしを付ける用件
+          <select id="fxRequest">
+            <option value="none">付けない(手で付ける)</option>
+            <option value="ご確認ください">ご確認ください</option>
+            <option value="ご返信ください">ご返信ください</option>
+            <option value="ご査収ください">ご査収ください</option>
+            <option value="至急">至急</option>
+          </select>
+        </label>
+      </div>
+      <p class="hint">枚数は、入れた数字をそのまま出します。<strong>この送付状も1枚に数えて</strong>入れてください(原稿が2枚なら3)。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>4. 通信欄</summary>
+      <label>相手に伝えること(300字・12行まで)
+        <textarea id="fxMessage" rows="6" placeholder="いつもお世話になっております。&#10;お見積書を2枚お送りします。ご確認をお願いいたします。"></textarea>
+      </label>
+      <p class="hint">空けた欄は空欄のまま紙に出るので、<strong>刷ってから手で書き足せます</strong>。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="fxPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="fxClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="fxProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+      このページにFAXを送る機能はありません。紙を作るところまでです。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/soufujo">送付状をつくる(書類を郵送するとき)</a></li>
+        <li><a href="/mitsumorisho">見積書をつくる</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="preview" aria-label="プレビュー">
+    <div id="fxSheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>FAX送付状は、「誰から誰へ、全部で何枚か」が分かれば足ります</h2>
+  <p>FAX送付状は、原稿のいちばん上に重ねて送る1枚です。受け取った側は、複合機から出てきた紙の束を見て、<strong>「これは誰あてで、誰から来て、全部そろっているか」</strong>をこの1枚で確かめます。あいさつを長く書く紙ではありません。</p>
+  <p>書くことは5つです。</p>
+  <ol>
+    <li><strong>送付先</strong> — 会社名と担当者名、相手のFAX番号</li>
+    <li><strong>発信元</strong> — 自分の名前と、電話番号・FAX番号</li>
+    <li><strong>日付と件名</strong> — 「お見積書送付の件」のように、何の紙かを1行で</li>
+    <li><strong>送付枚数</strong> — この送付状を含めた合計</li>
+    <li><strong>通信欄</strong> — 相手にしてほしいこと(確認・返信など)</li>
+  </ol>
+
+  <h2>書き方の例 — 見積書を2枚送るとき</h2>
+  <p>見積書2枚に送付状を重ねて、合計3枚を送る場合の例です。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>欄</th><th>書くこと</th></tr></thead>
+    <tbody>
+      <tr><td>送付先</td><td>株式会社サンプル<br>営業部 鈴木一郎 様</td></tr>
+      <tr><td>送付先のFAX番号</td><td>03-0000-0000</td></tr>
+      <tr><td>発信元</td><td>山田デザイン事務所 山田太郎</td></tr>
+      <tr><td>日付</td><td>2026年11月18日</td></tr>
+      <tr><td>件名</td><td>お見積書送付の件</td></tr>
+      <tr><td>送付枚数</td><td>3枚(この送付状を含む)</td></tr>
+      <tr><td>しるし</td><td>ご確認ください</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>枚数は、送付状も1枚に数える</h3>
+  <p>原稿が2枚なら、書く枚数は<strong>3枚</strong>です。受け取った側は、手元の紙を数えてこの数字と比べます。送付状を数えずに「2枚」と書くと、相手は3枚届いたのに2枚と書いてある紙を見ることになり、どちらが正しいのか迷います。このページは「(この送付状を含む)」を枚数のあとに必ず添えます。</p>
+
+  <h3>「御中」と「様」を重ねない</h3>
+  <p><strong>「株式会社サンプル御中 鈴木一郎様」は誤りです。</strong>担当者名まで書くなら、会社名には何も付けず、担当者に「様」を付けます。会社あてで止めるなら「御中」だけにします。このページは、担当者名の欄が空かどうかで自動で付け分けます。</p>
+
+  <h2>通信欄の例文</h2>
+  <p>通信欄は、<strong>相手にしてほしいことを先に</strong>書きます。時候のあいさつは要りません。</p>
+  <ul>
+    <li><strong>書類を送るだけのとき。</strong>「いつもお世話になっております。お見積書を2枚お送りします。ご確認をお願いいたします。」</li>
+    <li><strong>返事がほしいとき。</strong>「下記の内容でよろしければ、ご署名のうえ、11月25日までにFAXでご返信ください。」</li>
+    <li><strong>急ぎのとき。</strong>「本日中にご確認いただきたく、FAXでお送りします。のちほどお電話いたします。」</li>
+  </ul>
+  <p>返事の期限があるときは、「至急」のしるしだけで済ませず、<strong>日付を通信欄に書きます</strong>。「至急」がいつまでを指すかは、読む人によって違うからです。</p>
+
+  <h2>手書きで使うとき</h2>
+  <p>このページは、<strong>空けた欄を空欄のまま刷ります</strong>。何も入れずにPDFにすれば、枠だけの送付状になります。</p>
+  <ul>
+    <li><strong>発信元だけ入れて刷っておく。</strong>自分の名前と番号は毎回同じなので、ここだけ入れて何枚か刷り、送付先と枚数はそのつど手で書きます</li>
+    <li><strong>しるしは「付けない」にしておく。</strong>4つの箱が空のまま出るので、送るときにペンで「レ」を入れます</li>
+    <li><strong>ペンは黒の太めで。</strong>FAXは細い線と薄い色がかすれやすいので、鉛筆や青のペンは避けます</li>
+  </ul>
+
+  <h2>送る前に確かめること</h2>
+  <p>FAXは、<strong>送ってしまうと取り消せません</strong>。番号を1つ押し間違えると、まったく別の相手に紙が出ます。</p>
+  <ul>
+    <li><strong>FAX番号を、名刺や相手の書類と見比べる。</strong>電話番号とFAX番号を取り違えるのが、いちばん多い間違いです</li>
+    <li><strong>原稿の枚数を数え直す。</strong>送付状に書いた枚数と、手元の束が同じかを見ます</li>
+    <li><strong>原稿の向きと表裏を見る。</strong>裏返しで送ると、白い紙だけが相手に届きます</li>
+  </ul>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>原稿に重ねる紙そのもの</strong>までです。FAXを送る機能はありません。入れたFAX番号が正しいかどうか、相手に届いたかどうかは確かめません。その書類をFAXで送ってよいか(個人の情報を含む紙など)、FAXで送ったあとに原本を郵送する必要があるか、送った紙・受け取った紙をどう保存するかも扱いません。どれも相手との取り決めや書類の種類で変わり、ここで一律に決められないためです。一般的な説明であり、個別の判断は専門家にご確認ください。</p>
+
+  <a class="cta" href="/kaigyo">
+    <strong>開業したらやること — 書類の順番</strong>
+    <span>見積書から領収書まで、仕事1件の流れに沿って無料のツールを並べています</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/fax-soufujo-core.js"></script>
+<script src="/fax-soufujo.js"></script>
+</body>
+</html>
