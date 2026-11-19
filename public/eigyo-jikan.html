@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>営業時間の張り紙を無料で作成 — 定休日も入れてA4で</title>
+<meta name="description" content="営業時間や定休日の張り紙を、ワードやエクセルなしで作りたいですか。開く時刻と閉める時刻を入れると、大きな文字の張り紙をA4でPDFにできる無料ツールです。営業時間変更のお知らせにも使えます。入力内容は送信されません。">
+<meta property="og:title" content="営業時間の張り紙を無料で作成 — 定休日も入れてA4で">
+<meta property="og:description" content="営業時間や定休日の張り紙を、ワードやエクセルなしで作りたいですか。開く時刻と閉める時刻を入れると、大きな文字の張り紙をA4でPDFにできる無料ツールです。営業時間変更のお知らせにも使えます。入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/eigyo-jikan">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/eigyo-jikan.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">営業時間の張り紙ジェネレーター</p>
+  <p class="tagline">入口に貼る1枚 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">営業時間の張り紙を無料で作成 — 定休日も入れてA4で</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 見出し</summary>
+      <div class="grid2">
+        <label>見出しをえらぶ
+          <select id="ejTitlePreset">
+            <option value="営業時間のご案内">営業時間のご案内</option>
+            <option value="営業時間変更のお知らせ">営業時間変更のお知らせ</option>
+            <option value="定休日のご案内">定休日のご案内</option>
+            <option value="custom">自分で書く</option>
+          </select>
+        </label>
+        <label>見出し(「自分で書く」のとき・16字まで)
+          <input type="text" id="ejTitleCustom" placeholder="例: 年末の営業時間のお知らせ">
+        </label>
+        <label>いつから(入れると見出しの下に出ます)
+          <input type="date" id="ejFromDate">
+        </label>
+      </div>
+      <p class="hint">「いつから」を入れると、曜日を添えて見出しの下に出します。ふだんの営業時間を貼るだけなら、空けたままで構いません。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 営業時間(3行まで)</summary>
+      <div class="ej-row">
+        <label>1行目の呼び名(任意・8字まで)
+          <input type="text" id="ejLabel1" placeholder="例: 平日">
+        </label>
+        <label>開く時刻
+          <input type="time" id="ejOpen1">
+        </label>
+        <label>閉める時刻
+          <input type="time" id="ejClose1">
+        </label>
+      </div>
+      <div class="ej-row">
+        <label>2行目の呼び名(任意・8字まで)
+          <input type="text" id="ejLabel2" placeholder="例: 土曜">
+        </label>
+        <label>開く時刻
+          <input type="time" id="ejOpen2">
+        </label>
+        <label>閉める時刻
+          <input type="time" id="ejClose2">
+        </label>
+      </div>
+      <div class="ej-row">
+        <label>3行目の呼び名(任意・8字まで)
+          <input type="text" id="ejLabel3" placeholder="例: 日曜・祝日">
+        </label>
+        <label>開く時刻
+          <input type="time" id="ejOpen3">
+        </label>
+        <label>閉める時刻
+          <input type="time" id="ejClose3">
+        </label>
+      </div>
+      <p class="hint">時刻を入れた行だけが紙に出ます。閉める時刻が開く時刻より早い行は、日をまたぐ営業として「翌」を添えます(例: 18:00 〜 翌2:00)。<strong>その時間に営業してよいか、届出が要るかは、このツールでは判断しません。</strong></p>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 定休日・店の名前・ひとこと</summary>
+      <div class="grid2">
+        <label>定休日(任意・20字まで)
+          <input type="text" id="ejHoliday" placeholder="例: 日曜・祝日">
+        </label>
+        <label>店や事務所の名前(20字まで)
+          <input type="text" id="ejShop" placeholder="山田デザイン事務所">
+        </label>
+        <label>連絡先(任意・40字まで)
+          <input type="text" id="ejContact" placeholder="例: メール info@example.com">
+        </label>
+        <label>ひとこと(任意・60字まで)
+          <input type="text" id="ejMessage" placeholder="例: 受付は閉める30分前までです。">
+        </label>
+      </div>
+      <p class="hint">空けた欄は、紙に出ません。定休日は書いたとおりに出します(「第3火曜」「不定休」も書けます)。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="ejPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="ejClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="ejProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/kyugyo">休業のお知らせをつくる(年末年始・夏季・臨時の休み)</a></li>
+        <li><a href="/aisatsujo">開業挨拶状をはがきに刷る(開業を知らせる1枚)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="preview" aria-label="プレビュー">
+    <div id="ejSheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>営業時間の張り紙は、「何時から何時まで」をいちばん大きく書く</h2>
+  <p>入口の前に立った人が知りたいのは、<strong>「いま開いているのか、いつ来れば開いているのか」の1点</strong>です。だから、前置きのあいさつは入れず、時刻をいちばん大きく書きます。</p>
+  <p>書くことは3つです。</p>
+  <ol>
+    <li><strong>開く時刻と閉める時刻</strong> — 曜日で違うなら、行を分けて書く</li>
+    <li><strong>定休日</strong> — 「日曜・祝日」のように、休む日をまとめて1行で</li>
+    <li><strong>店や事務所の名前</strong> — 貼る場所が共用の入口なら、とくに要ります</li>
+  </ol>
+
+  <h2>書き方の例 — 平日と土曜で時間が違うとき</h2>
+  <p>平日は9時から18時、土曜は9時から13時まで開け、日曜と祝日を休む場合の例です。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>欄</th><th>入れること</th><th>紙に出る形</th></tr></thead>
+    <tbody>
+      <tr><td>見出し</td><td>営業時間のご案内</td><td>営業時間のご案内</td></tr>
+      <tr><td>1行目</td><td>平日 / 09:00 / 18:00</td><td>平日(小さく)と 9:00 〜 18:00</td></tr>
+      <tr><td>2行目</td><td>土曜 / 09:00 / 13:00</td><td>土曜(小さく)と 9:00 〜 13:00</td></tr>
+      <tr><td>定休日</td><td>日曜・祝日</td><td>日曜・祝日</td></tr>
+      <tr><td>ひとこと</td><td>受付は閉める30分前までです。</td><td>受付は閉める30分前までです。</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>曜日で違うなら、行を分ける</h3>
+  <p>「9:00〜18:00(土曜は13:00まで)」のようにかっこで足すと、<strong>土曜に来た人がかっこの中を読み落とします</strong>。平日と土曜を別の行にして、同じ大きさの文字で並べます。このページは3行まで書けます。</p>
+
+  <h3>昼休みや中休みがあるとき</h3>
+  <p>昼に1度閉めるなら、<strong>1行目を「ランチ」で 11:00 〜 14:00、2行目を「ディナー」で 17:00 〜 22:00 のように、2行に分けます</strong>。行の呼び名は自由に書けるので、「午前」「午後」でも同じように使えます。紙には、呼び名が時刻のすぐ上に出ます。</p>
+
+  <h3>日付をまたぐとき</h3>
+  <p>夕方に開けて夜中に閉める店では、閉める時刻が開く時刻より早くなります。このページは、その行の閉める時刻に<strong>「翌」を添えて「18:00 〜 翌2:00」と出します</strong>。</p>
+
+  <h2>営業時間変更のお知らせにも同じ紙を使う</h2>
+  <p>見出しで「営業時間変更のお知らせ」を選び、「いつから」に日付を入れます。紙には<strong>「2026年12月1日(火)から」のように曜日つきで出て</strong>、その下に新しい営業時間が並びます。結びには「ご不便をおかけいたしますが、何とぞよろしくお願い申し上げます。」の1文が入ります。</p>
+  <ul>
+    <li><strong>書くのは新しい時間だけ。</strong>古い時間と新しい時間を並べると、どちらが今の時間かを読む人に探させます</li>
+    <li><strong>変える日より前に貼る。</strong>何日前までに、という一律の決まりはここでは示せません。よく来る人が1度は目にできる長さを目安にします</li>
+    <li><strong>定休日だけ知らせるとき。</strong>見出しで「定休日のご案内」を選び、営業時間の欄を空けたままにします</li>
+  </ul>
+
+  <h2>張り紙のほかに直すところ</h2>
+  <p>張り紙を見るのは、店や事務所まで来た人だけです。来る前に調べる人のために、同じ時間を別の場所にも書きます。</p>
+  <ul>
+    <li><strong>ホームページやSNS。</strong>張り紙と同じ時刻を、同じ書き方で載せます</li>
+    <li><strong>地図アプリの営業時間。</strong>ここが古いままだと、閉まっている時間に来てしまいます</li>
+    <li><strong>名刺やショップカード。</strong>営業時間を刷ってあるなら、次に刷るときに直します</li>
+  </ul>
+  <p>年末年始や夏季に何日か休むときは、この紙ではなく<a href="/kyugyo">休業のお知らせ</a>を使います。休みの最初の日と最後の日を、曜日と日数つきで出せます。</p>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>営業時間と定休日を知らせる紙そのもの</strong>までです。時刻と定休日は入れたとおりに出すだけで、その時間に営業してよいか、深夜の営業などで届出や許可が要るか、働く人の時間の決まりに合っているかは扱いません。「祝日」と書いた日が実際にどの日に当たるかも見ません。開く時刻と閉める時刻が同じ行は作れないので、24時間営業はこの紙では書けません。どれも業種や地域の決まりと個別の事情で変わり、ここで一律に決められないためです。一般的な説明であり、個別の判断は専門家にご確認ください。</p>
+
+  <a class="cta" href="/kaigyo">
+    <strong>開業したらやること — 書類の順番</strong>
+    <span>見積書から領収書まで、仕事1件の流れに沿って無料のツールを並べています</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/eigyo-jikan-core.js"></script>
+<script src="/eigyo-jikan.js"></script>
+</body>
+</html>

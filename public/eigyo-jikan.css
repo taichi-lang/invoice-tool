@@ -1,0 +1,51 @@
+/* ---------------------------------------------------------- 営業時間の張り紙(/eigyo-jikan)
+
+   このページだけの規則を別ファイルに置く。
+   用紙は A4 縦1枚で、style.css の .paper と @page をそのまま使う。**ここでは @page を持たない。**
+   入口に貼る紙なので、離れても読めるように文字を大きく取る。
+   いちばん大きく出すのは「何時から何時まで」。 */
+
+.ej-paper p { margin: 0; }
+.ej-paper { text-align: center; overflow-wrap: anywhere; }
+
+.ej-title {
+  margin-top: 10mm !important;
+  padding-bottom: 4mm;
+  border-bottom: 2pt solid #000;
+  font-size: 28pt;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: .04em;
+}
+
+.ej-from { margin-top: 8mm !important; font-size: 18pt; font-weight: 700; line-height: 1.4; }
+
+.ej-hours {
+  margin-top: 8mm;
+  padding: 6mm 4mm 7mm;
+  border: 1.5pt solid #000;
+}
+.ej-cap { font-size: 14pt; letter-spacing: .3em; }
+.ej-label { margin-top: 4mm !important; font-size: 18pt; font-weight: 700; line-height: 1.3; }
+.ej-time {
+  margin-top: 1mm !important;
+  font-size: 36pt;
+  font-weight: 700;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+.ej-cap + .ej-time { margin-top: 4mm !important; }
+
+.ej-holiday { margin-top: 8mm; }
+.ej-holiday-text { margin-top: 2mm !important; font-size: 22pt; font-weight: 700; line-height: 1.4; }
+
+.ej-message { margin-top: 7mm !important; font-size: 14pt; line-height: 1.7; }
+.ej-closing { margin-top: 6mm !important; font-size: 13pt; line-height: 1.7; }
+
+.ej-sign { margin-top: 10mm; }
+.ej-shop { min-height: 10mm; font-size: 20pt; font-weight: 700; line-height: 1.4; }
+.ej-contact { margin-top: 2mm !important; font-size: 12pt; line-height: 1.6; }
+
+/* 時刻の2つの欄を、呼び名の下に横に並べる */
+.ej-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ej-row label:first-child { grid-column: 1 / -1; }

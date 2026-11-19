@@ -47,6 +47,7 @@ const NO_EXIT_PAGES = [
   'juryosho.html',
   'kyugyo.html',
   'fax-soufujo.html',
+  'eigyo-jikan.html',
   'aisatsujo.html',
   'inshi.html',
   'legal.html',
