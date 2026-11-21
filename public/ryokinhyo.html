@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>料金表を無料で作成 — 品名と金額を入れてA4で印刷</title>
+<meta name="description" content="店や事務所の料金表を、ワードやエクセルなしで作りたいですか。品名と金額を12行まで入れると、点線でつないだ見やすい料金表をA4でPDFにできる無料ツールです。登録不要で、入力内容は送信されません。">
+<meta property="og:title" content="料金表を無料で作成 — 品名と金額を入れてA4で印刷">
+<meta property="og:description" content="店や事務所の料金表を、ワードやエクセルなしで作りたいですか。品名と金額を12行まで入れると、点線でつないだ見やすい料金表をA4でPDFにできる無料ツールです。登録不要で、入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/ryokinhyo">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/ryokinhyo.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">料金表ジェネレーター</p>
+  <p class="tagline">店に貼る・置く1枚 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">料金表を無料で作成 — 品名と金額を入れてA4で印刷</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 見出しと税の書き添え</summary>
+      <div class="grid2">
+        <label>見出しをえらぶ
+          <select id="rkTitlePreset">
+            <option value="料金表">料金表</option>
+            <option value="料金のご案内">料金のご案内</option>
+            <option value="メニュー">メニュー</option>
+            <option value="価格表">価格表</option>
+            <option value="custom">自分で書く</option>
+          </select>
+        </label>
+        <label>見出し(「自分で書く」のとき・12字まで)
+          <input type="text" id="rkTitleCustom" placeholder="例: 施術メニュー">
+        </label>
+        <label>税の書き添え
+          <select id="rkTaxNote">
+            <option value="incl">「表示はすべて税込価格です」を出す</option>
+            <option value="none">何も書かない</option>
+          </select>
+        </label>
+      </div>
+      <p class="hint">このツールは<strong>消費税の計算をしません</strong>。金額は入れたとおりに出します。「税込」を出すときは、税込の金額を入れてください。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 品名と金額(12行まで)</summary>
+      <div class="rk-row-in">
+        <label>1行目の品名
+          <input type="text" id="rkName1" placeholder="例: カット">
+        </label>
+        <label>補足(任意)
+          <input type="text" id="rkNote1" placeholder="例: 60分">
+        </label>
+        <label>金額(円)
+          <input type="text" id="rkPrice1" inputmode="numeric" placeholder="例: 4400">
+        </label>
+      </div>
+      <div class="rk-row-in">
+        <label>2行目の品名
+          <input type="text" id="rkName2" placeholder="例: カラー">
+        </label>
+        <label>補足(任意)
+          <input type="text" id="rkNote2">
+        </label>
+        <label>金額(円)
+          <input type="text" id="rkPrice2" inputmode="numeric" placeholder="例: 6600">
+        </label>
+      </div>
+      <div class="rk-row-in">
+        <label>3行目の品名
+          <input type="text" id="rkName3" placeholder="例: パーマ">
+        </label>
+        <label>補足(任意)
+          <input type="text" id="rkNote3" placeholder="例: 90分">
+        </label>
+        <label>金額(円)
+          <input type="text" id="rkPrice3" inputmode="numeric" placeholder="例: 8800">
+        </label>
+      </div>
+      <div class="rk-row-in">
+        <label>4行目の品名
+          <input type="text" id="rkName4">
+        </label>
+        <label>補足(任意)
+          <input type="text" id="rkNote4">
+        </label>
+        <label>金額(円)
+          <input type="text" id="rkPrice4" inputmode="numeric">
+        </label>
+      </div>
+      <div class="rk-row-in">
+        <label>5行目の品名
+          <input type="text" id="rkName5">
+        </label>
+        <label>補足(任意)
+          <input type="text" id="rkNote5">
+        </label>
+        <label>金額(円)
+          <input type="text" id="rkPrice5" inputmode="numeric">
+        </label>
+      </div>
+      <div class="rk-row-in">
+        <label>6行目の品名
+          <input type="text" id="rkName6">
+        </label>
+        <label>補足(任意)
+          <input type="text" id="rkNote6">
+        </label>
+        <label>金額(円)
+          <input type="text" id="rkPrice6" inputmode="numeric">
+        </label>
+      </div>
+      <details>
+        <summary>7行目から12行目</summary>
+      <div class="rk-row-in">
+        <label>7行目の品名
+          <input type="text" id="rkName7">
+        </label>
+        <label>補足(任意)
+          <input type="text" id="rkNote7">
+        </label>
+        <label>金額(円)
+          <input type="text" id="rkPrice7" inputmode="numeric">
+        </label>
+      </div>
+      <div class="rk-row-in">
+        <label>8行目の品名
+          <input type="text" id="rkName8">
+        </label>
+        <label>補足(任意)
+          <input type="text" id="rkNote8">
+        </label>
+        <label>金額(円)
+          <input type="text" id="rkPrice8" inputmode="numeric">
+        </label>
+      </div>
+      <div class="rk-row-in">
+        <label>9行目の品名
+          <input type="text" id="rkName9">
+        </label>
+        <label>補足(任意)
+          <input type="text" id="rkNote9">
+        </label>
+        <label>金額(円)
+          <input type="text" id="rkPrice9" inputmode="numeric">
+        </label>
+      </div>
+      <div class="rk-row-in">
+        <label>10行目の品名
+          <input type="text" id="rkName10">
+        </label>
+        <label>補足(任意)
+          <input type="text" id="rkNote10">
+        </label>
+        <label>金額(円)
+          <input type="text" id="rkPrice10" inputmode="numeric">
+        </label>
+      </div>
+      <div class="rk-row-in">
+        <label>11行目の品名
+          <input type="text" id="rkName11">
+        </label>
+        <label>補足(任意)
+          <input type="text" id="rkNote11">
+        </label>
+        <label>金額(円)
+          <input type="text" id="rkPrice11" inputmode="numeric">
+        </label>
+      </div>
+      <div class="rk-row-in">
+        <label>12行目の品名
+          <input type="text" id="rkName12">
+        </label>
+        <label>補足(任意)
+          <input type="text" id="rkNote12">
+        </label>
+        <label>金額(円)
+          <input type="text" id="rkPrice12" inputmode="numeric">
+        </label>
+      </div>
+      </details>
+      <p class="hint">品名か金額を入れた行だけが紙に出ます。金額は「3000」「3,000」「３０００円」のどれでも読み、「3,000円」の形で出します。小数やマイナスは読みません。補足には「60分」「1枚」「〜」などを書けます。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>3. ひとこと・店の名前・連絡先</summary>
+      <div class="grid2">
+        <label>ひとこと(任意・60字まで)
+          <input type="text" id="rkMessage" placeholder="例: ご予約のうえお越しください。">
+        </label>
+        <label>店や事務所の名前(20字まで)
+          <input type="text" id="rkShop" placeholder="山田ヘアサロン">
+        </label>
+        <label>連絡先(任意・40字まで)
+          <input type="text" id="rkContact" placeholder="例: メール info@example.com">
+        </label>
+      </div>
+      <p class="hint">空けた欄は、紙に出ません。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="rkPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="rkClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="rkProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/eigyo-jikan">営業時間の張り紙をつくる(営業時間と定休日)</a></li>
+        <li><a href="/mitsumorisho">見積書をつくる(相手ごとに金額を出すとき)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="preview" aria-label="プレビュー">
+    <div id="rkSheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>料金表は「品名」と「金額」を同じ高さで並べる</h2>
+  <p>料金表を見る人が知りたいのは、<strong>「これはいくらか」の1点</strong>です。品名と金額を1行ずつ並べ、そのあいだを点線でつなぐと、目が横にすべって迷いません。</p>
+  <p>書くことは3つです。</p>
+  <ol>
+    <li><strong>品名</strong> — お客さまが口にする呼び方で書く(社内の略称にしない)</li>
+    <li><strong>金額</strong> — 「3,000円」のように、カンマと「円」をつけて同じ形にそろえる</li>
+    <li><strong>店や事務所の名前</strong> — 紙だけを持ち帰る人のために、下に入れる</li>
+  </ol>
+
+  <h2>書き方の例 — 美容室の料金表</h2>
+  <p>カット・カラー・パーマの3つを載せる場合の例です。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>品名</th><th>補足</th><th>金額</th><th>紙に出る形</th></tr></thead>
+    <tbody>
+      <tr><td>カット</td><td>60分</td><td>4400</td><td>カット 60分 ……… 4,400円</td></tr>
+      <tr><td>カラー</td><td>(空ける)</td><td>6600</td><td>カラー ……… 6,600円</td></tr>
+      <tr><td>パーマ</td><td>90分</td><td>8800</td><td>パーマ 90分 ……… 8,800円</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>時間や量は「補足」に分けて書く</h3>
+  <p>「カット(60分)」のように品名にかっこで足すと、品名の長さが行ごとにばらつき、金額の位置を目で追いにくくなります。<strong>時間・枚数・サイズは補足の欄に入れると、品名のすぐ右に小さく出ます。</strong></p>
+
+  <h3>「〜」で幅のある値段を書きたいとき</h3>
+  <p>「4,400円〜」のように下限だけを示したいときは、補足の欄に「〜」と書きます。金額の欄は数字だけを読むので、<strong>金額の欄に「〜」を入れると読めないと知らせます</strong>。</p>
+
+  <h3>行が多いときは2枚に分ける</h3>
+  <p>このページは1枚に12行までです。それより多いなら、「カット」「カラー」のように種類ごとに見出しを変えて、2枚に分けます。1枚に詰め込むより、1枚ずつの文字を大きく保てます。</p>
+
+  <h2>税込で書くか、税抜で書くか</h2>
+  <p>お客さまが個人の店では、<strong>支払う総額(税込)がひと目で分かる書き方</strong>が一般的です。このツールは消費税の計算をしないので、税込の金額を入れて「表示はすべて税込価格です」を出す使い方を想定しています。</p>
+  <p>どの書き方が求められるかは、相手が個人か事業者か、どこにどう示すかで変わります。<strong>このツールは、入れた金額が税込かどうかを確かめません。</strong>迷うときは、国税庁の案内や税理士などの専門家に確かめてください。</p>
+
+  <h2>料金表のほかに直すところ</h2>
+  <p>値段を決めたら、同じ金額を別の場所にもそろえて載せます。</p>
+  <ul>
+    <li><strong>ホームページやSNS。</strong>料金表と同じ品名・同じ金額で載せます</li>
+    <li><strong>見積書や請求書の品名。</strong>料金表と同じ呼び方にすると、お客さまが見比べやすくなります</li>
+    <li><strong>値段を変えたとき。</strong>貼ってある料金表を先に差し替えます。古い紙が残ると、言った値段と書いた値段が食い違います</li>
+  </ul>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>品名と金額を並べた紙そのもの</strong>までです。消費税の計算・税込か税抜かの確認・その値段で売ってよいか(業種ごとの料金の決まりや表示のきまり)は扱いません。どれも業種や相手、示し方で変わり、ここで一律に決められないためです。一般的な説明であり、個別の判断は専門家にご確認ください。</p>
+
+  <a class="cta" href="/kaigyo">
+    <strong>開業したらやること — 書類の順番</strong>
+    <span>見積書から領収書まで、仕事1件の流れに沿って無料のツールを並べています</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/ryokinhyo-core.js"></script>
+<script src="/ryokinhyo.js"></script>
+</body>
+</html>

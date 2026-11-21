@@ -1,0 +1,54 @@
+/* ---------------------------------------------------------- 料金表(/ryokinhyo)
+
+   このページだけの規則を別ファイルに置く。
+   用紙は A4 縦1枚で、style.css の .paper と @page をそのまま使う。**ここでは @page を持たない。**
+   店に貼る・置く紙なので、品名と金額を同じ大きさで並べ、点線でつなぐ。 */
+
+.rk-paper p { margin: 0; }
+.rk-paper { overflow-wrap: anywhere; }
+
+.rk-title {
+  margin-top: 6mm !important;
+  padding-bottom: 4mm;
+  border-bottom: 2pt solid #000;
+  text-align: center;
+  font-size: 28pt;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: .08em;
+}
+
+.rk-list { margin-top: 8mm; }
+.rk-row {
+  display: flex;
+  align-items: baseline;
+  gap: 3mm;
+  padding: 2.2mm 2mm;
+  border-bottom: .5pt solid #bbb;
+}
+.rk-left { flex: 0 1 auto; min-width: 0; }
+.rk-name { font-size: 16pt; font-weight: 700; line-height: 1.35; }
+.rk-note { margin-left: 3mm; font-size: 11pt; line-height: 1.35; }
+.rk-dots { flex: 1 1 8mm; min-width: 8mm; border-bottom: 1.2pt dotted #000; transform: translateY(-1.2mm); }
+.rk-price {
+  flex: 0 0 auto;
+  font-size: 16pt;
+  font-weight: 700;
+  line-height: 1.35;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.rk-tax { margin-top: 4mm !important; text-align: right; font-size: 11pt; }
+.rk-message { margin-top: 6mm !important; font-size: 12pt; line-height: 1.7; }
+
+.rk-sign { margin-top: 10mm; text-align: center; }
+.rk-shop { min-height: 9mm; font-size: 18pt; font-weight: 700; line-height: 1.4; }
+.rk-contact { margin-top: 2mm !important; font-size: 11pt; line-height: 1.6; }
+
+/* 入力: 品名を広く、補足と金額を横に */
+.rk-row-in { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; }
+@media (max-width: 520px) {
+  .rk-row-in { grid-template-columns: 1fr 1fr; }
+  .rk-row-in label:first-child { grid-column: 1 / -1; }
+}

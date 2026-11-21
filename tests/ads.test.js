@@ -57,6 +57,7 @@ const NO_AD_PAGES = [
   'kyugyo.html',
   'fax-soufujo.html',
   'eigyo-jikan.html',
+  'ryokinhyo.html',
   'aisatsujo.html',
   'inshi.html',
   'legal.html',
