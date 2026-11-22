@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>名刺を無料で作成 — A4に10枚並べて自宅で印刷</title>
+<meta name="description" content="開業したばかりで、名刺をすぐ自分で作りたいですか。屋号・氏名・連絡先を入れると、91×55mmの名刺をA4に10枚並べたPDFにできる無料ツールです。登録不要で、入力内容は送信されません。">
+<meta property="og:title" content="名刺を無料で作成 — A4に10枚並べて自宅で印刷">
+<meta property="og:description" content="開業したばかりで、名刺をすぐ自分で作りたいですか。屋号・氏名・連絡先を入れると、91×55mmの名刺をA4に10枚並べたPDFにできる無料ツールです。登録不要で、入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/meishi">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/meishi.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">名刺ジェネレーター</p>
+  <p class="tagline">A4に10枚 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">名刺を無料で作成 — A4に10枚並べて自宅で印刷</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 屋号と名前</summary>
+      <div class="grid2">
+        <label>屋号・会社名(20字まで)
+          <input type="text" id="mcCompany" placeholder="例: 山田デザイン事務所">
+        </label>
+        <label>仕事の内容(任意・28字まで)
+          <input type="text" id="mcCatchcopy" placeholder="例: ロゴ・チラシ・名刺のデザイン">
+        </label>
+        <label>肩書(任意・20字まで)
+          <input type="text" id="mcRole" placeholder="例: 代表">
+        </label>
+        <label>氏名(10字まで)
+          <input type="text" id="mcName" placeholder="例: 山田 太郎">
+        </label>
+        <label>ふりがな・ローマ字(任意・24字まで)
+          <input type="text" id="mcKana" placeholder="例: Taro Yamada">
+        </label>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 住所と連絡先</summary>
+      <div class="grid2">
+        <label>郵便番号(任意)
+          <input type="text" id="mcZip" inputmode="numeric" placeholder="例: 123-4567">
+        </label>
+        <label>住所1行目(任意・22字まで)
+          <input type="text" id="mcAddr1" placeholder="例: 東京都千代田区丸の内1-2-3">
+        </label>
+        <label>住所2行目(任意・28字まで)
+          <input type="text" id="mcAddr2" placeholder="例: 丸の内ビル5階">
+        </label>
+        <label>電話番号(任意)
+          <input type="text" id="mcTel" inputmode="tel" placeholder="例: 03-1234-5678">
+        </label>
+        <label>メールアドレス(任意)
+          <input type="text" id="mcEmail" inputmode="email" placeholder="例: info@example.com">
+        </label>
+        <label>URL(任意)
+          <input type="text" id="mcWeb" inputmode="url" placeholder="例: example.com">
+        </label>
+      </div>
+      <p class="hint">空けた欄は紙に出ません(「TEL」などの見出しだけが残ることはありません)。自宅で開業していて住所を載せたくないときは、住所を空けても作れます。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 刷る紙</summary>
+      <label>切り取り線
+        <select id="mcGuides">
+          <option value="on">つける(普通紙に刷ってはさみで切る)</option>
+          <option value="off">つけない(ミシン目の入った名刺用紙に刷る)</option>
+        </select>
+      </label>
+      <p class="hint">91×55mm の名刺を、A4 縦に2列×5段で10枚並べます。紙の端からの余白は上下11mm・左右14mmです。<strong>名刺用紙に刷る前に、必ず普通紙で1枚試し刷りして、用紙に重ねてずれを確かめてください。</strong>このツールは、お使いの用紙やプリンタに合うかを確かめていません。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="mcPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="mcClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="mcProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/aisatsujo">開業挨拶状をはがきに刷る(縦書き)</a></li>
+        <li><a href="/atena">封筒の宛名をつくる(長形3号)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="mc-preview" aria-label="プレビュー">
+    <div id="mcSheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>名刺に書くことは「誰か」と「どう連絡するか」の2つ</h2>
+  <p>名刺を受け取った人があとで見返すのは、<strong>「この人は誰か」と「どうやって連絡するか」</strong>の2点です。開業したばかりなら、次の順に決めれば足ります。</p>
+  <ol>
+    <li><strong>屋号・会社名と仕事の内容</strong> — 屋号だけでは何の仕事か伝わらないので、ひとことで添える</li>
+    <li><strong>氏名と肩書</strong> — ひとりで始めたなら、肩書は「代表」で十分です</li>
+    <li><strong>連絡先</strong> — 電話・メール・URL のうち、実際に受け付けるものだけを書く</li>
+  </ol>
+
+  <h2>書き方の例 — ひとりで開業したデザイン事務所</h2>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>欄</th><th>入れる例</th><th>考え方</th></tr></thead>
+    <tbody>
+      <tr><td>屋号・会社名</td><td>山田デザイン事務所</td><td>開業届に書いた屋号と同じにする</td></tr>
+      <tr><td>仕事の内容</td><td>ロゴ・チラシ・名刺のデザイン</td><td>相手が頼めることを具体的に書く</td></tr>
+      <tr><td>肩書</td><td>代表</td><td>空けてもよい</td></tr>
+      <tr><td>ふりがな・ローマ字</td><td>Taro Yamada</td><td>読み方が分かれる名前なら入れる</td></tr>
+      <tr><td>住所</td><td>(空ける)</td><td>自宅で開業していて載せたくないとき</td></tr>
+      <tr><td>連絡先</td><td>メールとURLだけ</td><td>出られない電話は書かない</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>自宅の住所を載せるか</h3>
+  <p>自宅で開業した人がまず迷うところです。名刺に住所を書く決まりはないので、<strong>載せない・市区町村までにする</strong>のどちらでも作れます。名刺は会った人に配って手元を離れる紙なので、<strong>誰の手に渡っても困らない範囲</strong>で決めます。</p>
+
+  <h2>自宅のプリンタで刷るときの手順</h2>
+  <ol>
+    <li>「PDFとして保存 / 印刷」を押し、<strong>用紙は A4、倍率は「100%」または「実際のサイズ」</strong>を選ぶ(「用紙に合わせる」にすると寸法がずれます)</li>
+    <li>まず<strong>普通紙で1枚</strong>刷り、名刺用紙に重ねて、枠の位置が合っているかを光にかざして確かめる</li>
+    <li>合っていたら名刺用紙に刷る。厚い紙は、プリンタの設定で用紙の種類を厚紙にする</li>
+  </ol>
+  <p>ミシン目の入った名刺用紙なら、切り取り線は「つけない」を選びます。普通紙や厚紙に刷ってはさみやカッターで切るなら、「つける」を選ぶと、名刺の境目に細い破線が入ります。</p>
+
+  <h3>枚数が足りないとき</h3>
+  <p>1枚の紙で10枚できます。50枚要るなら、印刷の画面で部数を5にします。中身を変えずに何度でも刷れるので、最初は少なめに刷って、肩書や連絡先を直したくなったら作り直すほうが無駄が出ません。</p>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>入れた文字を名刺の形に並べた紙そのもの</strong>までです。電話番号・メールアドレス・URL が正しいかは確かめません。ロゴや写真は入れられません。お使いの名刺用紙やプリンタで位置が合うかも確かめていないので、試し刷りで確かめてください。</p>
+
+  <a class="cta" href="/kaigyo">
+    <strong>開業したらやること — 書類の順番</strong>
+    <span>見積書から領収書まで、仕事1件の流れに沿って無料のツールを並べています</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/meishi-core.js"></script>
+<script src="/meishi.js"></script>
+</body>
+</html>
