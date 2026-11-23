@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>値札を無料で作成 — 品名と価格を入れてA4に18枚印刷</title>
+<meta name="description" content="店に並べる商品の値札を、すぐ自分で作りたいですか。品名・補足・価格を入れると、64×46mmの値札をA4に18枚並べたPDFにできる無料ツールです。登録不要で、入力内容は送信されません。">
+<meta property="og:title" content="値札を無料で作成 — 品名と価格を入れてA4に18枚印刷">
+<meta property="og:description" content="店に並べる商品の値札を、すぐ自分で作りたいですか。品名・補足・価格を入れると、64×46mmの値札をA4に18枚並べたPDFにできる無料ツールです。登録不要で、入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/nefuda">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/nefuda.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">値札ジェネレーター</p>
+  <p class="tagline">A4に18枚 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">値札を無料で作成 — 品名と価格を入れてA4に18枚印刷</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 品名と価格(18品まで)</summary>
+      <p class="hint">左から 品名(12字まで)・補足(任意・18字まで)・価格(7桁まで)。価格は「1500」「1,500円」「１５００」のどれで入れても「1,500円」の形にそろえます。品名も価格も空けた行は値札になりません。</p>
+      <div class="nf-rows">
+        <div class="nf-row"><span>1</span>
+          <input type="text" id="nfName1" aria-label="1行目の品名" placeholder="例: ハンドクリーム">
+          <input type="text" id="nfNote1" aria-label="1行目の補足" placeholder="例: 無香料 50g">
+          <input type="text" id="nfPrice1" inputmode="numeric" aria-label="1行目の金額" placeholder="例: 1200"></div>
+        <div class="nf-row"><span>2</span>
+          <input type="text" id="nfName2" aria-label="2行目の品名" placeholder="例: トートバッグ">
+          <input type="text" id="nfNote2" aria-label="2行目の補足" placeholder="例: 生成り・帆布">
+          <input type="text" id="nfPrice2" inputmode="numeric" aria-label="2行目の金額" placeholder="例: 2800"></div>
+        <div class="nf-row"><span>3</span>
+          <input type="text" id="nfName3" aria-label="3行目の品名" placeholder="例: マグカップ">
+          <input type="text" id="nfNote3" aria-label="3行目の補足">
+          <input type="text" id="nfPrice3" inputmode="numeric" aria-label="3行目の金額" placeholder="例: 1500"></div>
+        <div class="nf-row"><span>4</span>
+          <input type="text" id="nfName4" aria-label="4行目の品名">
+          <input type="text" id="nfNote4" aria-label="4行目の補足">
+          <input type="text" id="nfPrice4" inputmode="numeric" aria-label="4行目の金額"></div>
+        <div class="nf-row"><span>5</span>
+          <input type="text" id="nfName5" aria-label="5行目の品名">
+          <input type="text" id="nfNote5" aria-label="5行目の補足">
+          <input type="text" id="nfPrice5" inputmode="numeric" aria-label="5行目の金額"></div>
+        <div class="nf-row"><span>6</span>
+          <input type="text" id="nfName6" aria-label="6行目の品名">
+          <input type="text" id="nfNote6" aria-label="6行目の補足">
+          <input type="text" id="nfPrice6" inputmode="numeric" aria-label="6行目の金額"></div>
+        <div class="nf-row"><span>7</span>
+          <input type="text" id="nfName7" aria-label="7行目の品名">
+          <input type="text" id="nfNote7" aria-label="7行目の補足">
+          <input type="text" id="nfPrice7" inputmode="numeric" aria-label="7行目の金額"></div>
+        <div class="nf-row"><span>8</span>
+          <input type="text" id="nfName8" aria-label="8行目の品名">
+          <input type="text" id="nfNote8" aria-label="8行目の補足">
+          <input type="text" id="nfPrice8" inputmode="numeric" aria-label="8行目の金額"></div>
+        <div class="nf-row"><span>9</span>
+          <input type="text" id="nfName9" aria-label="9行目の品名">
+          <input type="text" id="nfNote9" aria-label="9行目の補足">
+          <input type="text" id="nfPrice9" inputmode="numeric" aria-label="9行目の金額"></div>
+        <div class="nf-row"><span>10</span>
+          <input type="text" id="nfName10" aria-label="10行目の品名">
+          <input type="text" id="nfNote10" aria-label="10行目の補足">
+          <input type="text" id="nfPrice10" inputmode="numeric" aria-label="10行目の金額"></div>
+        <div class="nf-row"><span>11</span>
+          <input type="text" id="nfName11" aria-label="11行目の品名">
+          <input type="text" id="nfNote11" aria-label="11行目の補足">
+          <input type="text" id="nfPrice11" inputmode="numeric" aria-label="11行目の金額"></div>
+        <div class="nf-row"><span>12</span>
+          <input type="text" id="nfName12" aria-label="12行目の品名">
+          <input type="text" id="nfNote12" aria-label="12行目の補足">
+          <input type="text" id="nfPrice12" inputmode="numeric" aria-label="12行目の金額"></div>
+        <div class="nf-row"><span>13</span>
+          <input type="text" id="nfName13" aria-label="13行目の品名">
+          <input type="text" id="nfNote13" aria-label="13行目の補足">
+          <input type="text" id="nfPrice13" inputmode="numeric" aria-label="13行目の金額"></div>
+        <div class="nf-row"><span>14</span>
+          <input type="text" id="nfName14" aria-label="14行目の品名">
+          <input type="text" id="nfNote14" aria-label="14行目の補足">
+          <input type="text" id="nfPrice14" inputmode="numeric" aria-label="14行目の金額"></div>
+        <div class="nf-row"><span>15</span>
+          <input type="text" id="nfName15" aria-label="15行目の品名">
+          <input type="text" id="nfNote15" aria-label="15行目の補足">
+          <input type="text" id="nfPrice15" inputmode="numeric" aria-label="15行目の金額"></div>
+        <div class="nf-row"><span>16</span>
+          <input type="text" id="nfName16" aria-label="16行目の品名">
+          <input type="text" id="nfNote16" aria-label="16行目の補足">
+          <input type="text" id="nfPrice16" inputmode="numeric" aria-label="16行目の金額"></div>
+        <div class="nf-row"><span>17</span>
+          <input type="text" id="nfName17" aria-label="17行目の品名">
+          <input type="text" id="nfNote17" aria-label="17行目の補足">
+          <input type="text" id="nfPrice17" inputmode="numeric" aria-label="17行目の金額"></div>
+        <div class="nf-row"><span>18</span>
+          <input type="text" id="nfName18" aria-label="18行目の品名">
+          <input type="text" id="nfNote18" aria-label="18行目の補足">
+          <input type="text" id="nfPrice18" inputmode="numeric" aria-label="18行目の金額"></div>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 並べ方</summary>
+      <div class="grid2">
+        <label>1品あたりの枚数
+          <select id="nfCopies">
+            <option value="1">1枚ずつ</option>
+            <option value="2">2枚ずつ</option>
+            <option value="3">3枚ずつ</option>
+          </select>
+        </label>
+        <label>価格の後ろの書き添え
+          <select id="nfTax">
+            <option value="incl">税込</option>
+            <option value="excl">税抜</option>
+            <option value="none">書かない</option>
+          </select>
+        </label>
+        <label>切り取り線
+          <select id="nfGuides">
+            <option value="on">つける(普通紙に刷ってはさみで切る)</option>
+            <option value="off">つけない(ミシン目の入った用紙に刷る)</option>
+          </select>
+        </label>
+      </div>
+      <p class="hint">64×46mm の値札を、A4 縦に3列×6段で18枚並べます。紙の端からの余白は上下10.5mm・左右9mmです。18枚に足りない分の枠は空けたまま刷ります。<strong>このツールは消費税を計算しません。</strong>「税込」「税抜」は、入れた価格の後ろに文字を添えるだけです。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="nfPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="nfClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="nfProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/ryokinhyo">料金表をつくる(値段を1枚にまとめて店に貼る)</a></li>
+        <li><a href="/eigyo-jikan">営業時間の張り紙をつくる(営業時間と定休日)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="nf-preview" aria-label="プレビュー">
+    <div id="nfSheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>値札に書くのは「何か」と「いくらか」の2つ</h2>
+  <p>お客さんが値札を見る時間は数秒です。<strong>品名と価格がひと目で読める</strong>ことが何より大事なので、このツールは価格をいちばん大きく、品名をその上に置きます。サイズや色・産地など、選ぶときに迷うことだけを補足に1行添えます。</p>
+
+  <h2>書き方の例 — 雑貨を並べる小さな店</h2>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>品名</th><th>補足</th><th>価格</th><th>考え方</th></tr></thead>
+    <tbody>
+      <tr><td>ハンドクリーム</td><td>無香料 50g</td><td>1200</td><td>同じ品で種類が分かれるなら、違いを補足に書く</td></tr>
+      <tr><td>トートバッグ</td><td>生成り・帆布</td><td>2800</td><td>色と素材は、手に取る前に知りたいこと</td></tr>
+      <tr><td>マグカップ</td><td>(空ける)</td><td>1500</td><td>見れば分かるものは補足を空ける</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>同じ値札が何枚も要るとき</h3>
+  <p>棚の前と奥、店頭とレジ横など、同じ品を2か所以上に置くなら「1品あたりの枚数」を2枚ずつ・3枚ずつにします。18枚を超えた分は紙に出ないので、画面の知らせを見て2回に分けて刷ってください。</p>
+
+  <h3>「税込」「税抜」はどちらを選ぶか</h3>
+  <p>入れた価格が消費税を含んだ額なら「税込」、含まない額なら「税抜」を選びます。このツールは<strong>税額の計算も、どちらで表示すべきかの判断もしません</strong>。価格の後ろに小さく文字を添えるだけです。</p>
+
+  <h2>自宅のプリンタで刷るときの手順</h2>
+  <ol>
+    <li>「PDFとして保存 / 印刷」を押し、<strong>用紙は A4、倍率は「100%」または「実際のサイズ」</strong>を選ぶ(「用紙に合わせる」にすると寸法がずれます)</li>
+    <li>普通紙なら切り取り線「つける」のまま刷り、はさみかカッターで線に沿って切る</li>
+    <li>厚紙に刷ると、商品の前に立てたり、二つ折りにしたりしやすくなります</li>
+  </ol>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>入れた品名と価格を値札の形に並べた紙</strong>までです。消費税の計算、価格の表示のしかたが決まりに合っているかの確認、バーコードや画像の印刷はしません。お使いの用紙やプリンタで位置が合うかも確かめていないので、まず普通紙で1枚試し刷りしてください。</p>
+
+  <a class="cta" href="/kaigyo">
+    <strong>開業したらやること — 書類の順番</strong>
+    <span>見積書から領収書まで、仕事1件の流れに沿って無料のツールを並べています</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/ryokinhyo-core.js"></script>
+<script src="/nefuda-core.js"></script>
+<script src="/nefuda.js"></script>
+</body>
+</html>

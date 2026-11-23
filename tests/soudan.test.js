@@ -50,6 +50,7 @@ const NO_EXIT_PAGES = [
   'eigyo-jikan.html',
   'ryokinhyo.html',
   'meishi.html',
+  'nefuda.html',
   'aisatsujo.html',
   'inshi.html',
   'legal.html',

@@ -1,0 +1,69 @@
+/* ---------------------------------------------------------- 値札(/nefuda)
+
+   このページだけの規則を別ファイルに置く。
+   style.css の A4 の @page(余白つき)は請求書と送付状の紙面を実測で決めた値なので触らない。
+   値札は紙の端からの位置そのものが寸法なので、名前付きページ @page nefuda で余白0の A4 を持つ。
+
+   64×46mm を 3列×6段・すき間なし。余白は 上下10.5mm・左右9mm(nefuda-core.js の LAYOUT と同じ値)。 */
+
+.nf-rows { display: grid; gap: 6px; }
+.nf-row { display: grid; grid-template-columns: 2em 1.4fr 1.4fr 1fr; gap: 6px; align-items: center; }
+.nf-row span { font-size: .85em; color: #666; text-align: right; }
+@media (max-width: 600px) { .nf-row { grid-template-columns: 1.6em 1fr 1fr; } .nf-row input:last-child { grid-column: 2 / 4; } }
+
+.nf-preview { display: flex; justify-content: center; overflow-x: auto; }
+
+.nf-paper {
+  box-sizing: border-box;
+  width: 210mm;
+  height: 297mm;
+  padding: 10.5mm 9mm;
+  display: grid;
+  grid-template-columns: repeat(3, 64mm);
+  grid-template-rows: repeat(6, 46mm);
+  background: #fff;
+  color: #000;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .12);
+}
+@media (max-width: 1400px) { .nf-paper { zoom: .72; } }
+@media (max-width: 900px) { .nf-paper { zoom: .45; } }
+
+.nf-tag, .nf-empty { box-sizing: border-box; width: 64mm; height: 46mm; }
+.nf-tag {
+  padding: 4.5mm 4mm 4mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+.nf-tag p { margin: 0; }
+
+/* 切り取り線: 値札のある枠だけに細い破線。空いた枠には引かない */
+.nf-guides .nf-tag { outline: .3pt dashed #999; outline-offset: -.15pt; }
+
+.nf-name { font-size: 12pt; font-weight: 700; line-height: 1.35; }
+.nf-note { margin-top: 1mm; font-size: 8pt; line-height: 1.4; }
+.nf-price { min-height: 11mm; line-height: 1.2; }
+.nf-amount { font-size: 22pt; font-weight: 700; letter-spacing: .02em; }
+.nf-tax { margin-left: 1mm; font-size: 8pt; }
+
+/* ---------------------------------------------------------- 印刷 */
+
+@page nefuda {
+  size: 210mm 297mm;
+  margin: 0;
+}
+
+@media print {
+  .nf-preview { display: block; overflow: visible; }
+  .nf-paper {
+    page: nefuda;
+    zoom: 1;
+    box-shadow: none;
+    margin: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
