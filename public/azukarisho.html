@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>預り証を無料で作成 — 品物を預かるときのA4のPDF</title>
+<meta name="description" content="修理や加工でお客様の品物を預かるとき、渡す預り証(預かり証)をワードやエクセルなしで作りたいですか。預かった日と品名・状態を入れると、お返しの欄と印の枠つきのA4の預り証をPDFにできる無料ツールです。入力内容は送信されません。">
+<meta property="og:title" content="預り証を無料で作成 — 品物を預かるときのA4のPDF">
+<meta property="og:description" content="修理や加工でお客様の品物を預かるとき、渡す預り証(預かり証)をワードやエクセルなしで作りたいですか。預かった日と品名・状態を入れると、お返しの欄と印の枠つきのA4の預り証をPDFにできる無料ツールです。入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/azukarisho">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/azukarisho.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">預り証ジェネレーター</p>
+  <p class="tagline">「お預かりしました」を渡す1枚 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">預り証を無料で作成 — 品物を預かるときのA4のPDF</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. だれから預かったか</summary>
+      <div class="grid2">
+        <label>宛先(品物を預けてくれた人)
+          <input type="text" id="azTo" placeholder="山田 花子">
+        </label>
+        <label>敬称
+          <select id="azHonorific">
+            <option value="様">様</option>
+            <option value="御中">御中</option>
+          </select>
+        </label>
+        <label>預かった側(あなた)の名前
+          <input type="text" id="azFrom" placeholder="さくら時計店">
+        </label>
+        <label>住所・電話(任意)
+          <input type="text" id="azFromAddress" placeholder="東京都○○区… / 03-0000-0000">
+        </label>
+        <label>担当者(任意)
+          <input type="text" id="azPerson" placeholder="佐藤">
+        </label>
+        <label>発行日
+          <input type="date" id="azIssueDate">
+        </label>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary>2. いつ預かって、いつ返すか</summary>
+      <div class="grid2">
+        <label>預かった日
+          <input type="date" id="azReceivedDate">
+        </label>
+        <label>お返しする予定日(任意)
+          <input type="date" id="azReturnDate">
+        </label>
+        <label>用件(任意)
+          <input type="text" id="azSubject" placeholder="例: 電池交換と点検のため">
+        </label>
+        <label>預り番号(任意)
+          <input type="text" id="azRefNo" placeholder="例: A-0012">
+        </label>
+      </div>
+      <p class="hint">空けた欄は、紙でも空欄のまま出ます。<strong>預かっておける期間の長さや、期限を過ぎたときの扱いは、このツールでは決めません</strong>(決めてあるときは備考に書いてください)。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 預かった品物(1行に1件・8行まで)</summary>
+      <div id="azRows"></div>
+      <button type="button" id="azAdd" class="btn-sub">行を1つ足す(8行まで)</button>
+      <p class="hint">金額の欄はありません。<strong>このページは品物を預かるとき用で、お金(保証金・敷金など)を預かるときの紙は扱いません。</strong>「状態・付属品」には、預かった時点の傷や、箱・充電器などいっしょに預かった物を書いておくと、返すときの行き違いを防げます。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>4. 備考と、紙の下に出すもの</summary>
+      <div class="grid2">
+        <label>備考(任意)
+          <input type="text" id="azNote" placeholder="例: 仕上がりのご連絡はお電話で差し上げます">
+        </label>
+        <label>お返しの欄(返したときに手で書く場所)
+          <select id="azReturnBox">
+            <option value="on">つける</option>
+            <option value="off">つけない</option>
+          </select>
+        </label>
+        <label>預かった側の印の枠
+          <select id="azStamp">
+            <option value="on">つける</option>
+            <option value="off">つけない</option>
+          </select>
+        </label>
+        <label>「お引き取りの際は、この預り証をお持ちください。」の一文
+          <select id="azPickup">
+            <option value="on">つける</option>
+            <option value="off">つけない</option>
+          </select>
+        </label>
+      </div>
+      <p class="hint">お返しの欄と印の枠の中は、いつも空欄で出ます。刷ったあとに手で書く・はんこを押すための枠です。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="azPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="azClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="azProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/juryosho">受領書をつくる(品物を受け取った側が返す1枚)</a></li>
+        <li><a href="/ryoshusho">領収書をつくる(修理代などのお金を受け取ったとき)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="preview" aria-label="プレビュー">
+    <div id="azSheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>預り証は、「お預かりしました」をお客様に渡す1枚</h2>
+  <p>時計の電池交換、洋服のお直し、パソコンの修理、額装の加工。お客様の品物を、いったんお店で預かる仕事があります。そのときに、<strong>預かった側が「この品物を、この状態でお預かりしました」と書いて、お客様に渡す紙</strong>が預り証です。「預かり証」と送り仮名をつけて書くこともあり、中身は同じです。</p>
+  <p>お客様にとっては、品物を手放している間の安心になります。お店にとっては、<strong>「預けたはずの付属品がない」「傷は前からあった」の行き違いを防ぐ記録</strong>になります。だから、預かったその場で渡すのが基本です。</p>
+  <p>書く欄は6つです。</p>
+  <ol>
+    <li><strong>宛先</strong> — 品物を預けてくれた人の名前。個人なら「様」、会社なら「御中」</li>
+    <li><strong>お預かりした日</strong> — 品物を受け取った日</li>
+    <li><strong>預かった側の名前</strong> — あなたの屋号や店の名前と、連絡先</li>
+    <li><strong>品名と数量</strong> — 何を、いくつ預かったかを1行に1件ずつ</li>
+    <li><strong>状態・付属品</strong> — 預かった時点の傷や、いっしょに預かった箱・ケーブルなど</li>
+    <li><strong>預かった側の印</strong> — お店のはんこを押す枠</li>
+  </ol>
+
+  <h2>書き方の例 — 時計を修理で預かったとき</h2>
+  <p>11月25日に、腕時計の電池交換と点検を受けた場合の例です。</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>欄</th><th>書くこと</th></tr></thead>
+    <tbody>
+      <tr><td>お預かりした日</td><td>2026年11月25日</td></tr>
+      <tr><td>お返しする予定日</td><td>2026年12月2日</td></tr>
+      <tr><td>用件</td><td>電池交換と点検のため</td></tr>
+      <tr><td>預り番号</td><td>A-0012</td></tr>
+      <tr><td>品名(1行目)</td><td>腕時計 1 点 / ベルトにすり傷・箱あり</td></tr>
+      <tr><td>品名(2行目)</td><td>保証書 1 枚</td></tr>
+      <tr><td>備考</td><td>仕上がりのご連絡はお電話で差し上げます</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>状態は、お客様の前で見ながら書く</h3>
+  <p>「状態・付属品」の欄は、<strong>お客様といっしょに品物を見ながら</strong>書きます。すり傷・へこみ・欠けがあればその場所を、箱・保証書・充電器があればその名前を書きます。お客様が同じものを見て納得していれば、返すときに「この傷は前からでしたね」と同じ紙で確かめられます。</p>
+
+  <h3>番号をつけると、返すときに探しやすい</h3>
+  <p>預かる品物が多いお店は、<strong>預り番号を書いて、同じ番号の札を品物にもつけておく</strong>と、お客様が来たときにすぐ見つかります。番号のつけ方は自由です。「A-0012」のように通し番号にしておくと、数え漏れにも気づけます。</p>
+
+  <h2>お返しするときは、同じ紙に書き込む</h2>
+  <p>紙の下にある「お返しの欄」は、<strong>品物を返したときに手で書き込むための空欄</strong>です。</p>
+  <ul>
+    <li><strong>控えを残すとき。</strong>同じものを2枚刷り、1枚をお客様に、1枚をお店の控えにします</li>
+    <li><strong>返すとき。</strong>お客様が持ってきた預り証と控えを見比べ、品物を渡して、お返しした日とお受け取りのお名前を書いてもらいます</li>
+    <li><strong>お客様が預り証をなくしたとき。</strong>どう確かめて返すかは、お店ごとに決めておきます。このツールでは決めません</li>
+  </ul>
+
+  <h2>預り証・受領書・領収書の違い</h2>
+  <p>名前が似た紙が3つあります。<strong>「何を受け取ったか」と「あとで返すか」</strong>で分かれます。</p>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>紙の名前</th><th>伝えること</th></tr></thead>
+    <tbody>
+      <tr><td>預り証</td><td>品物を<strong>預かった</strong>(あとで返す)</td></tr>
+      <tr><td>受領書</td><td>品物や書類を<strong>受け取った</strong>(返さない)</td></tr>
+      <tr><td>領収書</td><td><strong>お金</strong>を受け取った</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>このページで作れるのは、いちばん上の預り証です。注文した品物が届いて「受け取りました」と返すときは<a href="/juryosho">受領書</a>、修理代などを受け取ったときは<a href="/ryoshusho">領収書</a>を使ってください。</p>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>預かった品物の名前と状態を並べてお客様に渡す紙そのもの</strong>までです。金額の計算はしません。お金(保証金・敷金・手付金など)を預かるときの紙、預かっている間に品物が壊れたりなくなったりしたときの責任、預かっておける期間と期限を過ぎたときの扱い、この紙に収入印紙が要るかは扱いません。どれも契約の中身と個別の事情で変わり、ここで一律に決められないためです。一般的な説明であり、個別の判断は専門家にご確認ください。</p>
+
+  <a class="cta" href="/ryoshusho">
+    <strong>領収書をつくる</strong>
+    <span>品物をお返しして、修理代などを受け取ったときの1枚</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/shukkin-core.js"></script>
+<script src="/azukarisho-core.js"></script>
+<script src="/azukarisho.js"></script>
+</body>
+</html>

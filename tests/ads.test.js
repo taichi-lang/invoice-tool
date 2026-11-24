@@ -60,6 +60,7 @@ const NO_AD_PAGES = [
   'ryokinhyo.html',
   'meishi.html',
   'nefuda.html',
+  'azukarisho.html',
   'aisatsujo.html',
   'inshi.html',
   'legal.html',
