@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>整理券を無料で作成 — 番号つきでA4に18枚印刷</title>
+<meta name="description" content="開店の日やセールで、番号つきの整理券をすぐ用意したいですか。始めの番号と枚数を入れると、64×46mmの整理券をA4に18枚ずつ並べたPDFにできる無料ツールです。登録不要で、入力内容は送信されません。">
+<meta property="og:title" content="整理券を無料で作成 — 番号つきでA4に18枚印刷">
+<meta property="og:description" content="開店の日やセールで、番号つきの整理券をすぐ用意したいですか。始めの番号と枚数を入れると、64×46mmの整理券をA4に18枚ずつ並べたPDFにできる無料ツールです。登録不要で、入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/seiriken">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/seiriken.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">整理券ジェネレーター</p>
+  <p class="tagline">番号つき・A4に18枚 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">整理券を無料で作成 — 番号つきでA4に18枚印刷</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 番号と枚数</summary>
+      <div class="grid2">
+        <label>始めの番号
+          <input type="text" id="srStart" inputmode="numeric" placeholder="例: 1"></label>
+        <label>枚数(90枚まで)
+          <input type="text" id="srCount" inputmode="numeric" placeholder="例: 50"></label>
+        <label>番号の桁
+          <select id="srPad">
+            <option value="none">そのまま(1, 2, … 10)</option>
+            <option value="3">3桁にそろえる(001, 002, … 010)</option>
+          </select>
+        </label>
+      </div>
+      <p class="hint">始めの番号から1ずつ増やして並べます。1ページに18枚、19枚目からは次の紙になります(最大5ページ・90枚)。2回目に刷るときは、始めの番号を続きの番号にしてください(例: 1回目が1〜90なら、2回目は91)。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 券に書くこと</summary>
+      <div class="grid2">
+        <label>見出し(6字まで)
+          <input type="text" id="srTitle" placeholder="例: 整理券"></label>
+        <label>店名・催しの名前(14字まで)
+          <input type="text" id="srShop" placeholder="例: パン工房こむぎ"></label>
+        <label>日付・用件(任意・18字まで)
+          <input type="text" id="srEvent" placeholder="例: 12/1(月) 開店記念セール"></label>
+        <label>ひとこと(任意・22字まで)
+          <input type="text" id="srNote" placeholder="例: 10時までにお越しください"></label>
+        <label>切り取り線
+          <select id="srGuides">
+            <option value="on">つける(普通紙に刷ってはさみで切る)</option>
+            <option value="off">つけない(ミシン目の入った用紙に刷る)</option>
+          </select>
+        </label>
+      </div>
+      <p class="hint">見出しを空けると「整理券」と出ます。「受付票」「引換券」「番号札」などに変えられます。番号がいちばん大きく、その上に見出しと店名、下に日付・用件とひとことが入ります。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="srPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="srClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="srProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/aisatsujo">開業の挨拶状をつくる(開店を取引先やご近所に知らせる)</a></li>
+        <li><a href="/eigyo-jikan">営業時間の張り紙をつくる(営業時間と定休日)</a></li>
+        <li><a href="/nefuda">値札をつくる(A4に18枚)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="sr-preview" aria-label="プレビュー" id="srSheet"></section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>整理券は「番号」がひと目で読めればよい</h2>
+  <p>整理券を受け取った人が確かめるのは、<strong>自分が何番か</strong>と、<strong>いつ・どこの券か</strong>の2つです。このツールは番号をいちばん大きく置き、その上に見出しと店名、下に日付と用件を小さく添えます。</p>
+
+  <h2>書き方の例 — 開店初日に先着50名へ配る</h2>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>欄</th><th>入れる例</th><th>考え方</th></tr></thead>
+    <tbody>
+      <tr><td>始めの番号・枚数</td><td>1・50</td><td>配る人数ぶん。余りを少し足しておくと、書き損じや予備に使える</td></tr>
+      <tr><td>見出し</td><td>整理券</td><td>引き換えに使うなら「引換券」、受付順なら「受付票」</td></tr>
+      <tr><td>店名・催しの名前</td><td>パン工房こむぎ</td><td>ほかの店の券と見分けられるように</td></tr>
+      <tr><td>日付・用件</td><td>12/1(月) 開店記念セール</td><td>その日だけの券だと分かるように</td></tr>
+      <tr><td>ひとこと</td><td>10時までにお越しください</td><td>受け取った人が次にすることを1つだけ</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>90枚より多く要るとき</h3>
+  <p>1回に刷れるのは5ページ・90枚までです。続きを刷るときは、始めの番号を「91」にしてもう一度刷ってください。番号の桁を「3桁にそろえる」にしておくと、001から100まで同じ幅で並びます。</p>
+
+  <h3>同じ番号が2枚出ないようにする</h3>
+  <p>このツールは、1回に刷る中で同じ番号を出しません。<strong>2回に分けて刷るときに始めの番号を戻すと、同じ番号が2枚できます。</strong>刷った範囲(例: 1〜90)を控えておいてください。</p>
+
+  <h2>自宅のプリンタで刷るときの手順</h2>
+  <ol>
+    <li>「PDFとして保存 / 印刷」を押し、<strong>用紙は A4、倍率は「100%」または「実際のサイズ」</strong>を選ぶ(「用紙に合わせる」にすると寸法がずれます)</li>
+    <li>普通紙なら切り取り線「つける」のまま刷り、はさみかカッターで線に沿って切る</li>
+    <li>厚紙に刷ると、手渡しでも折れにくくなります</li>
+  </ol>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>入れた番号と文字を整理券の形に並べた紙</strong>までです。何人まで配ってよいか、先着順か抽選か、転売や譲渡をどう扱うかといった決まりは判断しません。偽造を防ぐ仕組み(透かし・通し番号の照合)もありません。お使いの用紙やプリンタで位置が合うかも確かめていないので、まず普通紙で1枚試し刷りしてください。</p>
+
+  <a class="cta" href="/kaigyo">
+    <strong>開業したらやること — 書類の順番</strong>
+    <span>見積書から領収書まで、仕事1件の流れに沿って無料のツールを並べています</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/seiriken-core.js"></script>
+<script src="/seiriken.js"></script>
+</body>
+</html>
