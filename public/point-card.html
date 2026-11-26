@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ポイントカードを無料で作成 — 名刺サイズをA4に10枚</title>
+<meta name="description" content="開店したお店で、また来てもらうためのポイントカードを自分で作りたいですか。店名・スタンプの数・特典を入れると、名刺サイズのカードをA4に10枚並べたPDFにできる無料ツールです。登録不要で、入力内容は送信されません。">
+<meta property="og:title" content="ポイントカードを無料で作成 — 名刺サイズをA4に10枚">
+<meta property="og:description" content="開店したお店で、また来てもらうためのポイントカードを自分で作りたいですか。店名・スタンプの数・特典を入れると、名刺サイズのカードをA4に10枚並べたPDFにできる無料ツールです。登録不要で、入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/point-card">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/point-card.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">ポイントカードジェネレーター</p>
+  <p class="tagline">名刺サイズ・A4に10枚 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">ポイントカードを無料で作成 — 名刺サイズをA4に10枚</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 店名とカード名</summary>
+      <div class="grid2">
+        <label>店名(16字まで)
+          <input type="text" id="pcShop" placeholder="例: カフェ こもれび">
+        </label>
+        <label>カード名(任意・10字まで)
+          <input type="text" id="pcTitle" placeholder="空けると「ポイントカード」">
+        </label>
+      </div>
+      <p class="hint">カード名は「スタンプカード」「メンバーズカード」などにも変えられます。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>2. スタンプの数と特典</summary>
+      <div class="grid2">
+        <label>スタンプの数
+          <select id="pcStamps">
+            <option value="5">5個</option>
+            <option value="10">10個</option>
+            <option value="15">15個</option>
+            <option value="20">20個</option>
+          </select>
+        </label>
+        <label>特典(任意・26字まで)
+          <input type="text" id="pcReward" placeholder="例: 10個たまるとドリンク1杯サービス">
+        </label>
+        <label>お名前の欄
+          <select id="pcName">
+            <option value="on">つける(手書きの下線)</option>
+            <option value="off">つけない</option>
+          </select>
+        </label>
+        <label>有効期限の欄
+          <select id="pcExpiry">
+            <option value="off">つけない</option>
+            <option value="on">つける(年・月・日を手書き)</option>
+          </select>
+        </label>
+      </div>
+      <p class="hint">マスには1から順に小さな番号が入り、<strong>最後のマスだけ枠が太く</strong>なります。お客様が特典まであと何個かを数えずに分かります。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 下に書くことと刷る紙</summary>
+      <div class="grid2">
+        <label>下の1行目(任意・30字まで)
+          <input type="text" id="pcInfo1" placeholder="例: 東京都千代田区丸の内1-2-3">
+        </label>
+        <label>下の2行目(任意・30字まで)
+          <input type="text" id="pcInfo2" placeholder="例: TEL 03-1234-5678 / 定休日 水曜">
+        </label>
+        <label>切り取り線
+          <select id="pcGuides">
+            <option value="on">つける(普通紙や厚紙に刷ってはさみで切る)</option>
+            <option value="off">つけない(ミシン目の入った名刺用紙に刷る)</option>
+          </select>
+        </label>
+      </div>
+      <p class="hint">91×55mm(名刺と同じ大きさ)のカードを、A4 縦に2列×5段で10枚並べます。空けた欄は紙に出ません。<strong>名刺用紙に刷る前に、必ず普通紙で1枚試し刷りして、用紙に重ねてずれを確かめてください。</strong>このツールは、お使いの用紙やプリンタに合うかを確かめていません。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="pcPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="pcClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="pcProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/meishi">名刺をつくる(同じ大きさ・A4に10枚)</a></li>
+        <li><a href="/seiriken">整理券をつくる(開店の日に先着順で配る番号つきの券)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="pc-preview" aria-label="プレビュー">
+    <div id="pcSheet"></div>
+  </section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>ポイントカードで決めるのは「何個で」「何がもらえるか」の2つ</h2>
+  <p>お客様がカードを見て知りたいのは、<strong>あと何個ためればいいか</strong>と、<strong>たまったら何がもらえるか</strong>です。開店したばかりなら、次の順に決めれば足ります。</p>
+  <ol>
+    <li><strong>スタンプの数</strong> — 月に何回来てもらえそうかで決める。週1回なら10個でおよそ2〜3か月</li>
+    <li><strong>特典</strong> — 「何を」「何個で」を1行で書く。「割引」だけでは何がもらえるか伝わりません</li>
+    <li><strong>店名と連絡先</strong> — カードは財布に入って持ち歩かれるので、住所か電話を入れておくと、次に来る道しるべになります</li>
+  </ol>
+
+  <h2>書き方の例 — 開店したばかりのカフェ</h2>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>欄</th><th>入れる例</th><th>考え方</th></tr></thead>
+    <tbody>
+      <tr><td>店名</td><td>カフェ こもれび</td><td>看板と同じ名前にする</td></tr>
+      <tr><td>カード名</td><td>スタンプカード</td><td>空けると「ポイントカード」</td></tr>
+      <tr><td>スタンプの数</td><td>10個</td><td>1回の来店で1個押す前提</td></tr>
+      <tr><td>特典</td><td>10個たまるとドリンク1杯サービス</td><td>何がもらえるかを具体的に</td></tr>
+      <tr><td>お名前の欄</td><td>つける</td><td>なくしたカードが戻ってくることがある</td></tr>
+      <tr><td>下の2行</td><td>住所 / TEL・定休日</td><td>次に来るときに要ることだけ</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>有効期限をつけるか</h3>
+  <p>期限をつけると、お客様が「切れる前に行こう」と思うきっかけになる一方、切れたときにがっかりさせます。開店したばかりで様子を見たいなら、<strong>まずは期限なしで刷り、続け方が決まってから期限つきで刷り直す</strong>ほうが、あとで揉めません。期限の欄は年・月・日を手書きする形なので、カードを渡すときに書き入れます。</p>
+
+  <h2>自宅のプリンタで刷るときの手順</h2>
+  <ol>
+    <li>「PDFとして保存 / 印刷」を押し、<strong>用紙は A4、倍率は「100%」または「実際のサイズ」</strong>を選ぶ(「用紙に合わせる」にすると寸法がずれます)</li>
+    <li>まず<strong>普通紙で1枚</strong>刷り、名刺用紙に重ねて、枠の位置が合っているかを光にかざして確かめる</li>
+    <li>合っていたら名刺用紙か厚紙に刷る。スタンプを押すと薄い紙は破れやすいので、厚めの紙が向いています</li>
+  </ol>
+  <p>1枚の紙で10枚できます。100枚要るなら、印刷の画面で部数を10にします。インクのにじまない紙かどうかは、手持ちのスタンプで1つ押して確かめてください。</p>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>入れた文字とスタンプのマスをカードの形に並べた紙そのもの</strong>までです。特典の中身や値打ちが景品表示法などの決まりに触れるかは判断しません。ポイントの記録・集計や、スタンプを押した回数の管理もしません。ロゴや絵は入れられません。お使いの名刺用紙やプリンタで位置が合うかも確かめていないので、試し刷りで確かめてください。</p>
+
+  <a class="cta" href="/kaigyo">
+    <strong>開業したらやること — 書類の順番</strong>
+    <span>見積書から領収書まで、仕事1件の流れに沿って無料のツールを並べています</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/point-card-core.js"></script>
+<script src="/point-card.js"></script>
+</body>
+</html>
