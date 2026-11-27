@@ -54,6 +54,7 @@ const NO_EXIT_PAGES = [
   'azukarisho.html',
   'seiriken.html',
   'point-card.html',
+  'coupon.html',
   'aisatsujo.html',
   'inshi.html',
   'legal.html',

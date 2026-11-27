@@ -1,0 +1,75 @@
+/* ---------------------------------------------------------- クーポン券(/coupon)
+
+   このページだけの規則を別ファイルに置く。
+   style.css の A4 の @page(余白つき)は請求書と送付状の紙面を実測で決めた値なので触らない。
+   券は紙の端からの位置そのものが寸法なので、名前付きページ @page coupon で余白0の A4 を持つ。
+
+   91×55mm を 2列×5段・すき間なし。余白は 上下11mm・左右14mm(coupon-core.js の LAYOUT と同じ値)。
+   通し番号つきで2枚以上刷るときは、紙(.cp-paper)ごとに改ページする。 */
+
+.cp-preview { display: flex; flex-direction: column; align-items: center; gap: 8mm; overflow-x: auto; }
+
+.cp-paper {
+  box-sizing: border-box;
+  width: 210mm;
+  height: 297mm;
+  padding: 11mm 14mm;
+  display: grid;
+  grid-template-columns: repeat(2, 91mm);
+  grid-template-rows: repeat(5, 55mm);
+  background: #fff;
+  color: #000;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .12);
+}
+@media (max-width: 1400px) { .cp-paper { zoom: .72; } }
+@media (max-width: 900px) { .cp-paper { zoom: .45; } }
+
+.cp-card {
+  box-sizing: border-box;
+  width: 91mm;
+  height: 55mm;
+  padding: 4mm 6mm 3.5mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.cp-card p { margin: 0; }
+
+/* 切り取り線: 券どうしの境目と外周に細い破線。普通紙をはさみで切るときの目印 */
+.cp-guides .cp-card { outline: .3pt dashed #999; outline-offset: -.15pt; }
+
+.cp-head { display: flex; justify-content: space-between; align-items: baseline; gap: 2mm; }
+.cp-title { font-size: 9pt; font-weight: 700; line-height: 1.3; letter-spacing: .08em; white-space: nowrap; }
+.cp-no { font-size: 7pt; line-height: 1.3; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.cp-middle { text-align: center; }
+.cp-offer { font-size: 15pt; font-weight: 700; line-height: 1.25; }
+.cp-terms { font-size: 6.5pt; line-height: 1.4; margin-top: 1mm !important; }
+.cp-expiry { font-size: 7pt; font-weight: 700; line-height: 1.4; margin-top: .8mm !important; }
+
+.cp-bottom { border-top: .4pt solid #000; padding-top: 1mm; }
+.cp-shop { font-size: 7pt; font-weight: 700; line-height: 1.35; }
+.cp-info { font-size: 6pt; line-height: 1.35; }
+
+/* ---------------------------------------------------------- 印刷 */
+
+@page coupon {
+  size: 210mm 297mm;
+  margin: 0;
+}
+
+@media print {
+  .cp-preview { display: block; overflow: visible; }
+  .cp-paper {
+    page: coupon;
+    zoom: 1;
+    box-shadow: none;
+    margin: 0;
+    break-after: page;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .cp-paper:last-child { break-after: auto; }
+}

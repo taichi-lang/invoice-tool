@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>クーポン券を無料で作成 — 名刺サイズをA4に10枚</title>
+<meta name="description" content="開店のチラシやお会計のときに渡すクーポン券を、自分で作りたいですか。特典・有効期限・店名を入れると、名刺サイズの券をA4に10枚並べたPDFにできる無料ツールです。通し番号もつけられます。登録不要で、入力内容は送信されません。">
+<meta property="og:title" content="クーポン券を無料で作成 — 名刺サイズをA4に10枚">
+<meta property="og:description" content="開店のチラシやお会計のときに渡すクーポン券を、自分で作りたいですか。特典・有効期限・店名を入れると、名刺サイズの券をA4に10枚並べたPDFにできる無料ツールです。通し番号もつけられます。登録不要で、入力内容は送信されません。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://invoice-tool-kohl.vercel.app/coupon">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/coupon.css">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="site-name">クーポン券ジェネレーター</p>
+  <p class="tagline">名刺サイズ・A4に10枚 / 登録不要 / <strong>入力内容は送信されません</strong></p>
+  <nav class="site-nav">
+    <a href="/">請求書をつくる</a>
+    <a href="/mitsumorisho">見積書をつくる</a>
+    <a href="/nohinsho">納品書をつくる</a>
+    <a href="/ryoshusho">領収書をつくる</a>
+    <a href="/soufujo">送付状をつくる</a>
+    <a href="/inshi">収入印紙を調べる</a>
+    <a href="/guide/">解説記事</a>
+    <a href="/kaigyo">開業の手順</a>
+  </nav>
+</header>
+
+<main class="layout">
+
+  <h1 class="page-title no-print">クーポン券を無料で作成 — 名刺サイズをA4に10枚</h1>
+
+  <!-- ============ 入力パネル ============ -->
+  <section class="editor no-print" aria-label="入力フォーム">
+
+    <details class="card" open>
+      <summary>1. 特典と使えるときの決まり</summary>
+      <div class="grid2">
+        <label>特典(12字まで・いちばん大きく出ます)
+          <input type="text" id="cpOffer" placeholder="例: 全品10%引き">
+        </label>
+        <label>見出し(任意・10字まで)
+          <input type="text" id="cpTitle" placeholder="空けると「クーポン券」">
+        </label>
+        <label>使えるときの決まり(任意・30字まで)
+          <input type="text" id="cpTerms" placeholder="例: お会計1回につき1枚まで・他の割引と併用不可">
+        </label>
+        <label>有効期限
+          <select id="cpExpiry">
+            <option value="off">書かない</option>
+            <option value="date">日付を入れる</option>
+            <option value="hand">手書きの欄にする(年・月・日)</option>
+          </select>
+        </label>
+        <label id="cpDateRow" hidden>有効期限の日付
+          <input type="date" id="cpExpiryDate">
+        </label>
+      </div>
+      <p class="hint">見出しは「割引券」「ご優待券」「無料券」などにも変えられます。</p>
+    </details>
+
+    <details class="card" open>
+      <summary>2. 店名と下に書くこと</summary>
+      <div class="grid2">
+        <label>店名(16字まで)
+          <input type="text" id="cpShop" placeholder="例: カフェ こもれび">
+        </label>
+        <label>下の1行目(任意・30字まで)
+          <input type="text" id="cpInfo1" placeholder="例: 東京都千代田区丸の内1-2-3">
+        </label>
+        <label>下の2行目(任意・30字まで)
+          <input type="text" id="cpInfo2" placeholder="例: TEL 03-1234-5678 / 定休日 水曜">
+        </label>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary>3. 通し番号と刷る紙</summary>
+      <div class="grid2">
+        <label>通し番号
+          <select id="cpNumbering">
+            <option value="off">つけない(10枚とも同じ券)</option>
+            <option value="on">つける(No.0001 から1ずつ増える)</option>
+          </select>
+        </label>
+        <label>切り取り線
+          <select id="cpGuides">
+            <option value="on">つける(普通紙や厚紙に刷ってはさみで切る)</option>
+            <option value="off">つけない(ミシン目の入った名刺用紙に刷る)</option>
+          </select>
+        </label>
+      </div>
+      <div class="grid2" id="cpNumberRow" hidden>
+        <label>始めの番号(1〜9999)
+          <input type="text" id="cpStart" inputmode="numeric" placeholder="1">
+        </label>
+        <label>刷る紙の枚数
+          <select id="cpSheets">
+            <option value="1">1枚(券10枚)</option>
+            <option value="2">2枚(券20枚)</option>
+            <option value="3">3枚(券30枚)</option>
+            <option value="4">4枚(券40枚)</option>
+            <option value="5">5枚(券50枚)</option>
+            <option value="6">6枚(券60枚)</option>
+            <option value="7">7枚(券70枚)</option>
+            <option value="8">8枚(券80枚)</option>
+            <option value="9">9枚(券90枚)</option>
+            <option value="10">10枚(券100枚)</option>
+          </select>
+        </label>
+      </div>
+      <p class="hint">91×55mm(名刺と同じ大きさ)の券を、A4 縦に2列×5段で10枚並べます。空けた欄は紙に出ません。通し番号をつけると、配った枚数や使われた枚数を数えやすくなります。<strong>名刺用紙に刷る前に、必ず普通紙で1枚試し刷りして、用紙に重ねてずれを確かめてください。</strong>このツールは、お使いの用紙やプリンタに合うかを確かめていません。</p>
+    </details>
+
+    <div class="actions">
+      <button type="button" id="cpPrint" class="btn-main">PDFとして保存 / 印刷</button>
+      <button type="button" id="cpClear" class="btn-sub danger">入力をすべて消す</button>
+    </div>
+
+    <ul class="hint warn" id="cpProblems" hidden></ul>
+
+    <p class="privacy-note">
+      入力した内容は<strong>お使いのブラウザの中だけ</strong>で処理され、サーバーへ送信・保存されることはありません。
+      下書きはこの端末の localStorage に保存されます(「入力をすべて消す」で削除できます)。
+    </p>
+
+    <section class="card pro-card">
+      <h2>あわせて使うもの</h2>
+      <ul class="guide-links">
+        <li><a href="/point-card">ポイントカードをつくる(同じ大きさ・A4に10枚)</a></li>
+        <li><a href="/seiriken">整理券をつくる(開店の日に先着順で配る番号つきの券)</a></li>
+        <li><a href="/kaigyo">開業したらやること — 書類の順番</a></li>
+      </ul>
+    </section>
+
+  </section>
+
+  <!-- ============ プレビュー(印刷対象) ============ -->
+  <section class="cp-preview" aria-label="プレビュー" id="cpSheet"></section>
+
+</main>
+
+<article class="article no-print">
+
+  <h2>クーポン券で決めるのは「何が得か」「いつまでか」の2つ</h2>
+  <p>券を受け取った人が見るのは、<strong>何がどれだけ得になるか</strong>と、<strong>いつまで使えるか</strong>です。開店したばかりなら、次の順に決めれば足ります。</p>
+  <ol>
+    <li><strong>特典</strong> — 「全品10%引き」「ドリンク1杯無料」のように、何がどれだけかを1行で書く。「お得なサービス」では伝わりません</li>
+    <li><strong>使えるときの決まり</strong> — 1回に何枚まで使えるか、ほかの割引と重ねられるかを書いておくと、レジで揉めません</li>
+    <li><strong>有効期限</strong> — 期限があると「切れる前に行こう」と思うきっかけになります</li>
+  </ol>
+
+  <h2>書き方の例 — 開店したばかりのカフェ</h2>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>欄</th><th>入れる例</th><th>考え方</th></tr></thead>
+    <tbody>
+      <tr><td>特典</td><td>ドリンク1杯無料</td><td>何がどれだけかを具体的に</td></tr>
+      <tr><td>見出し</td><td>ご優待券</td><td>空けると「クーポン券」</td></tr>
+      <tr><td>使えるときの決まり</td><td>お食事ご注文の方・1回1枚まで</td><td>レジで聞かれそうなことを先に書く</td></tr>
+      <tr><td>有効期限</td><td>日付を入れる(開店から1か月後)</td><td>開店直後に来てもらう券なら短めに</td></tr>
+      <tr><td>店名と下の2行</td><td>店名 / 住所 / TEL・定休日</td><td>券を持って来るときに要ることだけ</td></tr>
+      <tr><td>通し番号</td><td>つける</td><td>何枚配って何枚戻ったかが数えられる</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>通し番号をつけるか</h3>
+  <p>番号をつけると、<strong>配った枚数と使われた枚数</strong>が分かります。チラシに挟んだ分は1〜100、店頭で渡した分は101〜200のように番号の範囲を分けておくと、どこで配った券がよく戻ってきたかを、使われた券の番号だけで比べられます。同じ番号の券が2枚出てきたら、コピーされたものだと気づけます。</p>
+
+  <h2>自宅のプリンタで刷るときの手順</h2>
+  <ol>
+    <li>「PDFとして保存 / 印刷」を押し、<strong>用紙は A4、倍率は「100%」または「実際のサイズ」</strong>を選ぶ(「用紙に合わせる」にすると寸法がずれます)</li>
+    <li>まず<strong>普通紙で1枚</strong>刷り、名刺用紙に重ねて、枠の位置が合っているかを光にかざして確かめる</li>
+    <li>合っていたら名刺用紙か厚紙に刷る</li>
+  </ol>
+  <p>通し番号をつけないときは、1枚の紙で同じ券が10枚できます。100枚要るなら、印刷の画面で部数を10にします。通し番号をつけたときは、選んだ枚数の紙に続きの番号が並ぶので、部数は1のまま刷ります。</p>
+
+  <h2>このツールで扱わないこと</h2>
+  <p>このツールが作るのは、<strong>入れた文字を券の形に並べた紙そのもの</strong>までです。割引や特典の表示が景品表示法などの決まりに触れるかは判断しません。配った券や使われた券の記録・集計もしません。ロゴや絵は入れられません。お使いの名刺用紙やプリンタで位置が合うかも確かめていないので、試し刷りで確かめてください。</p>
+
+  <a class="cta" href="/kaigyo">
+    <strong>開業したらやること — 書類の順番</strong>
+    <span>見積書から領収書まで、仕事1件の流れに沿って無料のツールを並べています</span>
+  </a>
+
+</article>
+
+<footer class="site-footer">
+  <p><a href="/">請求書をつくる</a> ・ <a href="/mitsumorisho">見積書をつくる</a> ・ <a href="/ryoshusho">領収書をつくる</a> ・ <a href="/nohinsho">納品書をつくる</a> ・ <a href="/soufujo">送付状をつくる</a> ・ <a href="/inshi">収入印紙を調べる</a> ・ <a href="/legal">免責事項・プライバシー</a></p>
+  <p class="small">本サイトの記事は制度の一般的な説明であり、税務判断を行うものではありません。</p>
+  <p class="small sister">運営者の他のサイト:
+    <a href="https://seal-generator.vercel.app/">会社印ジェネレーター</a> ・
+    <a href="https://kougu-erabido.vercel.app/">工具えらび堂</a> ・
+    <a href="https://seido-web.vercel.app/">星導Seido</a> ・
+    <a href="https://www.amazon.co.jp/dp/B0HCW64VV7">書籍『ひとり社長・フリーランスの請求書&amp;インボイス実務』</a>
+  </p>
+</footer>
+
+<script src="/coupon-core.js"></script>
+<script src="/coupon.js"></script>
+</body>
+</html>

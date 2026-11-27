@@ -63,6 +63,7 @@ const NO_AD_PAGES = [
   'azukarisho.html',
   'seiriken.html',
   'point-card.html',
+  'coupon.html',
   'aisatsujo.html',
   'inshi.html',
   'legal.html',
